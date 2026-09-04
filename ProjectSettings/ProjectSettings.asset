@@ -931,10 +931,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: db271b66-517a-4fe0-ba39-6569b74cde55
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
+  projectName: ar-labs
   organizationId: 
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
