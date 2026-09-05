@@ -10,9 +10,7 @@ namespace Game.Lab1
 
         public void PlayRandomAnimation()
         {
-            int randomInt = Random.Range(0, _numberOfAnimations);
-            animator.SetInteger(_animatorChoiceParameterName, randomInt);
-            Debug.Log(randomInt);
+            animator.SetInteger(_animatorChoiceParameterName, Random.Range(0, _numberOfAnimations));
         }
     }
 }
