@@ -115,3 +115,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game.Lab1::Game.Lab1.Pudge
   animator: {fileID: 5852243822369358075}
+  _animatorChoiceParameterName: AnimationChoice
+  _numberOfAnimations: 11

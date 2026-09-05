@@ -48,6 +48,8 @@ namespace Game.Lab1
                 return;
 
             Pudge pudge = _pudgeSpawnerView.SpawnPudge(raycastHit.pose.position, raycastHit.pose.rotation);
+            pudge.PlayRandomAnimation();
+
             _spawnedPudges.Add(pudge);
         }
 
