@@ -7,11 +7,17 @@ namespace Game.Lab1
         [SerializeField] private GameObject _pudgePrefab;
         [SerializeField] private string _animatorChoiceParameterName;
 
-        public void SpawnPudge(Vector3 position, Quaternion rotation)
+        public Pudge SpawnPudge(Vector3 position, Quaternion rotation)
         {
             GameObject pudgeObject = Instantiate(_pudgePrefab, position, rotation);
-            Animator animator = pudgeObject.GetComponent<Animator>();
-            animator.SetInteger(_animatorChoiceParameterName, Random.Range(0, 10));
+            Pudge pudge = pudgeObject.GetComponent<Pudge>();
+            pudge.SetAnimatorIntParameter(_animatorChoiceParameterName, Random.Range(0, 10));
+            return pudge;
+        }
+
+        public void DespawnPudge(Pudge pudge)
+        {
+            Destroy(pudge.gameObject);
         }
     }
 }
