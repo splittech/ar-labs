@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using Game.Core;
+using Game.Core.AR;
+using Game.Core.Input;
 using R3;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
 namespace Game.Lab1
 {
     public class PudgeSpawner
     {
         private readonly InputService _inputService;
-        private readonly ARRaycastManager _raycastManager;
+        private readonly ARRaycastService _raycastService;
         private readonly PudgeSpawnerView _pudgeSpawnerView;
         private readonly Button _despawnAllPudgesButton;
 
@@ -20,34 +19,33 @@ namespace Game.Lab1
 
         public PudgeSpawner(
             InputService inputService,
-            ARRaycastManager raycastManager,
+            ARRaycastService raycastService,
             PudgeSpawnerView pudgeSpawnerView,
             Button deleteAllPudgesButton)
         {
             _inputService = inputService;
-            _raycastManager = raycastManager;
+            _raycastService = raycastService;
             _pudgeSpawnerView = pudgeSpawnerView;
             _despawnAllPudgesButton = deleteAllPudgesButton;
         }
 
         public void Initialize()
         {
-            _inputService.OnTap.Subscribe(SpawnPudge);
-            _despawnAllPudgesButton.OnClickAsObservable().Subscribe(DespawnAllPudges);
+            _inputService.OnInputActionPerformed
+                .Where(context => context.ActionType == ActionType.Tap || !context.IsOverUI)
+                .Subscribe(SpawnPudge);
+
+            _despawnAllPudgesButton.OnClickAsObservable()
+                .Subscribe(DespawnAllPudges);
         }
 
-        private void SpawnPudge(Vector2 tapScreenPosition)
+        private void SpawnPudge(InputContext context)
         {
-            List<ARRaycastHit> raycastHits = new();
-            _raycastManager.Raycast(tapScreenPosition, raycastHits, TrackableType.PlaneWithinPolygon);
-            if (raycastHits.Count == 0)
+            if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
                 return;
 
-            ARRaycastHit raycastHit = raycastHits.First();
-            if (!IsFloorHit(raycastHit))
-                return;
-
-            Pudge pudge = _pudgeSpawnerView.SpawnPudge(raycastHit.pose.position, raycastHit.pose.rotation);
+            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pose.position, pose.rotation);
+            Pudge pudge = new(pudgeView);
             pudge.PlayRandomAnimation();
 
             _spawnedPudges.Add(pudge);
@@ -56,17 +54,9 @@ namespace Game.Lab1
         private void DespawnAllPudges(Unit _)
         {
             foreach (var pudge in _spawnedPudges)
-                _pudgeSpawnerView.DespawnPudge(pudge);
+                pudge.Despawn();
 
             _spawnedPudges.Clear();
-        }
-
-        private bool IsFloorHit(ARRaycastHit raycastHit)
-        {
-            if (raycastHit.trackable is not ARPlane plane)
-                return false;
-
-            return plane.alignment == PlaneAlignment.HorizontalUp;
         }
     }
 }

@@ -1,16 +1,25 @@
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Lab1
 {
     public class Pudge : MonoBehaviour
     {
-        [SerializeField] private Animator animator;
-        [SerializeField] private string _animatorChoiceParameterName;
-        [SerializeField] private int _numberOfAnimations;
+        private readonly PudgeView _pudgeView;
+
+        public Pudge(PudgeView pudgeView)
+        {
+            _pudgeView = pudgeView;
+        }
 
         public void PlayRandomAnimation()
         {
-            animator.SetInteger(_animatorChoiceParameterName, Random.Range(0, _numberOfAnimations));
+            _pudgeView.PlayRandomAnimation();
+        }
+
+        public void Despawn()
+        {
+            _pudgeView.DestroyObject();
         }
     }
 }

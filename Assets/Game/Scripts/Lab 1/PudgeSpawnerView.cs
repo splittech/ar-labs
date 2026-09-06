@@ -1,3 +1,4 @@
+using Game.Core;
 using UnityEngine;
 
 namespace Game.Lab1
@@ -6,17 +7,11 @@ namespace Game.Lab1
     {
         [SerializeField] private GameObject _pudgePrefab;
 
-
-        public Pudge SpawnPudge(Vector3 position, Quaternion rotation)
+        public PudgeView CreatePudgeObject(Vector3 position, Quaternion rotation)
         {
             GameObject pudgeObject = Instantiate(_pudgePrefab, position, rotation);
-            Pudge pudge = pudgeObject.GetComponent<Pudge>();
-            return pudge;
-        }
-
-        public void DespawnPudge(Pudge pudge)
-        {
-            Destroy(pudge.gameObject);
+            PudgeView pudgeView = pudgeObject.GetComponent<PudgeView>();
+            return pudgeView;
         }
     }
 }
