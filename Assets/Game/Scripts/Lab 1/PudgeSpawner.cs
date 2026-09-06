@@ -16,6 +16,7 @@ namespace Game.Lab1
         private readonly Button _despawnAllPudgesButton;
 
         private List<Pudge> _spawnedPudges = new();
+        private SpawnMarker _spawnMarker;
 
         public PudgeSpawner(
             InputService inputService,
@@ -32,23 +33,63 @@ namespace Game.Lab1
         public void Initialize()
         {
             _inputService.OnInputActionPerformed
-                .Where(context => context.ActionType == ActionType.Tap || !context.IsOverUI)
+                .Where(context => context.ActionType == ActionType.DragStarted && !context.IsOverUI)
+                .Subscribe(CreateSpawnMarker);
+
+            _inputService.OnInputActionPerformed
+                .Where(context => context.ActionType == ActionType.DragHold)
+                .Subscribe(MoveSpawnMarker);
+
+            _inputService.OnInputActionPerformed
+                .Where(context => context.ActionType == ActionType.DragEnded)
                 .Subscribe(SpawnPudge);
 
             _despawnAllPudgesButton.OnClickAsObservable()
                 .Subscribe(DespawnAllPudges);
         }
 
+        private void CreateSpawnMarker(InputContext context)
+        {
+            if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
+                return;
+
+            SpawnMarkerView spawnMarkerView = _pudgeSpawnerView.CreateSpawnMarkerObject(pose.position, pose.rotation);
+            _spawnMarker = new SpawnMarker(spawnMarkerView, pose.position, pose.rotation);
+        }
+
+        private void MoveSpawnMarker(InputContext context)
+        {
+            if (_spawnMarker == null)
+                return;
+
+            if (context.IsOverUI)
+            {
+                _spawnMarker.Delete();
+                _spawnMarker = null;
+                return;
+            }
+
+            if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
+                return;
+
+            _spawnMarker.SetPositionAndRotation(pose.position, pose.rotation);
+        }
+
         private void SpawnPudge(InputContext context)
         {
+            if (_spawnMarker == null)
+                return;
+
             if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
                 return;
 
             PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pose.position, pose.rotation);
             Pudge pudge = new(pudgeView);
             pudge.PlayRandomAnimation();
-
             _spawnedPudges.Add(pudge);
+
+            _spawnMarker.Delete();
+            _spawnMarker = null;
         }
 
         private void DespawnAllPudges(Unit _)

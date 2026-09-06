@@ -863,6 +863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game.Lab1::Game.Lab1.PudgeSpawnerView
   _pudgePrefab: {fileID: 3615363029413999933, guid: 5ecdf01b695db3043bcbc910b814f1dc, type: 3}
+  _spawnMarkerPrefab: {fileID: 7665107799993797696, guid: f5cea4487bd1a614487721b0ec03f21e, type: 3}
 --- !u!4 &1810100743
 Transform:
   m_ObjectHideFlags: 0
