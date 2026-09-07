@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Lab1
+namespace Game.Gameplay
 {
     public class PudgeSpawnerView : MonoBehaviour
     {

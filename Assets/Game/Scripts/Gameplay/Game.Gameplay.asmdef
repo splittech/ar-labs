@@ -1,6 +1,6 @@
 {
-    "name": "Game.Lab1",
-    "rootNamespace": "Game.Lab1",
+    "name": "Game.Gameplay",
+    "rootNamespace": "Game.Gameplay",
     "references": [
         "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
         "GUID:0eea9bc4aa17e634797576fe2f2a6ca8",

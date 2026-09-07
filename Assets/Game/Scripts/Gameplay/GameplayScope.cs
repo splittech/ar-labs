@@ -3,9 +3,9 @@ using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 
-namespace Game.Lab1
+namespace Game.Gameplay
 {
-    public class Lab1Scope : LifetimeScope
+    public class GameplayScope : LifetimeScope
     {
         [SerializeField] private PudgeSpawnerView _pudgeSpawnerView;
         [SerializeField] private Button _despawnAllPudgesButton;
@@ -13,7 +13,7 @@ namespace Game.Lab1
         protected override void Configure(IContainerBuilder builder)
         {
             // Bootstrap.
-            builder.RegisterEntryPoint<Lab1Bootstrap>();
+            builder.RegisterEntryPoint<GameplayBootstrap>();
 
             // Pudge Spawner.
             builder.Register<PudgeSpawner>(Lifetime.Singleton);

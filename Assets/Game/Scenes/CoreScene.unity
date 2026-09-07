@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 508475058}
   - component: {fileID: 508475057}
   m_Layer: 0
-  m_Name: Lab 1
+  m_Name: Gameplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -937,7 +937,7 @@ GameObject:
   - component: {fileID: 1840361969}
   - component: {fileID: 1840361968}
   m_Layer: 0
-  m_Name: Lab 1 Scope
+  m_Name: Gameplay Scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

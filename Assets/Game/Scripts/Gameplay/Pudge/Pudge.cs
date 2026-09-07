@@ -1,4 +1,4 @@
-namespace Game.Lab1
+namespace Game.Gameplay
 {
     public class Pudge
     {

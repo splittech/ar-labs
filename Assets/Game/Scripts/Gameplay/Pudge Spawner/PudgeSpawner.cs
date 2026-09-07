@@ -6,7 +6,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Lab1
+namespace Game.Gameplay
 {
     public class PudgeSpawner
     {
