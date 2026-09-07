@@ -6,6 +6,9 @@ namespace Game.Gameplay
     {
         private readonly SpawnMarkerView _spawnMarkerView;
 
+        public Vector3 Position => _spawnMarkerView.Position;
+        public Quaternion Rotation => _spawnMarkerView.Rotation;
+
         public SpawnMarker(SpawnMarkerView spawnMarkerView, Vector3 position, Quaternion rotation)
         {
             _spawnMarkerView = spawnMarkerView;

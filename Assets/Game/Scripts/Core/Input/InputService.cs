@@ -24,12 +24,14 @@ namespace Game.Core.Input
         {
             _inputServiceView.OnPointerPositionChanged += OnPointerPositionChanged;
 
-            _inputServiceView.OnTapStarted += OnTapStarted;
             _inputServiceView.OnTapPerformed += OnTapPerformed;
 
+            _inputServiceView.OnPointerPressStarted += OnPointerPressStarted;
+            _inputServiceView.OnPointerPressCanceled += OnPointerPressCanceled;
+
             _inputServiceView.OnDragStarted += OnDragStarted;
-            _inputServiceView.OnDragEnded += OnDragEnded;
-            _inputServiceView.OnDragHold += OnDragHold;
+            _inputServiceView.OnDragCanceled += OnDragCanceled;
+            _inputServiceView.OnDragPerformed += OnDragPerformed;
 
             _inputServiceView.Enable();
         }
@@ -37,10 +39,15 @@ namespace Game.Core.Input
         public void Disable()
         {
             _inputServiceView.OnPointerPositionChanged -= OnPointerPositionChanged;
+
             _inputServiceView.OnTapPerformed -= OnTapPerformed;
+
+            _inputServiceView.OnPointerPressStarted -= OnPointerPressStarted;
+            _inputServiceView.OnPointerPressCanceled -= OnPointerPressCanceled;
+
             _inputServiceView.OnDragStarted -= OnDragStarted;
-            _inputServiceView.OnDragEnded -= OnDragEnded;
-            _inputServiceView.OnDragHold -= OnDragHold;
+            _inputServiceView.OnDragCanceled -= OnDragCanceled;
+            _inputServiceView.OnDragPerformed -= OnDragPerformed;
 
             _inputServiceView.Disable();
         }
@@ -50,11 +57,25 @@ namespace Game.Core.Input
             _pointerScreenPosition = position;
         }
 
-        private void OnTapStarted()
+        private void OnPointerPressStarted()
         {
             InputContext context = new()
             {
-                ActionType = ActionType.TapStarted,
+                ActionType = ActionType.Press,
+                ActionStatus = ActionStatus.Started,
+                ScreenPosition = _pointerScreenPosition,
+                IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
+            };
+
+            _onInputActionPerformed.OnNext(context);
+        }
+
+        private void OnPointerPressCanceled()
+        {
+            InputContext context = new()
+            {
+                ActionType = ActionType.Press,
+                ActionStatus = ActionStatus.Canceled,
                 ScreenPosition = _pointerScreenPosition,
                 IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
             };
@@ -66,7 +87,8 @@ namespace Game.Core.Input
         {
             InputContext context = new()
             {
-                ActionType = ActionType.TapPerformed,
+                ActionType = ActionType.Tap,
+                ActionStatus = ActionStatus.Performed,
                 ScreenPosition = _pointerScreenPosition,
                 IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
             };
@@ -78,7 +100,8 @@ namespace Game.Core.Input
         {
             InputContext context = new()
             {
-                ActionType = ActionType.DragStarted,
+                ActionType = ActionType.Drag,
+                ActionStatus = ActionStatus.Started,
                 ScreenPosition = _pointerScreenPosition,
                 IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
             };
@@ -86,11 +109,12 @@ namespace Game.Core.Input
             _onInputActionPerformed.OnNext(context);
         }
 
-        private void OnDragEnded()
+        private void OnDragCanceled()
         {
             InputContext context = new()
             {
-                ActionType = ActionType.DragEnded,
+                ActionType = ActionType.Drag,
+                ActionStatus = ActionStatus.Canceled,
                 ScreenPosition = _pointerScreenPosition,
                 IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
             };
@@ -98,11 +122,12 @@ namespace Game.Core.Input
             _onInputActionPerformed.OnNext(context);
         }
 
-        private void OnDragHold()
+        private void OnDragPerformed()
         {
             InputContext context = new()
             {
-                ActionType = ActionType.DragHold,
+                ActionType = ActionType.Drag,
+                ActionStatus = ActionStatus.Performed,
                 ScreenPosition = _pointerScreenPosition,
                 IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
             };

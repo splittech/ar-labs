@@ -1145,7 +1145,7 @@ GameObject:
   - component: {fileID: 1831573578}
   - component: {fileID: 1831573579}
   m_Layer: 0
-  m_Name: Input Service
+  m_Name: Input Service View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1179,8 +1179,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game.Core::Game.Core.InputServiceView
   _pointerPositionAction: {fileID: 2869410428622933342, guid: 564cbdb0d23f79a478733a128bb7b6f4, type: 3}
-  _tapStartAction: {fileID: 2494954584338170553, guid: 564cbdb0d23f79a478733a128bb7b6f4, type: 3}
-  _dragCurrentAction: {fileID: -7530398834462728267, guid: 564cbdb0d23f79a478733a128bb7b6f4, type: 3}
+  _pointerPressAction: {fileID: 7195252092563101979, guid: 564cbdb0d23f79a478733a128bb7b6f4, type: 3}
+  _tapAction: {fileID: 2494954584338170553, guid: 564cbdb0d23f79a478733a128bb7b6f4, type: 3}
+  _dragAction: {fileID: -7530398834462728267, guid: 564cbdb0d23f79a478733a128bb7b6f4, type: 3}
 --- !u!1 &1840361967
 GameObject:
   m_ObjectHideFlags: 0

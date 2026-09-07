@@ -33,16 +33,30 @@ namespace Game.Gameplay
         public void Initialize()
         {
             _inputService.OnInputActionPerformed
-                .Where(context => context.ActionType == ActionType.TapStarted && !context.IsOverUI)
+                .Where(context => context is
+                {
+                    ActionType: ActionType.Press,
+                    ActionStatus: ActionStatus.Started,
+                    IsOverUI: false
+                })
                 .Subscribe(CreateSpawnMarker);
 
             _inputService.OnInputActionPerformed
-                .Where(context => context.ActionType == ActionType.DragHold)
+                .Where(context => context is
+                {
+                    ActionType: ActionType.Drag,
+                    ActionStatus: ActionStatus.Performed,
+                })
                 .Subscribe(MoveSpawnMarker);
 
             _inputService.OnInputActionPerformed
-                .Where(context => context.ActionType is ActionType.DragEnded or ActionType.TapPerformed)
-                .Subscribe(SpawnPudge);
+                .Where(context => context is
+                {
+                    ActionType: ActionType.Press,
+                    ActionStatus: ActionStatus.Canceled,
+                })
+                .Do(SpawnPudge)
+                .Subscribe(DespawnMarker);
 
             _despawnAllPudgesButton.OnClickAsObservable()
                 .Subscribe(DespawnAllPudges);
@@ -80,13 +94,18 @@ namespace Game.Gameplay
             if (_spawnMarker == null)
                 return;
 
-            if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
-                return;
-
-            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pose.position, pose.rotation);
+            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(_spawnMarker.Position, _spawnMarker.Rotation);
             Pudge pudge = new(pudgeView);
+
             pudge.PlayRandomAnimation();
+
             _spawnedPudges.Add(pudge);
+        }
+
+        private void DespawnMarker(InputContext _)
+        {
+            if (_spawnMarker == null)
+                return;
 
             _spawnMarker.Delete();
             _spawnMarker = null;

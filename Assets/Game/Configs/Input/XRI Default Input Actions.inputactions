@@ -3339,6 +3339,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Finger Press",
+                    "type": "Button",
+                    "id": "ad7d2d00-0d09-47a7-ac23-159db01ad5e3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -3638,6 +3647,17 @@
                     "action": "Spawn Object",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "dda4816d-1fdc-4bd0-860b-83a8ff36d82d",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Finger Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

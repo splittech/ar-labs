@@ -7,19 +7,22 @@ namespace Game.Core.Input
     public sealed class InputServiceView : MonoBehaviour
     {
         [SerializeField] private InputActionReference _pointerPositionAction;
-        [SerializeField] private InputActionReference _tapStartAction;
-        [SerializeField] private InputActionReference _dragCurrentAction;
+        [SerializeField] private InputActionReference _pointerPressAction;
+        [SerializeField] private InputActionReference _tapAction;
+        [SerializeField] private InputActionReference _dragAction;
 
         private bool _enabled;
 
         public event Action<Vector2> OnPointerPositionChanged;
 
-        public event Action OnTapStarted;
         public event Action OnTapPerformed;
 
+        public event Action OnPointerPressStarted;
+        public event Action OnPointerPressCanceled;
+
         public event Action OnDragStarted;
-        public event Action OnDragEnded;
-        public event Action OnDragHold;
+        public event Action OnDragCanceled;
+        public event Action OnDragPerformed;
 
         public void Enable()
         {
@@ -29,15 +32,19 @@ namespace Game.Core.Input
             _enabled = true;
 
             _pointerPositionAction.action.performed += HandlePointerPositionPerformed;
-            _tapStartAction.action.started += HandleTapStartStarted;
-            _tapStartAction.action.performed += HandleTapStartPerformed;
-            _dragCurrentAction.action.started += HandleDragStartPerformed;
-            _dragCurrentAction.action.canceled += HandleDragEndPerformed;
-            _dragCurrentAction.action.performed += HandleDragCurrentPerformed;
+
+            _pointerPressAction.action.started += HandlePointerPressStarted;
+            _pointerPressAction.action.canceled += HandlePointerPressCanceled;
+
+            _tapAction.action.performed += HandleTapStartPerformed;
+            _dragAction.action.started += HandleDragStarted;
+            _dragAction.action.canceled += HandleDragCanceled;
+            _dragAction.action.performed += HandleDragPerformed;
 
             _pointerPositionAction.action.Enable();
-            _tapStartAction.action.Enable();
-            _dragCurrentAction.action.Enable();
+            _pointerPressAction.action.Enable();
+            _tapAction.action.Enable();
+            _dragAction.action.Enable();
         }
 
         public void Disable()
@@ -48,19 +55,19 @@ namespace Game.Core.Input
             _enabled = false;
 
             _pointerPositionAction.action.performed -= HandlePointerPositionPerformed;
-            _tapStartAction.action.performed -= HandleTapStartPerformed;
-            _dragCurrentAction.action.started -= HandleDragStartPerformed;
-            _dragCurrentAction.action.canceled -= HandleDragEndPerformed;
-            _dragCurrentAction.action.performed -= HandleDragCurrentPerformed;
+
+            _pointerPressAction.action.started -= HandlePointerPressStarted;
+            _pointerPressAction.action.canceled -= HandlePointerPressCanceled;
+
+            _tapAction.action.performed -= HandleTapStartPerformed;
+            _dragAction.action.started -= HandleDragStarted;
+            _dragAction.action.canceled -= HandleDragCanceled;
+            _dragAction.action.performed -= HandleDragPerformed;
 
             _pointerPositionAction.action.Disable();
-            _tapStartAction.action.Disable();
-            _dragCurrentAction.action.Disable();
-        }
-
-        private void HandleTapStartStarted(InputAction.CallbackContext context)
-        {
-            OnTapStarted?.Invoke();
+            _pointerPressAction.action.Disable();
+            _tapAction.action.Disable();
+            _dragAction.action.Disable();
         }
 
         private void HandlePointerPositionPerformed(InputAction.CallbackContext context)
@@ -74,19 +81,29 @@ namespace Game.Core.Input
             OnTapPerformed?.Invoke();
         }
 
-        private void HandleDragStartPerformed(InputAction.CallbackContext _)
+        private void HandlePointerPressStarted(InputAction.CallbackContext _)
+        {
+            OnPointerPressStarted?.Invoke();
+        }
+
+        private void HandlePointerPressCanceled(InputAction.CallbackContext _)
+        {
+            OnPointerPressCanceled?.Invoke();
+        }
+
+        private void HandleDragStarted(InputAction.CallbackContext _)
         {
             OnDragStarted?.Invoke();
         }
 
-        private void HandleDragEndPerformed(InputAction.CallbackContext _)
+        private void HandleDragCanceled(InputAction.CallbackContext _)
         {
-            OnDragEnded?.Invoke();
+            OnDragCanceled?.Invoke();
         }
 
-        private void HandleDragCurrentPerformed(InputAction.CallbackContext _)
+        private void HandleDragPerformed(InputAction.CallbackContext _)
         {
-            OnDragHold?.Invoke();
+            OnDragPerformed?.Invoke();
         }
     }
 }
