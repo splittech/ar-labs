@@ -4,7 +4,8 @@ namespace Game.Core.Input
 {
     public enum ActionType
     {
-        Tap,
+        TapStarted,
+        TapPerformed,
         DragStarted,
         DragEnded,
         DragHold

@@ -33,7 +33,7 @@ namespace Game.Lab1
         public void Initialize()
         {
             _inputService.OnInputActionPerformed
-                .Where(context => context.ActionType == ActionType.DragStarted && !context.IsOverUI)
+                .Where(context => context.ActionType == ActionType.TapStarted && !context.IsOverUI)
                 .Subscribe(CreateSpawnMarker);
 
             _inputService.OnInputActionPerformed
@@ -41,7 +41,7 @@ namespace Game.Lab1
                 .Subscribe(MoveSpawnMarker);
 
             _inputService.OnInputActionPerformed
-                .Where(context => context.ActionType == ActionType.DragEnded)
+                .Where(context => context.ActionType is ActionType.DragEnded or ActionType.TapPerformed)
                 .Subscribe(SpawnPudge);
 
             _despawnAllPudgesButton.OnClickAsObservable()

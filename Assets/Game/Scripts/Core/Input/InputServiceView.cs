@@ -13,7 +13,10 @@ namespace Game.Core.Input
         private bool _enabled;
 
         public event Action<Vector2> OnPointerPositionChanged;
+
+        public event Action OnTapStarted;
         public event Action OnTapPerformed;
+
         public event Action OnDragStarted;
         public event Action OnDragEnded;
         public event Action OnDragHold;
@@ -26,6 +29,7 @@ namespace Game.Core.Input
             _enabled = true;
 
             _pointerPositionAction.action.performed += HandlePointerPositionPerformed;
+            _tapStartAction.action.started += HandleTapStartStarted;
             _tapStartAction.action.performed += HandleTapStartPerformed;
             _dragCurrentAction.action.started += HandleDragStartPerformed;
             _dragCurrentAction.action.canceled += HandleDragEndPerformed;
@@ -52,6 +56,11 @@ namespace Game.Core.Input
             _pointerPositionAction.action.Disable();
             _tapStartAction.action.Disable();
             _dragCurrentAction.action.Disable();
+        }
+
+        private void HandleTapStartStarted(InputAction.CallbackContext context)
+        {
+            OnTapStarted?.Invoke();
         }
 
         private void HandlePointerPositionPerformed(InputAction.CallbackContext context)

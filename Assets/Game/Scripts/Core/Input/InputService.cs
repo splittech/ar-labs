@@ -23,7 +23,10 @@ namespace Game.Core.Input
         public void Enable()
         {
             _inputServiceView.OnPointerPositionChanged += OnPointerPositionChanged;
+
+            _inputServiceView.OnTapStarted += OnTapStarted;
             _inputServiceView.OnTapPerformed += OnTapPerformed;
+
             _inputServiceView.OnDragStarted += OnDragStarted;
             _inputServiceView.OnDragEnded += OnDragEnded;
             _inputServiceView.OnDragHold += OnDragHold;
@@ -47,11 +50,23 @@ namespace Game.Core.Input
             _pointerScreenPosition = position;
         }
 
+        private void OnTapStarted()
+        {
+            InputContext context = new()
+            {
+                ActionType = ActionType.TapStarted,
+                ScreenPosition = _pointerScreenPosition,
+                IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
+            };
+
+            _onInputActionPerformed.OnNext(context);
+        }
+
         private void OnTapPerformed()
         {
             InputContext context = new()
             {
-                ActionType = ActionType.Tap,
+                ActionType = ActionType.TapPerformed,
                 ScreenPosition = _pointerScreenPosition,
                 IsOverUI = _inputUIChecker.CheckPointerOverUI(_pointerScreenPosition)
             };
