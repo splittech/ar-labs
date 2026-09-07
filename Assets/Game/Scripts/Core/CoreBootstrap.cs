@@ -6,16 +6,19 @@ namespace Game.Core
     public class CoreBootstrap : IInitializable
     {
         private readonly InputLogger _inputLogger;
-        private InputService _inputService;
+        private readonly InputService _inputService;
+        private readonly FPSCounter _fpsCounter;
 
-        public CoreBootstrap(InputService inputService, InputLogger inputLogger)
+        public CoreBootstrap(InputService inputService, InputLogger inputLogger, FPSCounter fpsCounter)
         {
             _inputService = inputService;
             _inputLogger = inputLogger;
+            _fpsCounter = fpsCounter;
         }
 
         public void Initialize()
         {
+            _fpsCounter.Initialize();
             _inputLogger.Initialize();
 
             _inputService.Enable();

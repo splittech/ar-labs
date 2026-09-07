@@ -9,13 +9,24 @@ namespace Game.Core
 {
     public class CoreScope : LifetimeScope
     {
-        [SerializeField] private InputServiceView _inputServiceView;
+        [Header("AR")]
         [SerializeField] private ARRaycastManager _raycastManager;
+
+        [Header("Input Service")]
+        [SerializeField] private InputServiceView _inputServiceView;
+
+        [Header("FPS Counter")]
+        [SerializeField] private FPSCounterConfig _fpsCounterConfig;
+        [SerializeField] private FPSCounterView _fpsCounterView;
 
         protected override void Configure(IContainerBuilder builder)
         {
             // Bootstrap.
             builder.RegisterEntryPoint<CoreBootstrap>();
+
+            // AR.
+            builder.Register<ARRaycastService>(Lifetime.Singleton);
+            builder.RegisterComponent(_raycastManager);
 
             // Input.
             builder.Register<InputService>(Lifetime.Singleton);
@@ -23,9 +34,10 @@ namespace Game.Core
             builder.Register<InputLogger>(Lifetime.Singleton);
             builder.RegisterComponent(_inputServiceView);
 
-            // AR.
-            builder.Register<ARRaycastService>(Lifetime.Singleton);
-            builder.RegisterComponent(_raycastManager);
+            // FPS Counter.
+            builder.Register<FPSCounter>(Lifetime.Singleton);
+            builder.RegisterInstance(_fpsCounterConfig);
+            builder.RegisterComponent(_fpsCounterView);
         }
     }
 }
