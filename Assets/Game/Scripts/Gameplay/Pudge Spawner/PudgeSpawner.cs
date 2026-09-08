@@ -4,7 +4,6 @@ using Game.Core.AR;
 using Game.Core.Input;
 using R3;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Gameplay
 {
@@ -13,7 +12,6 @@ namespace Game.Gameplay
         private readonly InputService _inputService;
         private readonly ARRaycastService _raycastService;
         private readonly PudgeSpawnerView _pudgeSpawnerView;
-        private readonly Button _despawnAllPudgesButton;
 
         private List<Pudge> _spawnedPudges = new();
         private SpawnMarker _spawnMarker;
@@ -21,13 +19,11 @@ namespace Game.Gameplay
         public PudgeSpawner(
             InputService inputService,
             ARRaycastService raycastService,
-            PudgeSpawnerView pudgeSpawnerView,
-            Button deleteAllPudgesButton)
+            PudgeSpawnerView pudgeSpawnerView)
         {
             _inputService = inputService;
             _raycastService = raycastService;
             _pudgeSpawnerView = pudgeSpawnerView;
-            _despawnAllPudgesButton = deleteAllPudgesButton;
         }
 
         public void Initialize()
@@ -57,9 +53,6 @@ namespace Game.Gameplay
                 })
                 .Do(SpawnPudge)
                 .Subscribe(DespawnMarker);
-
-            _despawnAllPudgesButton.OnClickAsObservable()
-                .Subscribe(DespawnAllPudges);
         }
 
         private void CreateSpawnMarker(InputContext context)
