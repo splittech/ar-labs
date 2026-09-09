@@ -3,7 +3,7 @@ using VContainer.Unity;
 
 namespace Game.Core
 {
-    public class CoreBootstrap : IInitializable
+    public class CoreBootstrap : IStartable
     {
         private readonly InputLogger _inputLogger;
         private readonly InputService _inputService;
@@ -16,10 +16,10 @@ namespace Game.Core
             _fpsCounter = fpsCounter;
         }
 
-        public void Initialize()
+        public void Start()
         {
             _fpsCounter.Initialize();
-            _inputLogger.Initialize();
+            //_inputLogger.Initialize();
 
             _inputService.Enable();
         }
