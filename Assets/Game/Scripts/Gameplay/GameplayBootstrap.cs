@@ -18,8 +18,6 @@ namespace Game.Gameplay
         public void Start()
         {
             _gameModeSwitcher.Initialize();
-
-            _pudgeSpawner.Initialize();
         }
     }
 }

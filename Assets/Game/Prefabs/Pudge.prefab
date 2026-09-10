@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf81b493bce357a4985d18bd99bdb561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Lab1::Game.Core.PudgeView
-  animator: {fileID: 5852243822369358075}
-  _animatorChoiceParameterName: AnimationChoice
-  _numberOfAnimations: 11
+  _animator: {fileID: 5852243822369358075}
+  _normalStateParameterName: Normal
+  _sadStateParameterName: Sad
+  _happyStateParameterName: Happy

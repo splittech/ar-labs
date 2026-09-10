@@ -13,7 +13,9 @@ namespace Game.Menu
         public Observable<MenuView> OnSwitchMenuButtonClicked =>
             _switchMenuSettings
                 .SelectMany(setting => setting.SwitchButtonViews
-                    .Select(button => button.OnClick.Select(_ => setting.MenuView)))
+                    .Select(button => button.OnActionPerformed
+                        .Where(action => action == ButtonAction.Click)
+                        .Select(_ => setting.MenuView)))
                 .Merge();
 
         [Serializable]

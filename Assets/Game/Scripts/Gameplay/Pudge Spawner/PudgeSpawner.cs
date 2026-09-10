@@ -15,6 +15,12 @@ namespace Game.Gameplay
 
         private List<Pudge> _spawnedPudges = new();
         private SpawnMarker _spawnMarker;
+        private Pudge.State _inititalPudgeState;
+        private bool _enabled;
+
+        private DisposableBag _disposableBag;
+
+        public Pudge.State InititalPudgeState { set => _inititalPudgeState = value; }
 
         public PudgeSpawner(
             InputService inputService,
@@ -26,8 +32,13 @@ namespace Game.Gameplay
             _pudgeSpawnerView = pudgeSpawnerView;
         }
 
-        public void Initialize()
+        public void Enable()
         {
+            if (_enabled)
+                return;
+
+            _enabled = true;
+
             _inputService.OnInputActionPerformed
                 .Where(context => context is
                 {
@@ -35,7 +46,8 @@ namespace Game.Gameplay
                     ActionStatus: ActionStatus.Started,
                     IsOverUI: false
                 })
-                .Subscribe(CreateSpawnMarker);
+                .Subscribe(CreateSpawnMarker)
+                .AddTo(ref _disposableBag);
 
             _inputService.OnInputActionPerformed
                 .Where(context => context is
@@ -43,7 +55,8 @@ namespace Game.Gameplay
                     ActionType: ActionType.Drag,
                     ActionStatus: ActionStatus.Performed,
                 })
-                .Subscribe(MoveSpawnMarker);
+                .Subscribe(MoveMarker)
+                .AddTo(ref _disposableBag);
 
             _inputService.OnInputActionPerformed
                 .Where(context => context is
@@ -52,7 +65,19 @@ namespace Game.Gameplay
                     ActionStatus: ActionStatus.Canceled,
                 })
                 .Do(SpawnPudge)
-                .Subscribe(DespawnMarker);
+                .Subscribe(_ => DeleteMarker())
+                .AddTo(ref _disposableBag);
+        }
+
+        public void Disable()
+        {
+            if (!_enabled)
+                return;
+
+            _enabled = false;
+            _disposableBag.Clear();
+
+            DeleteMarker();
         }
 
         private void CreateSpawnMarker(InputContext context)
@@ -64,7 +89,7 @@ namespace Game.Gameplay
             _spawnMarker = new SpawnMarker(spawnMarkerView, pose.position, pose.rotation);
         }
 
-        private void MoveSpawnMarker(InputContext context)
+        private void MoveMarker(InputContext context)
         {
             if (_spawnMarker == null)
                 return;
@@ -82,20 +107,7 @@ namespace Game.Gameplay
             _spawnMarker.SetPositionAndRotation(pose.position, pose.rotation);
         }
 
-        private void SpawnPudge(InputContext context)
-        {
-            if (_spawnMarker == null)
-                return;
-
-            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(_spawnMarker.Position, _spawnMarker.Rotation);
-            Pudge pudge = new(pudgeView);
-
-            pudge.PlayRandomAnimation();
-
-            _spawnedPudges.Add(pudge);
-        }
-
-        private void DespawnMarker(InputContext _)
+        private void DeleteMarker()
         {
             if (_spawnMarker == null)
                 return;
@@ -104,12 +116,17 @@ namespace Game.Gameplay
             _spawnMarker = null;
         }
 
-        private void DespawnAllPudges(Unit _)
+        private void SpawnPudge(InputContext context)
         {
-            foreach (var pudge in _spawnedPudges)
-                pudge.Despawn();
+            if (_spawnMarker == null || _inititalPudgeState == Pudge.State.None)
+                return;
 
-            _spawnedPudges.Clear();
+            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(_spawnMarker.Position, _spawnMarker.Rotation);
+            Pudge pudge = new(pudgeView);
+
+            pudge.SetState(_inititalPudgeState);
+
+            _spawnedPudges.Add(pudge);
         }
     }
 }

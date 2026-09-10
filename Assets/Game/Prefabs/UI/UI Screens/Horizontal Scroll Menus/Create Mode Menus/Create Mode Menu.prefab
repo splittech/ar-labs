@@ -97,6 +97,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5bd20e67f73b28d4e90f8a2e667c6cf7, type: 3}
+--- !u!114 &7345312060061174477 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8014591781932410959, guid: 5bd20e67f73b28d4e90f8a2e667c6cf7, type: 3}
+  m_PrefabInstance: {fileID: 780889264132874882}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
 --- !u!224 &8341314457331899062 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8724611486239389748, guid: 5bd20e67f73b28d4e90f8a2e667c6cf7, type: 3}
@@ -324,6 +335,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5403586685702012343, guid: 79b80c22f0215354c96501404774f806, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5399582680296112886}
+    - targetCorrespondingSourceObject: {fileID: 5403586685702012343, guid: 79b80c22f0215354c96501404774f806, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 182274530887866402}
   m_SourcePrefab: {fileID: 100100000, guid: 79b80c22f0215354c96501404774f806, type: 3}
 --- !u!1 &7418643470861838863 stripped
 GameObject:
@@ -342,6 +356,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf5f6da1e115334d82989368232df06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.CreateGameModeView
+  _radioButtonView: {fileID: 182274530887866402}
+  _createNormalPudgeButton: {fileID: 3395488770758318776}
+  _createHappyPudgeButton: {fileID: 2944414149045376811}
+  _createSadPudgeButton: {fileID: 7345312060061174477}
+--- !u!114 &182274530887866402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7418643470861838863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292679c55b7240d4493e4845fb9adf28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.RadioButtonView
+  _buttonViews:
+  - {fileID: 3395488770758318776}
+  - {fileID: 2944414149045376811}
+  - {fileID: 7345312060061174477}
 --- !u!224 &8397258125202633816 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6377159050853278688, guid: 79b80c22f0215354c96501404774f806, type: 3}
@@ -444,6 +478,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09434fcb54dd9a54cbd29799a87b9f0d, type: 3}
+--- !u!114 &3395488770758318776 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8014591781932410959, guid: 09434fcb54dd9a54cbd29799a87b9f0d, type: 3}
+  m_PrefabInstance: {fileID: 4622592964231181047}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
 --- !u!224 &4121554679176841923 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8724611486239389748, guid: 09434fcb54dd9a54cbd29799a87b9f0d, type: 3}
@@ -546,6 +591,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3147958ec38c3664f94e19b8b5f67f8e, type: 3}
+--- !u!114 &2944414149045376811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6987438390673178985, guid: 3147958ec38c3664f94e19b8b5f67f8e, type: 3}
+  m_PrefabInstance: {fileID: 5198551588842198594}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
 --- !u!224 &4535457123365291856 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8562988968773112082, guid: 3147958ec38c3664f94e19b8b5f67f8e, type: 3}
