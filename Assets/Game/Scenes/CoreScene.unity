@@ -690,6 +690,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40e6e45641734bb489dd6f8ed3325d44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.PudgeMergerView
+  _finalEffectPrefab: {fileID: 3292873369356817367, guid: 4bbe7ebffdf267f4486764ad6006fc83, type: 3}
+  _effectsRootTransform: {fileID: 432536053}
   _addScale: 0.5
   _scaleToDestroy: 2
 --- !u!4 &432536053
@@ -744,6 +746,51 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508475056}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &566405612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 566405614}
+  - component: {fileID: 566405613}
+  m_Layer: 0
+  m_Name: Gameplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &566405613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566405612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f517a64d7c9c64b32922a42317242caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Alchemy::Alchemy.Hierarchy.HierarchyHeader
+  hierarchyObjectMode: 0
+--- !u!4 &566405614
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566405612}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1718,6 +1765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game.Lab1::Game.Lab1.PudgeSpawnerView
   _pudgePrefab: {fileID: 8182380960476877424, guid: 5ecdf01b695db3043bcbc910b814f1dc, type: 3}
+  _pudgeRootTransform: {fileID: 1810100743}
   _initialScale: 1
 --- !u!4 &1810100743
 Transform:
@@ -1929,10 +1977,11 @@ SceneRoots:
   - {fileID: 1525909400}
   - {fileID: 272514704}
   - {fileID: 195992019}
+  - {fileID: 566405614}
+  - {fileID: 432536053}
   - {fileID: 508475058}
   - {fileID: 1910591015}
   - {fileID: 1810100743}
-  - {fileID: 432536053}
   - {fileID: 1641567290}
   - {fileID: 374523678}
   - {fileID: 1629116672}

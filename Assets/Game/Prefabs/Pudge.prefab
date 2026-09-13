@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.PudgeView
   _movementSpeed: 0.1
-  _rotationSpeed: 1337
+  _rotationSpeed: 1000
   _animator: {fileID: 5656006795175558973}
   _normalStateParameterName: Normal
   _happyStateParameterName: Happy

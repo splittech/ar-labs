@@ -99,7 +99,7 @@ namespace Game.Gameplay
 
             if (scale >= _pudgeMergerView.ScaleToDestroy)
             {
-                // Spawn particles.
+                _pudgeMergerView.CreateFinalEffect(pose.position);
                 return;
             }
 
