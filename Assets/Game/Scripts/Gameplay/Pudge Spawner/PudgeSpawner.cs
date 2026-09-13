@@ -20,10 +20,9 @@ namespace Game.Gameplay
 
         private DisposableBag _disposableBag;
 
-        private Subject<Pudge> _onPudgeSpawned = new();
-
         public HashSet<Pudge> SpawnedPudges => _spawnedPudges;
 
+        private Subject<Pudge> _onPudgeSpawned = new();
         public Observable<Pudge> OnPudgeSpawned => _onPudgeSpawned;
 
         public PudgeSpawner(
@@ -71,7 +70,7 @@ namespace Game.Gameplay
 
         public void SpawnPudge(Pose pudgePose, Pudge.State pudgeState, float pudgeScale)
         {
-            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject();
+            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pudgeState);
             Pudge pudge = new(pudgeView, _tickService);
 
             pudge.Initialize(pudgePose, pudgeState, pudgeScale);

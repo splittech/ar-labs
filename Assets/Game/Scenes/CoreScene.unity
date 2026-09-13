@@ -940,6 +940,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2042477975887565892, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+      propertyPath: _addScaleButton
+      value: 
+      objectReference: {fileID: 798516424}
+    - target: {fileID: 2042477975887565892, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+      propertyPath: _rotateClockwiseButton
+      value: 
+      objectReference: {fileID: 798516422}
+    - target: {fileID: 2042477975887565892, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+      propertyPath: _substractSacaleButton
+      value: 
+      objectReference: {fileID: 798516423}
+    - target: {fileID: 2042477975887565892, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+      propertyPath: _switchDescriptionButton
+      value: 
+      objectReference: {fileID: 798516425}
+    - target: {fileID: 2042477975887565892, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+      propertyPath: _rotateCounterClockwiseButton
+      value: 
+      objectReference: {fileID: 798516420}
     - target: {fileID: 6149422275745905693, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1041,6 +1061,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
+--- !u!114 &798516420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5005731056286271704, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+  m_PrefabInstance: {fileID: 798516417}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
 --- !u!114 &798516421 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2042477975887565892, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
@@ -1052,6 +1083,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c2f36162e0bbf4db1e5455ad413635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.EditGameModeView
+--- !u!114 &798516422 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2850928112259087975, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+  m_PrefabInstance: {fileID: 798516417}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
+--- !u!114 &798516423 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9040276476231437220, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+  m_PrefabInstance: {fileID: 798516417}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
+--- !u!114 &798516424 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4725050998313599293, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+  m_PrefabInstance: {fileID: 798516417}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
+--- !u!114 &798516425 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7742380586967334565, guid: ba1e100f0ebba294ba8acc34c6059810, type: 3}
+  m_PrefabInstance: {fileID: 798516417}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d48aad9d8156a4d825a5b015bc9347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Menu::Game.Menu.ButtonView
+--- !u!20 &857704900 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2512387469002778331, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
+  m_PrefabInstance: {fileID: 331264285}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1075000274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,6 +1296,100 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122700246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1224360293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1224360295}
+  - component: {fileID: 1224360294}
+  m_Layer: 0
+  m_Name: Pudge Editor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1224360294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224360293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 840bc41a63c7b3d459f032f493f67d02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.PudgeEditorView
+  _pudgeInteractableLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _scaleDelta: 0.5
+  _rotationDelta: 90
+--- !u!4 &1224360295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224360293}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 631.13696, y: 1399.8115, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1233005469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233005471}
+  - component: {fileID: 1233005470}
+  m_Layer: 0
+  m_Name: Edit Mode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1233005470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233005469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f517a64d7c9c64b32922a42317242caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Alchemy::Alchemy.Hierarchy.HierarchyHeader
+  hierarchyObjectMode: 0
+--- !u!4 &1233005471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233005469}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1455,7 +1629,8 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
-  _raycastManager: {fileID: 2031237971}
+  _camera: {fileID: 857704900}
+  _ARRaycastManager: {fileID: 2031237971}
   _inputServiceView: {fileID: 1831573579}
   _tickService: {fileID: 1525909399}
   _fpsCounterConfig: {fileID: 11400000, guid: 4879a789d1f460f4d9b99186429f36cd, type: 2}
@@ -1764,9 +1939,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f3e06a3f16b8fb49b97175305efab66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Lab1::Game.Lab1.PudgeSpawnerView
-  _pudgePrefab: {fileID: 8182380960476877424, guid: 5ecdf01b695db3043bcbc910b814f1dc, type: 3}
   _pudgeRootTransform: {fileID: 1810100743}
   _initialScale: 1
+  _normalPudgePrefab: {fileID: 6252106359123107023, guid: 541b3d4fe9ea3074699593cc6d7829b5, type: 3}
+  _happyPudgePrefab: {fileID: 2731997405173027979, guid: 34fe2e8e11ed8f643afcf3162c9208cd, type: 3}
+  _sadPudgePrefab: {fileID: 4440512929689870850, guid: 64a743573ab21b941b68e4aa182d817b, type: 3}
 --- !u!4 &1810100743
 Transform:
   m_ObjectHideFlags: 0
@@ -1831,6 +2008,7 @@ MonoBehaviour:
   _pudgeSpawnerView: {fileID: 1810100742}
   _pudgeMergerView: {fileID: 432536052}
   _editGameModeView: {fileID: 798516421}
+  _pudgeEditorView: {fileID: 1224360294}
 --- !u!4 &1840361969
 Transform:
   m_ObjectHideFlags: 0
@@ -1875,7 +2053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c4510b78ff00c46a9197fba632f96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.SpawnMarkerCreatorView
-  _spawnMarkerPrefab: {fileID: 7665107799993797696, guid: f5cea4487bd1a614487721b0ec03f21e, type: 3}
+  _spawnMarkerPrefab: {fileID: 6206106006107262628, guid: dacf160b254b6424c93acfc49477de29, type: 3}
 --- !u!4 &1910591015
 Transform:
   m_ObjectHideFlags: 0
@@ -1982,6 +2160,8 @@ SceneRoots:
   - {fileID: 508475058}
   - {fileID: 1910591015}
   - {fileID: 1810100743}
+  - {fileID: 1233005471}
+  - {fileID: 1224360295}
   - {fileID: 1641567290}
   - {fileID: 374523678}
   - {fileID: 1629116672}

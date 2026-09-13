@@ -9,13 +9,13 @@ namespace Game.Gameplay
     {
         private readonly SpawnMarkerCreatorView _spawnMarkerCreatorView;
         private readonly InputService _inputService;
-        private readonly ARRaycastService _raycastService;
+        private readonly RaycastService _raycastService;
 
         private SpawnMarker _currentSpawnMarker;
         private DisposableBag _disposableBag;
         private bool _enabled;
 
-        public SpawnMarkerCreator(SpawnMarkerCreatorView spawnMarkerCreatorView, InputService inputService, ARRaycastService raycastService)
+        public SpawnMarkerCreator(SpawnMarkerCreatorView spawnMarkerCreatorView, InputService inputService, RaycastService raycastService)
         {
             _spawnMarkerCreatorView = spawnMarkerCreatorView;
             _inputService = inputService;
