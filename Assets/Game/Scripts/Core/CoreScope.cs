@@ -15,6 +15,9 @@ namespace Game.Core
         [Header("Input Service")]
         [SerializeField] private InputServiceView _inputServiceView;
 
+        [Header("Tick Service")]
+        [SerializeField] private TickService _tickService;
+
         [Header("FPS Counter")]
         [SerializeField] private FPSCounterConfig _fpsCounterConfig;
         [SerializeField] private FPSCounterView _fpsCounterView;
@@ -33,6 +36,9 @@ namespace Game.Core
             builder.Register<InputUIChecker>(Lifetime.Singleton);
             builder.Register<InputLogger>(Lifetime.Singleton);
             builder.RegisterComponent(_inputServiceView);
+
+            // Tick Service
+            builder.RegisterComponent(_tickService);
 
             // FPS Counter.
             builder.Register<FPSCounter>(Lifetime.Singleton);

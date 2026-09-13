@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Game.Core.AR;
+using Game.Core;
 using Game.Core.Input;
 using R3;
 using UnityEngine;
@@ -10,26 +10,32 @@ namespace Game.Gameplay
     public class PudgeSpawner
     {
         private readonly InputService _inputService;
-        private readonly ARRaycastService _raycastService;
         private readonly PudgeSpawnerView _pudgeSpawnerView;
+        private readonly SpawnMarkerCreator _spawnMarkerCreator;
+        private readonly TickService _tickService;
 
-        private List<Pudge> _spawnedPudges = new();
-        private SpawnMarker _spawnMarker;
+        private HashSet<Pudge> _spawnedPudges = new();
         private Pudge.State _inititalPudgeState;
         private bool _enabled;
 
         private DisposableBag _disposableBag;
 
-        public Pudge.State InititalPudgeState { set => _inititalPudgeState = value; }
+        private Subject<Pudge> _onPudgeSpawned = new();
+
+        public HashSet<Pudge> SpawnedPudges => _spawnedPudges;
+
+        public Observable<Pudge> OnPudgeSpawned => _onPudgeSpawned;
 
         public PudgeSpawner(
             InputService inputService,
-            ARRaycastService raycastService,
-            PudgeSpawnerView pudgeSpawnerView)
+            PudgeSpawnerView pudgeSpawnerView,
+            SpawnMarkerCreator spawnMarkerCreator,
+            TickService tickService)
         {
             _inputService = inputService;
-            _raycastService = raycastService;
             _pudgeSpawnerView = pudgeSpawnerView;
+            _spawnMarkerCreator = spawnMarkerCreator;
+            _tickService = tickService;
         }
 
         public void Enable()
@@ -43,29 +49,9 @@ namespace Game.Gameplay
                 .Where(context => context is
                 {
                     ActionType: ActionType.Press,
-                    ActionStatus: ActionStatus.Started,
-                    IsOverUI: false
-                })
-                .Subscribe(CreateSpawnMarker)
-                .AddTo(ref _disposableBag);
-
-            _inputService.OnInputActionPerformed
-                .Where(context => context is
-                {
-                    ActionType: ActionType.Drag,
-                    ActionStatus: ActionStatus.Performed,
-                })
-                .Subscribe(MoveMarker)
-                .AddTo(ref _disposableBag);
-
-            _inputService.OnInputActionPerformed
-                .Where(context => context is
-                {
-                    ActionType: ActionType.Press,
                     ActionStatus: ActionStatus.Canceled,
                 })
-                .Do(SpawnPudge)
-                .Subscribe(_ => DeleteMarker())
+                .Subscribe(_ => SpawnInitialPudge())
                 .AddTo(ref _disposableBag);
         }
 
@@ -76,57 +62,35 @@ namespace Game.Gameplay
 
             _enabled = false;
             _disposableBag.Clear();
-
-            DeleteMarker();
         }
 
-        private void CreateSpawnMarker(InputContext context)
+        public void SetInitialPudgeState(Pudge.State initialPudgeState)
         {
-            if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
-                return;
-
-            SpawnMarkerView spawnMarkerView = _pudgeSpawnerView.CreateSpawnMarkerObject(pose.position, pose.rotation);
-            _spawnMarker = new SpawnMarker(spawnMarkerView, pose.position, pose.rotation);
+            _inititalPudgeState = initialPudgeState;
         }
 
-        private void MoveMarker(InputContext context)
+        public void SpawnPudge(Pose pudgePose, Pudge.State pudgeState, float pudgeScale)
         {
-            if (_spawnMarker == null)
-                return;
+            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject();
+            Pudge pudge = new(pudgeView, _tickService);
 
-            if (context.IsOverUI)
-            {
-                _spawnMarker.Delete();
-                _spawnMarker = null;
-                return;
-            }
-
-            if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
-                return;
-
-            _spawnMarker.SetPositionAndRotation(pose.position, pose.rotation);
-        }
-
-        private void DeleteMarker()
-        {
-            if (_spawnMarker == null)
-                return;
-
-            _spawnMarker.Delete();
-            _spawnMarker = null;
-        }
-
-        private void SpawnPudge(InputContext context)
-        {
-            if (_spawnMarker == null || _inititalPudgeState == Pudge.State.None)
-                return;
-
-            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(_spawnMarker.Position, _spawnMarker.Rotation);
-            Pudge pudge = new(pudgeView);
-
-            pudge.SetState(_inititalPudgeState);
-
+            pudge.Initialize(pudgePose, pudgeState, pudgeScale);
             _spawnedPudges.Add(pudge);
+            _onPudgeSpawned.OnNext(pudge);
+        }
+
+        public void DespawnPudge(Pudge pudge)
+        {
+            pudge.Dispose();
+            _spawnedPudges.Remove(pudge);
+        }
+
+        private void SpawnInitialPudge()
+        {
+            if (_spawnMarkerCreator.CurrentSpawnMarker == null || _inititalPudgeState == Pudge.State.None)
+                return;
+
+            SpawnPudge(_spawnMarkerCreator.CurrentSpawnMarker.Pose, _inititalPudgeState, 1);
         }
     }
 }

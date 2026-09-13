@@ -6,14 +6,13 @@ namespace Game.Gameplay
     {
         private readonly SpawnMarkerView _spawnMarkerView;
 
-        public Vector3 Position => _spawnMarkerView.Position;
-        public Quaternion Rotation => _spawnMarkerView.Rotation;
+        public Pose Pose => new(_spawnMarkerView.Position, _spawnMarkerView.Rotation);
 
-        public SpawnMarker(SpawnMarkerView spawnMarkerView, Vector3 position, Quaternion rotation)
+        public SpawnMarker(SpawnMarkerView spawnMarkerView, Pose pose)
         {
             _spawnMarkerView = spawnMarkerView;
 
-            SetPositionAndRotation(position, rotation);
+            SetPositionAndRotation(pose.position, pose.rotation);
         }
 
         public void SetPositionAndRotation(Vector3 position, Quaternion rotation)

@@ -5,20 +5,13 @@ namespace Game.Gameplay
     public class PudgeSpawnerView : MonoBehaviour
     {
         [SerializeField] private GameObject _pudgePrefab;
-        [SerializeField] private GameObject _spawnMarkerPrefab;
+        [SerializeField] private float _initialScale = 1f;
 
-        public PudgeView CreatePudgeObject(Vector3 position, Quaternion rotation)
+        public PudgeView CreatePudgeObject()
         {
-            GameObject pudgeObject = Instantiate(_pudgePrefab, position, rotation);
+            GameObject pudgeObject = Instantiate(_pudgePrefab);
             PudgeView pudgeView = pudgeObject.GetComponent<PudgeView>();
             return pudgeView;
-        }
-
-        public SpawnMarkerView CreateSpawnMarkerObject(Vector3 position, Quaternion rotation)
-        {
-            GameObject spawnMarkerObject = Instantiate(_spawnMarkerPrefab, position, rotation);
-            SpawnMarkerView spawnMarkerView = spawnMarkerObject.GetComponent<SpawnMarkerView>();
-            return spawnMarkerView;
         }
     }
 }

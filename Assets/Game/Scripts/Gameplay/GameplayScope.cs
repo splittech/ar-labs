@@ -8,7 +8,9 @@ namespace Game.Gameplay
     {
         [Header("Create Game Mode")]
         [SerializeField] private CreateGameModeView _createGameModeView;
+        [SerializeField] private SpawnMarkerCreatorView _spawnMarkerCreatorView;
         [SerializeField] private PudgeSpawnerView _pudgeSpawnerView;
+        [SerializeField] private PudgeMergerView _pudgeMergerView;
 
         [Header("Edit Game Mode")]
         [SerializeField] private EditGameModeView _editGameModeView;
@@ -33,9 +35,17 @@ namespace Game.Gameplay
             builder.Register<EditGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_editGameModeView);
 
+            // Spawn Marker Creator.
+            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton);
+            builder.RegisterComponent(_spawnMarkerCreatorView);
+
             // Pudge Spawner.
             builder.Register<PudgeSpawner>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeSpawnerView);
+
+            // Pudge Merger.
+            builder.Register<PudgeMerger>(Lifetime.Singleton);
+            builder.RegisterComponent(_pudgeMergerView);
         }
     }
 }
