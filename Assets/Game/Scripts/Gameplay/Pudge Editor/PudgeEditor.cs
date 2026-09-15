@@ -1,6 +1,7 @@
 using Game.Core.AR;
 using Game.Core.Input;
 using R3;
+using UnityEngine;
 
 namespace Game.Gameplay
 {
@@ -15,12 +16,12 @@ namespace Game.Gameplay
         private DisposableBag _disposableBag;
 
         private ReactiveProperty<Pudge> _selectedPudge = new();
-        private ReactiveProperty<float> _scaleDelta = new();
-        private ReactiveProperty<float> _angleDelta = new();
+        private ReactiveProperty<float> _totalScaleDelta = new();
+        private ReactiveProperty<float> _totalRotationDelta = new();
 
         public ReadOnlyReactiveProperty<Pudge> SelectedPudge => _selectedPudge;
-        public ReadOnlyReactiveProperty<float> ScaleDelta => _scaleDelta;
-        public ReadOnlyReactiveProperty<float> AngleDelta => _angleDelta;
+        public ReadOnlyReactiveProperty<float> TotalScaleDelta => _totalScaleDelta;
+        public ReadOnlyReactiveProperty<float> TotalAngleDelta => _totalRotationDelta;
 
         public PudgeEditor(InputService inputService, RaycastService raycastService, PudgeEditorView pudgeEditorView)
         {
@@ -38,8 +39,8 @@ namespace Game.Gameplay
 
             SelectPudge(null);
 
-            _scaleDelta.Value = 0f;
-            _angleDelta.Value = 0f;
+            _totalScaleDelta.Value = 0f;
+            _totalRotationDelta.Value = 0f;
 
             _inputService.OnInputActionPerformed
                 .Where(context =>
@@ -64,26 +65,62 @@ namespace Game.Gameplay
 
         public void AddScale()
         {
-            Pudge selectedPudge = _selectedPudge.CurrentValue;
-
-            if (selectedPudge == null)
-                return;
-
-            _angleDelta.Value += _pudgeEditorView.ScaleDelta;
-
-            selectedPudge.SetScale(selectedPudge.CurrentScale + _pudgeEditorView.ScaleDelta);
+            ChangeScale(_pudgeEditorView.ScaleDelta);
         }
 
         public void SubstractScale()
         {
+            ChangeScale(-_pudgeEditorView.ScaleDelta);
+        }
+
+        public void RotateClockwise()
+        {
+            ChangeRotation(_pudgeEditorView.RotationDelta);
+        }
+
+        public void RotateCounterClockwise()
+        {
+            ChangeRotation(-_pudgeEditorView.RotationDelta);
+        }
+
+        public void ResetScaleAndRotation()
+        {
+            ChangeScale(-_totalScaleDelta.CurrentValue);
+            ChangeRotation(-_totalRotationDelta.CurrentValue);
+        }
+
+        private void ChangeScale(float scaleDelta)
+        {
+            Debug.Log("scaleDelta:" + scaleDelta);
+
             Pudge selectedPudge = _selectedPudge.CurrentValue;
 
             if (selectedPudge == null)
                 return;
 
-            _angleDelta.Value -= _pudgeEditorView.ScaleDelta;
+            if (selectedPudge.CurrentScale + scaleDelta < Mathf.Epsilon)
+                return;
 
-            selectedPudge.SetScale(selectedPudge.CurrentScale - _pudgeEditorView.ScaleDelta);
+            selectedPudge.SetScale(selectedPudge.CurrentScale + scaleDelta);
+
+            _totalScaleDelta.Value += scaleDelta;
+        }
+
+        private void ChangeRotation(float angleDelta)
+        {
+            Debug.Log("angleDelta:" + angleDelta);
+
+            Pudge selectedPudge = _selectedPudge.CurrentValue;
+
+            if (selectedPudge == null)
+                return;
+
+            Quaternion pudgeRotation = selectedPudge.CurrentPose.rotation;
+            Quaternion deltaRotation = Quaternion.AngleAxis(angleDelta, Vector3.up);
+
+            selectedPudge.SetRotation(pudgeRotation * deltaRotation);
+
+            _totalRotationDelta.Value += angleDelta;
         }
 
         private void TryGetPudge(InputContext context)
@@ -99,13 +136,18 @@ namespace Game.Gameplay
             if (!collider.TryGetComponent<PudgeView>(out var pudgeView))
                 return;
 
-            SelectPudge(pudgeView.Pudge);
+            Pudge pudge = pudgeView.Pudge;
+
+            if (pudge == _selectedPudge.CurrentValue)
+                return;
+
+            SelectPudge(pudge);
         }
 
         private void SelectPudge(Pudge pudge)
         {
-            _scaleDelta.Value = 0f;
-            _angleDelta.Value = 0f;
+            _totalScaleDelta.Value = 0f;
+            _totalRotationDelta.Value = 0f;
 
             _selectedPudge.CurrentValue?.Deselect();
             _selectedPudge.Value = pudge;

@@ -122,6 +122,12 @@ namespace Game.Gameplay
             _currentState = state;
         }
 
+        public void SetRotation(Quaternion rotation)
+        {
+            _currentPose.rotation = rotation;
+            _pudgeView.SetRotation(rotation);
+        }
+
         public void Select()
         {
             _selected = true;
@@ -201,12 +207,6 @@ namespace Game.Gameplay
         {
             _currentPose.position = position;
             _pudgeView.SetPosition(position);
-        }
-
-        private void SetRotation(Quaternion rotation)
-        {
-            _currentPose.rotation = rotation;
-            _pudgeView.SetRotation(rotation);
         }
 
         private void SetPose(Pose pose)

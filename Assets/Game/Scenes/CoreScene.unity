@@ -1337,7 +1337,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _scaleDelta: 0.5
-  _rotationDelta: 90
+  _rotationDelta: 45
 --- !u!4 &1224360295
 Transform:
   m_ObjectHideFlags: 0

@@ -6,8 +6,11 @@ namespace Game.Gameplay
 {
     public class PudgeMergerView : MonoBehaviour
     {
+        [Header("Parameters")]
         [SerializeField] private GameObject _finalEffectPrefab;
         [SerializeField] private Transform _effectsRootTransform;
+
+        [Header("Effects")]
         [SerializeField] private float _addScale = 1f;
         [SerializeField] private float _scaleToDestroy = 3f;
 

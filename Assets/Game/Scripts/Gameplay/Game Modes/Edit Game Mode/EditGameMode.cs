@@ -31,15 +31,30 @@ namespace Game.Gameplay
                 .Subscribe(_ => _pudgeEditor.SubstractScale())
                 .AddTo(ref _disposableBag);
 
+            _editGameModeView.OnButtonPressed
+                .Where(button => button == EditGameModeView.Button.RotateClockwise)
+                .Subscribe(_ => _pudgeEditor.RotateClockwise())
+                .AddTo(ref _disposableBag);
+
+            _editGameModeView.OnButtonPressed
+                .Where(button => button == EditGameModeView.Button.RotateCounterClockwise)
+                .Subscribe(_ => _pudgeEditor.RotateCounterClockwise())
+                .AddTo(ref _disposableBag);
+
+            _editGameModeView.OnButtonPressed
+                .Where(button => button == EditGameModeView.Button.Reset)
+                .Subscribe(_ => _pudgeEditor.ResetScaleAndRotation())
+                .AddTo(ref _disposableBag);
+
             _pudgeEditor.SelectedPudge
                 .Subscribe(_editGameModeView.UpdateTextPanels)
                 .AddTo(ref _disposableBag);
 
-            _pudgeEditor.ScaleDelta
+            _pudgeEditor.TotalScaleDelta
                 .Subscribe(_editGameModeView.UpdateScaleText)
                 .AddTo(ref _disposableBag);
 
-            _pudgeEditor.AngleDelta
+            _pudgeEditor.TotalAngleDelta
                 .Subscribe(_editGameModeView.UpdateAngleText)
                 .AddTo(ref _disposableBag);
         }
@@ -47,6 +62,9 @@ namespace Game.Gameplay
         public override void Disable()
         {
             _pudgeEditor.Disable();
+
+            _editGameModeView.HideAllPanels();
+
             _disposableBag.Clear();
         }
     }

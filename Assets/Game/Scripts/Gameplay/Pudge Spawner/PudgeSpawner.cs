@@ -89,7 +89,10 @@ namespace Game.Gameplay
             if (_spawnMarkerCreator.CurrentSpawnMarker == null || _inititalPudgeState == Pudge.State.None)
                 return;
 
-            SpawnPudge(_spawnMarkerCreator.CurrentSpawnMarker.Pose, _inititalPudgeState, 1);
+            SpawnPudge(
+                _spawnMarkerCreator.CurrentSpawnMarker.Pose,
+                _inititalPudgeState,
+                _pudgeSpawnerView.InitialScale);
         }
     }
 }

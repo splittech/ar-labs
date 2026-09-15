@@ -14,6 +14,8 @@ namespace Game.Gameplay
         [SerializeField] private GameObject _happyPudgePrefab;
         [SerializeField] private GameObject _sadPudgePrefab;
 
+        public float InitialScale => _initialScale;
+
         public PudgeView CreatePudgeObject(Pudge.State pudgeState)
         {
             GameObject pudgePrefab = pudgeState switch

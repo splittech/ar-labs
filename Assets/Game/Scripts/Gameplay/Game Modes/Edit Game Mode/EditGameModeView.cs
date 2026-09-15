@@ -13,7 +13,8 @@ namespace Game.Gameplay
             AddScale,
             SubstractScale,
             RotateClockwise,
-            RotateCounterClockwise
+            RotateCounterClockwise,
+            Reset
         }
 
         [Header("Information Panel")]
@@ -27,6 +28,7 @@ namespace Game.Gameplay
         [SerializeField] private ButtonView _substractSacaleButton;
         [SerializeField] private ButtonView _rotateClockwiseButton;
         [SerializeField] private ButtonView _rotateCounterClockwiseButton;
+        [SerializeField] private ButtonView _resetButton;
 
         private List<TextPanelView> _allTextPanels = new();
         private int _currentTextFieldIndex;
@@ -36,7 +38,8 @@ namespace Game.Gameplay
             ObserveClick(_addScaleButton, Button.AddScale),
             ObserveClick(_substractSacaleButton, Button.SubstractScale),
             ObserveClick(_rotateClockwiseButton, Button.RotateClockwise),
-            ObserveClick(_rotateCounterClockwiseButton, Button.RotateCounterClockwise)
+            ObserveClick(_rotateCounterClockwiseButton, Button.RotateCounterClockwise),
+            ObserveClick(_resetButton, Button.Reset)
         );
 
         private static Observable<Button> ObserveClick(ButtonView buttonView, Button button)
@@ -54,7 +57,8 @@ namespace Game.Gameplay
             });
 
             _currentTextFieldIndex = 0;
-            ShowCurrentTextField();
+
+            HideAllPanels();
 
             _switchDescriptionButton.OnActionPerformed
                 .Where(action => action == ButtonAction.Click)
@@ -71,6 +75,8 @@ namespace Game.Gameplay
             _desciptionTextPanel.TextFields[0].text = selectedPudge.Description;
             _transformationTextPanel.TextFields[0].text = "0";
             _transformationTextPanel.TextFields[1].text = "0";
+
+            ShowCurrentTextField();
         }
 
         public void UpdateScaleText(float scale)
@@ -81,6 +87,13 @@ namespace Game.Gameplay
         public void UpdateAngleText(float angle)
         {
             _transformationTextPanel.TextFields[1].text = angle.ToString();
+        }
+
+        public void HideAllPanels()
+        {
+            _nameTextPanel.Hide();
+            _desciptionTextPanel.Hide();
+            _transformationTextPanel.Hide();
         }
 
         private void ShowNextTextField()
