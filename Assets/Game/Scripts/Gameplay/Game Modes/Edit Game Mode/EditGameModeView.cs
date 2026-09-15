@@ -18,6 +18,7 @@ namespace Game.Gameplay
         }
 
         [Header("Information Panel")]
+        [SerializeField] private GameObject _textPanelsRoot;
         [SerializeField] private TextPanelView _nameTextPanel;
         [SerializeField] private TextPanelView _desciptionTextPanel;
         [SerializeField] private TextPanelView _transformationTextPanel;
@@ -58,8 +59,6 @@ namespace Game.Gameplay
 
             _currentTextFieldIndex = 0;
 
-            HideAllPanels();
-
             _switchDescriptionButton.OnActionPerformed
                 .Where(action => action == ButtonAction.Click)
                 .Subscribe(_ => ShowNextTextField())
@@ -69,7 +68,12 @@ namespace Game.Gameplay
         public void UpdateTextPanels(Pudge selectedPudge)
         {
             if (selectedPudge == null)
+            {
+                HidePanels();
                 return;
+            }
+
+            ShowPanels();
 
             _nameTextPanel.TextFields[0].text = selectedPudge.Name;
             _desciptionTextPanel.TextFields[0].text = selectedPudge.Description;
@@ -89,11 +93,14 @@ namespace Game.Gameplay
             _transformationTextPanel.TextFields[1].text = angle.ToString();
         }
 
-        public void HideAllPanels()
+        public void HidePanels()
         {
-            _nameTextPanel.Hide();
-            _desciptionTextPanel.Hide();
-            _transformationTextPanel.Hide();
+            _textPanelsRoot.SetActive(false);
+        }
+
+        public void ShowPanels()
+        {
+            _textPanelsRoot.SetActive(true);
         }
 
         private void ShowNextTextField()

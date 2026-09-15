@@ -62,9 +62,6 @@ namespace Game.Gameplay
         public override void Disable()
         {
             _pudgeEditor.Disable();
-
-            _editGameModeView.HideAllPanels();
-
             _disposableBag.Clear();
         }
     }

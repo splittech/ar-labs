@@ -91,8 +91,6 @@ namespace Game.Gameplay
 
         private void ChangeScale(float scaleDelta)
         {
-            Debug.Log("scaleDelta:" + scaleDelta);
-
             Pudge selectedPudge = _selectedPudge.CurrentValue;
 
             if (selectedPudge == null)
@@ -108,8 +106,6 @@ namespace Game.Gameplay
 
         private void ChangeRotation(float angleDelta)
         {
-            Debug.Log("angleDelta:" + angleDelta);
-
             Pudge selectedPudge = _selectedPudge.CurrentValue;
 
             if (selectedPudge == null)
