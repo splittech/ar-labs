@@ -9,8 +9,11 @@ namespace Game.Core
 {
     public class CoreScope : LifetimeScope
     {
+        [Header("Camera")]
+        [SerializeField] private Camera _camera;
+
         [Header("AR")]
-        [SerializeField] private ARRaycastManager _raycastManager;
+        [SerializeField] private ARRaycastManager _ARRaycastManager;
 
         [Header("Input Service")]
         [SerializeField] private InputServiceView _inputServiceView;
@@ -27,9 +30,12 @@ namespace Game.Core
             // Bootstrap.
             builder.RegisterEntryPoint<CoreBootstrap>();
 
+            // Camera.
+            builder.RegisterComponent(_camera);
+
             // AR.
-            builder.Register<ARRaycastService>(Lifetime.Singleton);
-            builder.RegisterComponent(_raycastManager);
+            builder.Register<RaycastService>(Lifetime.Singleton);
+            builder.RegisterComponent(_ARRaycastManager);
 
             // Input.
             builder.Register<InputService>(Lifetime.Singleton);

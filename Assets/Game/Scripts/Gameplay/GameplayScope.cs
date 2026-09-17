@@ -14,6 +14,7 @@ namespace Game.Gameplay
 
         [Header("Edit Game Mode")]
         [SerializeField] private EditGameModeView _editGameModeView;
+        [SerializeField] private PudgeEditorView _pudgeEditorView;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -46,6 +47,10 @@ namespace Game.Gameplay
             // Pudge Merger.
             builder.Register<PudgeMerger>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeMergerView);
+
+            // Pudge Editor.
+            builder.Register<PudgeEditor>(Lifetime.Singleton);
+            builder.RegisterComponent(_pudgeEditorView);
         }
     }
 }

@@ -28,14 +28,18 @@ namespace Game.Gameplay
         private float _movementSpeed;
         private float _rotationSpeed;
 
-        private DisposableBag _disposableBag;
         private bool _initialized;
         private bool _disposed;
+        private bool _selected;
+
+        private DisposableBag _disposableBag;
 
         public State CurrentState => _currentState;
         public Pose CurrentPose => _currentPose;
         public float CurrentScale => _currentScale;
-
+        public string Name => _pudgeView.Name;
+        public string Description => _pudgeView.Description;
+        public bool Selected => _selected;
 
         public ReadOnlyReactiveProperty<Vector3?> TargetPosition => _targetPosition;
         public ReadOnlyReactiveProperty<Quaternion?> TargetRotation => _targetRotation;
@@ -46,13 +50,18 @@ namespace Game.Gameplay
             _tickService = tickService;
         }
 
-        public void Initialize(Pose initialPose, State initialState, float initialScale)
+        public void Initialize(
+            Pose initialPose,
+            State initialState,
+            float initialScale)
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(Pudge));
 
             if (_initialized)
                 return;
+
+            _pudgeView.Initialize(this);
 
             _movementSpeed = _pudgeView.MovementSpeed;
             _rotationSpeed = _pudgeView.RotationSpeed;
@@ -111,6 +120,24 @@ namespace Game.Gameplay
 
             _pudgeView.SetAnimatorState(animatorState);
             _currentState = state;
+        }
+
+        public void SetRotation(Quaternion rotation)
+        {
+            _currentPose.rotation = rotation;
+            _pudgeView.SetRotation(rotation);
+        }
+
+        public void Select()
+        {
+            _selected = true;
+            _pudgeView.Select();
+        }
+
+        public void Deselect()
+        {
+            _selected = false;
+            _pudgeView.Deselect();
         }
 
         public void Dispose()
@@ -180,12 +207,6 @@ namespace Game.Gameplay
         {
             _currentPose.position = position;
             _pudgeView.SetPosition(position);
-        }
-
-        private void SetRotation(Quaternion rotation)
-        {
-            _currentPose.rotation = rotation;
-            _pudgeView.SetRotation(rotation);
         }
 
         private void SetPose(Pose pose)
