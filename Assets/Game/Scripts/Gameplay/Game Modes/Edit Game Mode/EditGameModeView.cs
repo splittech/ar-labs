@@ -75,22 +75,22 @@ namespace Game.Gameplay
 
             ShowPanels();
 
-            _nameTextPanel.TextFields[0].text = selectedPudge.Name;
-            _desciptionTextPanel.TextFields[0].text = selectedPudge.Description;
-            _transformationTextPanel.TextFields[0].text = "0";
-            _transformationTextPanel.TextFields[1].text = "0";
+            _nameTextPanel.UpdateText(0, selectedPudge.Name);
+            _desciptionTextPanel.UpdateText(0, selectedPudge.Description);
+            _transformationTextPanel.UpdateText(0, "0");
+            _transformationTextPanel.UpdateText(1, "0");
 
             ShowCurrentTextField();
         }
 
         public void UpdateScaleText(float scale)
         {
-            _transformationTextPanel.TextFields[0].text = scale.ToString();
+            _transformationTextPanel.UpdateText(0, scale.ToString());
         }
 
         public void UpdateAngleText(float angle)
         {
-            _transformationTextPanel.TextFields[1].text = angle.ToString();
+            _transformationTextPanel.UpdateText(1, angle.ToString());
         }
 
         public void HidePanels()

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Menu
 {
@@ -18,6 +19,14 @@ namespace Game.Menu
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void UpdateText(int textIndex, string newText)
+        {
+            _textFields[textIndex].text = newText;
+
+            // Layout does not update automatically when we set text via script.
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_textFields[textIndex].rectTransform);
         }
     }
 }
