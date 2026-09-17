@@ -10,16 +10,20 @@ namespace Game.Gameplay
     {
         private readonly PudgeMergerView _pudgeMergerView;
         private readonly PudgeSpawner _pudgeSpawner;
+        private readonly PudgeEditor _pudgeEditor;
 
         private readonly HashSet<Pudge> _mergingPudges = new();
+        private Pudge _previousSelectedPudge;
         private bool _enabled;
+
 
         private DisposableBag _disposableBag;
 
-        public PudgeMerger(PudgeMergerView pudgeMergerView, PudgeSpawner pudgeSpawner)
+        public PudgeMerger(PudgeMergerView pudgeMergerView, PudgeSpawner pudgeSpawner, PudgeEditor pudgeEditor)
         {
             _pudgeMergerView = pudgeMergerView;
             _pudgeSpawner = pudgeSpawner;
+            _pudgeEditor = pudgeEditor;
         }
 
         public void Enable()
@@ -32,6 +36,10 @@ namespace Game.Gameplay
             _pudgeSpawner.OnPudgeSpawned
                 .Subscribe(MergePudges)
                 .AddTo(ref _disposableBag);
+
+            _pudgeEditor.SelectedPudge
+                .Subscribe(SwitchPudgeSelection)
+                .AddTo(ref _disposableBag);
         }
 
         public void Disable()
@@ -42,6 +50,14 @@ namespace Game.Gameplay
             _enabled = false;
 
             _disposableBag.Clear();
+        }
+
+        private void SwitchPudgeSelection(Pudge pudge)
+        {
+            if (_previousSelectedPudge != null)
+                MergePudges(_previousSelectedPudge);
+
+            _previousSelectedPudge = pudge;
         }
 
         private void MergePudges(Pudge firstPudge)
