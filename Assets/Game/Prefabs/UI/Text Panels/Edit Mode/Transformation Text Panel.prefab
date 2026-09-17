@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: '_textFields.Array.data[1]'
       value: 
       objectReference: {fileID: 5942091784277151722}
+    - target: {fileID: 6456867498083331603, guid: c0c64f5984be4954ba183ef03d31d7a4, type: 3}
+      propertyPath: m_text
+      value: Transform
+      objectReference: {fileID: 0}
     - target: {fileID: 6606940976270238444, guid: c0c64f5984be4954ba183ef03d31d7a4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
