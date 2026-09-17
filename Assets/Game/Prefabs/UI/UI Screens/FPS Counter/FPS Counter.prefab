@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.6117647}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -223,7 +223,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3527505417974520764, guid: 787f4b80bd9d2e445b148c56b21b6ef4, type: 3}
       propertyPath: m_Name
-      value: FPS Counter View
+      value: FPS Counter
       objectReference: {fileID: 0}
     - target: {fileID: 8427572172285750219, guid: 787f4b80bd9d2e445b148c56b21b6ef4, type: 3}
       propertyPath: m_Pivot.x
