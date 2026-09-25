@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Alchemy.Serialization;
 using UnityEngine;
 
 #if UNITY_EDITOR

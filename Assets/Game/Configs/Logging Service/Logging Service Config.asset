@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f0bd56a745606498f9a41cc56ad3d7, type: 3}
+  m_Name: Logging Service Config
+  m_EditorClassIdentifier: Game.Core::Game.Core.LoggingServiceConfig
+  __alchemySerializationData_Game_Core_LoggingServiceConfig:
+    _logChannels:
+      isCreated: 1
+      data: "[\n    {\n        \"Key\": 0,\n        \"Value\": {\n            \"_muted\":
+        false,\n            \"channelPrefix\": \"\",\n            \"prefixColor\":
+        {\n                \"r\": 1,\n                \"g\": 1,\n               
+        \"b\": 1,\n                \"a\": 1\n            },\n            \"_loggerTypes\":
+        0\n        }\n    },\n    {\n        \"Key\": 1,\n        \"Value\": {\n           
+        \"_muted\": false,\n            \"channelPrefix\": \"\",\n            \"prefixColor\":
+        {\n                \"r\": 1,\n                \"g\": 1,\n               
+        \"b\": 1,\n                \"a\": 1\n            },\n            \"_loggerTypes\":
+        0\n        }\n    },\n    {\n        \"Key\": 2,\n        \"Value\": {\n           
+        \"_muted\": false,\n            \"channelPrefix\": \"\",\n            \"prefixColor\":
+        {\n                \"r\": 1,\n                \"g\": 1,\n               
+        \"b\": 1,\n                \"a\": 1\n            },\n            \"_loggerTypes\":
+        0\n        }\n    },\n    {\n        \"Key\": 3,\n        \"Value\": {\n           
+        \"_muted\": false,\n            \"channelPrefix\": \"\",\n            \"prefixColor\":
+        {\n                \"r\": 1,\n                \"g\": 1,\n               
+        \"b\": 1,\n                \"a\": 1\n            },\n            \"_loggerTypes\":
+        0\n        }\n    }\n]"
+    unityObjectReferences: []
