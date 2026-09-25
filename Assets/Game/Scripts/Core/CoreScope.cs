@@ -25,6 +25,9 @@ namespace Game.Core
         [SerializeField] private FPSCounterConfig _fpsCounterConfig;
         [SerializeField] private FPSCounterView _fpsCounterView;
 
+        [Header("Gesture Service")]
+        [SerializeField] private GestureServiceView _gestureServiceView;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // Bootstrap.
@@ -50,6 +53,10 @@ namespace Game.Core
             builder.Register<FPSCounter>(Lifetime.Singleton);
             builder.RegisterInstance(_fpsCounterConfig);
             builder.RegisterComponent(_fpsCounterView);
+
+            // Gesture Service.
+            builder.Register<GestureService>(Lifetime.Singleton);
+            builder.RegisterComponent(_gestureServiceView);
         }
     }
 }
