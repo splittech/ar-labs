@@ -4,48 +4,67 @@ namespace Game.Core
 {
     public class CrossDetector
     {
-        public bool DetectCross(Swipe firstSwipe, Swipe secondSwipe, float maxAngleDelta, out Vector2 intersection)
+        private readonly CrossDetectorView _crossDetectorView;
+        private readonly Timer _crossTimer;
+        private Swipe _previousSwipe;
+
+        public CrossDetector(CrossDetectorView crossDetectorView, TimerService timerService)
+        {
+            _crossDetectorView = crossDetectorView;
+
+            _crossTimer = timerService.CreateTimer();
+        }
+
+        public bool TryDetectCross(Swipe newSwipe, out Vector2 intersection)
         {
             intersection = Vector2.zero;
 
-            bool firstSwipeIsDiagonal = IsDiagonalVector(firstSwipe.Vector, maxAngleDelta);
-            bool secondSwipeIsDiagonal = IsDiagonalVector(secondSwipe.Vector, maxAngleDelta);
-
-            if (!firstSwipeIsDiagonal && !secondSwipeIsDiagonal)
+            if (!_crossTimer.Elapsed.CurrentValue)
+            {
+                CastAwayPreviousSwipe(newSwipe);
                 return false;
+            }
 
-            Vector2 firstSwipeStartPos = firstSwipe.StartScreenPosition;
-            Vector2 firstSwipeEndPos = firstSwipe.EndScreenPosition;
-            Vector2 secondSwipeStartPos = secondSwipe.StartScreenPosition;
-            Vector2 secondSwipeEndPos = secondSwipe.EndScreenPosition;
+            bool firstSwipeIsDiagonal = IsDiagonalVector(_previousSwipe.Vector, _crossDetectorView.MaxDiagonalDeltaAngle);
+            bool secondSwipeIsDiagonal = IsDiagonalVector(newSwipe.Vector, _crossDetectorView.MaxDiagonalDeltaAngle);
 
-            return TryGetIntersection(
-                firstSwipeStartPos,
-                firstSwipeEndPos,
-                secondSwipeStartPos,
-                secondSwipeEndPos,
+            if (!firstSwipeIsDiagonal || !secondSwipeIsDiagonal)
+            {
+                CastAwayPreviousSwipe(newSwipe);
+                return false;
+            }
+
+            bool crossDetected = TryGetIntersection(
+                _previousSwipe.StartScreenPosition,
+                _previousSwipe.EndScreenPosition,
+                newSwipe.StartScreenPosition,
+                newSwipe.EndScreenPosition,
                 out intersection);
+
+            if (!crossDetected)
+            {
+                CastAwayPreviousSwipe(newSwipe);
+                return false;
+            }
+
+            _crossTimer.Stop();
+            return true;
+        }
+
+        private void CastAwayPreviousSwipe(Swipe newSwipe)
+        {
+            _crossTimer.Reset(_crossDetectorView.MaxDeltaTimeBwetweenTwoSwipes);
+            _previousSwipe = newSwipe;
         }
 
         private bool IsDiagonalVector(Vector2 vector, float maxAngleDelta)
         {
-            Vector2 upLeftDiagonalVector = new(-1f, 1f);
-            if (Vector2.Angle(vector, upLeftDiagonalVector) < maxAngleDelta)
-                return true;
+            float upDeltaAngle = Vector2.Angle(vector, Vector2.up);
 
-            Vector2 upRightDiagonalVector = new(1f, 1f);
-            if (Vector2.Angle(vector, upRightDiagonalVector) < maxAngleDelta)
-                return true;
+            bool isUpDiagonalVector = Mathf.Abs(Mathf.DeltaAngle(upDeltaAngle, 45f)) < maxAngleDelta;
+            bool isDownDiagonalVector = Mathf.Abs(Mathf.DeltaAngle(upDeltaAngle, 135f)) < maxAngleDelta;
 
-            Vector2 downRightDiagonalVector = new(1f, -1f);
-            if (Vector2.Angle(vector, downRightDiagonalVector) < maxAngleDelta)
-                return true;
-
-            Vector2 downLeftDiagonalVector = new(-1f, -1f);
-            if (Vector2.Angle(vector, downLeftDiagonalVector) < maxAngleDelta)
-                return true;
-
-            return false;
+            return isUpDiagonalVector || isDownDiagonalVector;
         }
 
         private bool TryGetIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d, out Vector2 intersection)

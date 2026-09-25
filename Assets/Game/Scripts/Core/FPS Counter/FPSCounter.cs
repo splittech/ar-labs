@@ -1,37 +1,58 @@
+using R3;
+
 namespace Game.Core
 {
     public class FPSCounter
     {
-        private readonly FPSCounterConfig _config;
         private readonly FPSCounterView _fpsCounterView;
+        private readonly TickService _tickService;
 
         private int _accumulatedFrames;
         private float _accumulatedTime;
+        private bool _enabled;
 
-        public FPSCounter(FPSCounterView fpsCounterView, FPSCounterConfig config)
+        private DisposableBag _disposableBag;
+
+        public FPSCounter(FPSCounterView fpsCounterView, TickService tickService)
         {
             _fpsCounterView = fpsCounterView;
-            _config = config;
+            _tickService = tickService;
         }
 
-        public void Initialize()
+        public void Enable()
         {
-            _fpsCounterView.OnFrameUpdated += OnFrameUpdated;
+            if (_enabled)
+                return;
+            _enabled = true;
+
+            _tickService.OnTick
+                .Where(tick => tick.Type == TickType.Update)
+                .Subscribe(AccamulateFrame)
+                .AddTo(ref _disposableBag);
         }
 
-        private void OnFrameUpdated(float frameDelta)
+        public void Disable()
         {
-            _accumulatedTime += frameDelta;
+            if (!_enabled)
+                return;
+            _enabled = false;
+
+            _disposableBag.Clear();
+        }
+
+        private void AccamulateFrame(TickService.Tick tick)
+        {
+            _accumulatedTime += tick.DeltaTime;
             _accumulatedFrames++;
 
-            if (_accumulatedTime > _config.TimeBetweenFPSTextUpdate)
-            {
-                float fps = CalculateFPS(_accumulatedFrames, _accumulatedTime);
-                _fpsCounterView.ShowFPS(fps);
+            if (_accumulatedTime < _fpsCounterView.TimeBetweenFPSTextUpdate)
+                return;
 
-                _accumulatedFrames = 0;
-                _accumulatedTime = 0f;
-            }
+            float fps = CalculateFPS(_accumulatedFrames, _accumulatedTime);
+            _fpsCounterView.ShowFPS(fps);
+
+            _accumulatedFrames = 0;
+            _accumulatedTime = 0f;
         }
 
         private float CalculateFPS(int frames, float time)

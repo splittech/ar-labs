@@ -8,20 +8,26 @@ namespace Game.Core
         private readonly InputLogger _inputLogger;
         private readonly InputService _inputService;
         private readonly FPSCounter _fpsCounter;
+        private readonly GestureLogger _gestureLogger;
 
-        public CoreBootstrap(InputService inputService, InputLogger inputLogger, FPSCounter fpsCounter)
+        public CoreBootstrap(
+            InputService inputService,
+            InputLogger inputLogger,
+            FPSCounter fpsCounter,
+            GestureLogger gestureLogger)
         {
             _inputService = inputService;
             _inputLogger = inputLogger;
             _fpsCounter = fpsCounter;
+            _gestureLogger = gestureLogger;
         }
 
         public void Start()
         {
-            _fpsCounter.Initialize();
-            //_inputLogger.Initialize();
-
+            _fpsCounter.Enable();
             _inputService.Enable();
+            _inputLogger.Enable();
+            _gestureLogger.Enable();
         }
     }
 }

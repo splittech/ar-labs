@@ -1,4 +1,3 @@
-using Lean.Touch;
 using R3;
 using UnityEngine;
 
@@ -9,25 +8,25 @@ namespace Game.Core
         private readonly GestureServiceView _gestureServiceView;
         private readonly CrossDetector _crossDetector;
         private readonly HorizontalSwipeDetector _horizontalSwipeDetector;
-        private readonly Timer _crossTimer;
 
         private bool _enabled;
 
         private DisposableBag _disposableBag;
 
-        private Subject<Swipe> _onHorizontalSwipe;
+        private Subject<Swipe> _onHorizontalSwipe = new();
         public Observable<Swipe> OnHorizontalSwipe => _onHorizontalSwipe;
 
-        private Subject<Vector2> _onCross;
+        private Subject<Vector2> _onCross = new();
         public Observable<Vector2> OnCross => _onCross;
 
-        public GestureService(GestureServiceView gestureServiceView, TimerService timerService, CrossDetector crossDetector, HorizontalSwipeDetector horizontalSwipeDetector)
+        public GestureService(
+            GestureServiceView gestureServiceView,
+            CrossDetector crossDetector,
+            HorizontalSwipeDetector horizontalSwipeDetector)
         {
             _gestureServiceView = gestureServiceView;
             _crossDetector = crossDetector;
             _horizontalSwipeDetector = horizontalSwipeDetector;
-
-            _crossTimer = timerService.CreateTimer();
         }
 
         public void Enable()
@@ -37,7 +36,7 @@ namespace Game.Core
             _enabled = true;
 
             _gestureServiceView.OnSwipe
-                .Subscribe(OnFingerSwipe)
+                .Subscribe(DetectGestures)
                 .AddTo(ref _disposableBag);
         }
 
@@ -50,46 +49,13 @@ namespace Game.Core
             _disposableBag.Clear();
         }
 
-        private void OnFingerSwipe(LeanFinger finger)
+        private void DetectGestures(Swipe swipe)
         {
-            Swipe swipe = new(finger.StartScreenPosition, finger.LastScreenPosition);
-
-            DetectHorizontalSwipe(swipe);
-            DetectCross(swipe);
-        }
-
-        private Swipe _firstSwipe;
-
-        private void DetectCross(Swipe swipe)
-        {
-            if (!_crossTimer.Elapsed)
-            {
-                _firstSwipe = swipe;
-                _crossTimer.Reset(_gestureServiceView.CrossDeltaTime);
-                return;
-            }
-
-            // Timer stop.
-            _crossTimer.Reset(_gestureServiceView.CrossDeltaTime);
-
-            bool crossDetected = _crossDetector.DetectCross(
-                _firstSwipe,
-                swipe,
-                _gestureServiceView.MaxCrossDeltaAngle,
-                out Vector2 intersection);
-
-            if (crossDetected)
-                _onCross.OnNext(intersection);
-        }
-
-        private void DetectHorizontalSwipe(Swipe swipe)
-        {
-            bool horizontalSwipeDetected = _horizontalSwipeDetector.DetectHorizontalSwipe(
-                swipe,
-                _gestureServiceView.MaxHorizontalDeltaAngle);
-
-            if (horizontalSwipeDetected)
+            if (_horizontalSwipeDetector.TryDetectHorizontalSwipe(swipe))
                 _onHorizontalSwipe.OnNext(swipe);
+
+            if (_crossDetector.TryDetectCross(swipe, out Vector2 intersection))
+                _onCross.OnNext(intersection);
         }
     }
 }

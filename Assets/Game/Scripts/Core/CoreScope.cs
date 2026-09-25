@@ -22,11 +22,15 @@ namespace Game.Core
         [SerializeField] private TickService _tickService;
 
         [Header("FPS Counter")]
-        [SerializeField] private FPSCounterConfig _fpsCounterConfig;
         [SerializeField] private FPSCounterView _fpsCounterView;
 
         [Header("Gesture Service")]
         [SerializeField] private GestureServiceView _gestureServiceView;
+        [SerializeField] private HorizontalSwipeDetectorView _horizontalSwipeDetectorView;
+        [SerializeField] private CrossDetectorView _crossDetectorView;
+
+        [Header("Logging Service")]
+        [SerializeField] private LoggingServiceConfig _loggingServiceConfig;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -40,7 +44,7 @@ namespace Game.Core
             builder.Register<RaycastService>(Lifetime.Singleton);
             builder.RegisterComponent(_ARRaycastManager);
 
-            // Input.
+            // Input Service.
             builder.Register<InputService>(Lifetime.Singleton);
             builder.Register<InputUIChecker>(Lifetime.Singleton);
             builder.Register<InputLogger>(Lifetime.Singleton);
@@ -51,12 +55,24 @@ namespace Game.Core
 
             // FPS Counter.
             builder.Register<FPSCounter>(Lifetime.Singleton);
-            builder.RegisterInstance(_fpsCounterConfig);
             builder.RegisterComponent(_fpsCounterView);
 
             // Gesture Service.
             builder.Register<GestureService>(Lifetime.Singleton);
+            builder.Register<HorizontalSwipeDetector>(Lifetime.Singleton);
+            builder.Register<CrossDetector>(Lifetime.Singleton);
+            builder.Register<GestureLogger>(Lifetime.Singleton);
             builder.RegisterComponent(_gestureServiceView);
+            builder.RegisterComponent(_horizontalSwipeDetectorView);
+            builder.RegisterComponent(_crossDetectorView);
+
+            // Timer Service.
+            builder.Register<TimerService>(Lifetime.Singleton);
+
+            // Logging Service.
+            builder.Register<LoggingService>(Lifetime.Singleton);
+            builder.Register<LoggerFactory>(Lifetime.Singleton);
+            builder.RegisterInstance(_loggingServiceConfig);
         }
     }
 }

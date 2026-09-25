@@ -783,7 +783,9 @@ Transform:
   m_LocalPosition: {x: 630, y: 1400, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1183593282}
+  - {fileID: 905595664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &544452541
@@ -1177,6 +1179,51 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 2512387469002778331, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
   m_PrefabInstance: {fileID: 331264285}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &905595663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 905595664}
+  - component: {fileID: 905595665}
+  m_Layer: 0
+  m_Name: Horizontal Swipe Detector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &905595664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905595663}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 544452540}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &905595665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905595663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1aae469dabfa7642b7b871e9cccf23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Core::Game.Core.HorizontalSwipeDetectorView
+  _maxHorizontalDeltaAngle: 30
 --- !u!1 &1075000274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,6 +1477,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1183593281
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183593282}
+  - component: {fileID: 1183593283}
+  m_Layer: 0
+  m_Name: Cross Detector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1183593282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183593281}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 544452540}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1183593283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183593281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c307c1cccd98334f9529be8648bdce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Core::Game.Core.CrossDetectorView
+  _maxDiagonalDeltaAngle: 30
+  _maxDeltaTimeBwetweenTwoSwipes: 1
 --- !u!1 &1224360293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,8 +1897,11 @@ MonoBehaviour:
   _ARRaycastManager: {fileID: 2031237971}
   _inputServiceView: {fileID: 1831573579}
   _tickService: {fileID: 1525909399}
-  _fpsCounterConfig: {fileID: 11400000, guid: 4879a789d1f460f4d9b99186429f36cd, type: 2}
   _fpsCounterView: {fileID: 374523679}
+  _gestureServiceView: {fileID: 544452541}
+  _horizontalSwipeDetectorView: {fileID: 905595665}
+  _crossDetectorView: {fileID: 1183593283}
+  _loggingServiceConfig: {fileID: 11400000, guid: 990fb826bedf25947b1d7bcb27310b02, type: 2}
 --- !u!1 &1629116671
 GameObject:
   m_ObjectHideFlags: 0
@@ -2400,9 +2496,9 @@ SceneRoots:
   - {fileID: 1390610793}
   - {fileID: 1840361969}
   - {fileID: 380711178}
+  - {fileID: 1525909400}
   - {fileID: 6466767166001173882}
   - {fileID: 544452540}
-  - {fileID: 1525909400}
   - {fileID: 272514704}
   - {fileID: 195992019}
   - {fileID: 566405614}

@@ -8,16 +8,8 @@ namespace Game.Core
     {
         [SerializeField] private LeanFingerSwipe _leanFingerSwipe;
 
-        [SerializeField] private float _maxHorizontalDeltaAngle = 30f;
-        [SerializeField] private float _maxCrossDeltaAngle = 30f;
-        [SerializeField] private float _crossDeltaTime = 1f;
-
-        public float MaxHorizontalDeltaAngle => _maxHorizontalDeltaAngle;
-        public float MaxCrossDeltaAngle => _maxCrossDeltaAngle;
-        public float CrossDeltaTime => _crossDeltaTime;
-
-        private Subject<LeanFinger> _onSwipe;
-        public Observable<LeanFinger> OnSwipe => _onSwipe;
+        private Subject<Swipe> _onSwipe = new();
+        public Observable<Swipe> OnSwipe => _onSwipe;
 
         private void Start()
         {
@@ -26,7 +18,8 @@ namespace Game.Core
 
         private void OnFingerSwipe(LeanFinger leanFinger)
         {
-            _onSwipe.OnNext(leanFinger);
+            Swipe swipe = new(leanFinger.StartScreenPosition, leanFinger.LastScreenPosition);
+            _onSwipe.OnNext(swipe);
         }
     }
 }

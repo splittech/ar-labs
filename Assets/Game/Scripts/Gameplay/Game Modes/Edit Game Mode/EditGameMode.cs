@@ -1,3 +1,4 @@
+using Game.Core;
 using R3;
 
 namespace Game.Gameplay
@@ -6,13 +7,15 @@ namespace Game.Gameplay
     {
         private readonly EditGameModeView _editGameModeView;
         private readonly PudgeEditor _pudgeEditor;
+        private readonly GestureService _gestureService;
 
         private DisposableBag _disposableBag;
 
-        public EditGameMode(EditGameModeView editGameModeView, PudgeEditor pudgeEditor)
+        public EditGameMode(EditGameModeView editGameModeView, PudgeEditor pudgeEditor, GestureService gestureService)
         {
             _editGameModeView = editGameModeView;
             _pudgeEditor = pudgeEditor;
+            _gestureService = gestureService;
         }
 
         public Observable<EditGameModeView.Button> OnButtonPressed => _editGameModeView.OnButtonPressed;
@@ -20,6 +23,7 @@ namespace Game.Gameplay
         public override void Enable()
         {
             _pudgeEditor.Enable();
+            _gestureService.Enable();
 
             _editGameModeView.OnButtonPressed
                 .Where(button => button == EditGameModeView.Button.AddScale)
