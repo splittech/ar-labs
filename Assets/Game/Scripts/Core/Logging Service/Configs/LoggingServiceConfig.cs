@@ -22,10 +22,8 @@ namespace Game.Core
 
     public enum LoggingChannel
     {
-        ApplicationService,
-        SceneService,
-        AudioService,
-        AddressablesService
+        InputService,
+        GestureService
     }
 
     [AlchemySerialize]
