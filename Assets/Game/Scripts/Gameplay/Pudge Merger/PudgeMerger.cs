@@ -69,7 +69,7 @@ namespace Game.Gameplay
                 .Where(pudge =>
                     pudge != firstPudge &&
                     !_mergingPudges.Contains(pudge) &&
-                    pudge.TargetPosition.CurrentValue == null &&
+                    !pudge.IsTransforming() &&
                     pudge.CurrentState == firstPudge.CurrentState &&
                     pudge.CurrentScale == firstPudge.CurrentScale)
                 .OrderBy(pudge => Vector3.Distance(pudge.CurrentPose.position, firstPudge.CurrentPose.position))
@@ -83,11 +83,11 @@ namespace Game.Gameplay
 
             Vector3 middlePoint = (firstPudge.CurrentPose.position + secondPudge.CurrentPose.position) / 2;
 
-            firstPudge.RotateTowards(middlePoint);
-            secondPudge.RotateTowards(middlePoint);
+            firstPudge.RotateTo(middlePoint, Pudge.EasingType.Linear);
+            secondPudge.RotateTo(middlePoint, Pudge.EasingType.Linear);
 
-            firstPudge.SetTargetPosition(middlePoint);
-            secondPudge.SetTargetPosition(middlePoint);
+            firstPudge.MoveTo(middlePoint, Pudge.EasingType.Linear);
+            secondPudge.MoveTo(middlePoint, Pudge.EasingType.Linear);
 
             firstPudge.TargetPosition
                 .CombineLatest(secondPudge.TargetPosition,

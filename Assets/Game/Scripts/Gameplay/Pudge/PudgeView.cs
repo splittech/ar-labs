@@ -13,11 +13,24 @@ namespace Game.Gameplay
             Sad
         }
 
-        [Header("Parameters")]
+        [Header("General")]
         [SerializeField] private string _name;
         [SerializeField, TextArea] private string _description;
-        [SerializeField] private float _movementSpeed = 0.1f;
-        [SerializeField] private float _rotationSpeed = 500f;
+
+        [Header("Movement Speed")]
+        [SerializeField] private float _linearMovementSpeed = 0.1f;
+        [SerializeField] private float _dampedInitialMovementSpeed = 0.1f;
+        [SerializeField] private float _dampedMovementSpeedLoss = 0.02f;
+
+        [Header("Rotation Speed")]
+        [SerializeField] private float _linearRotationSpeed = 500f;
+        [SerializeField] private float _dampedInitialRotationSpeed = 500f;
+        [SerializeField] private float _dampedRotationSpeedLoss = 0.02f;
+
+        [Header("Scaling Speed")]
+        [SerializeField] private float _linearScaleSpeed = 0.2f;
+        [SerializeField] private float _dampedInitialScaleSpeed = 0.2f;
+        [SerializeField] private float _dampedScaleSpeedLoss = 0.02f;
 
         [Header("Animator")]
         [SerializeField] private Animator _animator;
@@ -33,8 +46,16 @@ namespace Game.Gameplay
         public Pudge Pudge => _pudge;
         public string Name => _name;
         public string Description => _description;
-        public float MovementSpeed => _movementSpeed;
-        public float RotationSpeed => _rotationSpeed;
+
+        public float LinearMovementSpeed => _linearMovementSpeed;
+        public float DampedInitialMovementSpeed => _dampedInitialMovementSpeed;
+        public float DampedMovementSpeedLoss => _dampedMovementSpeedLoss;
+        public float LinearRotationSpeed => _linearRotationSpeed;
+        public float DampedInitialRotationSpeed => _dampedInitialRotationSpeed;
+        public float DampedRotationSpeedLoss => _dampedRotationSpeedLoss;
+        public float LinearScaleSpeed => _linearScaleSpeed;
+        public float DampedInitialScaleSpeed => _dampedInitialScaleSpeed;
+        public float DampedScalingSpeedLoss => _dampedScaleSpeedLoss;
 
         private Subject<Unit> _onSelected = new();
         public Observable<Unit> OnSelected => _onSelected;

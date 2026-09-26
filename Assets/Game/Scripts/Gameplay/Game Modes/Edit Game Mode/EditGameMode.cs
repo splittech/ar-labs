@@ -23,7 +23,6 @@ namespace Game.Gameplay
         public override void Enable()
         {
             _pudgeEditor.Enable();
-            _gestureService.Enable();
 
             _editGameModeView.OnButtonPressed
                 .Where(button => button == EditGameModeView.Button.AddScale)

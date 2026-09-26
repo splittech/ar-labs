@@ -99,7 +99,7 @@ namespace Game.Gameplay
             if (selectedPudge.CurrentScale + scaleDelta < Mathf.Epsilon)
                 return;
 
-            selectedPudge.SetScale(selectedPudge.CurrentScale + scaleDelta);
+            selectedPudge.ScaleTo(selectedPudge.CurrentScale + scaleDelta, Pudge.EasingType.Instant);
 
             _totalScaleDelta.Value += scaleDelta;
         }
@@ -114,7 +114,7 @@ namespace Game.Gameplay
             Quaternion pudgeRotation = selectedPudge.CurrentPose.rotation;
             Quaternion deltaRotation = Quaternion.AngleAxis(angleDelta, Vector3.up);
 
-            selectedPudge.SetRotation(pudgeRotation * deltaRotation);
+            selectedPudge.RotateTo(pudgeRotation * deltaRotation, Pudge.EasingType.Instant);
 
             _totalRotationDelta.Value += angleDelta;
         }
@@ -134,7 +134,7 @@ namespace Game.Gameplay
 
             Pudge pudge = pudgeView.Pudge;
 
-            if (pudge == _selectedPudge.CurrentValue)
+            if (pudge == _selectedPudge.CurrentValue || pudge.IsTransforming())
                 return;
 
             SelectPudge(pudge);

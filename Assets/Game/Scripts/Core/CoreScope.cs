@@ -80,6 +80,9 @@ namespace Game.Core
             builder.Register<LoggingService>(Lifetime.Singleton);
             builder.Register<LoggerFactory>(Lifetime.Singleton);
             builder.RegisterInstance(_loggingServiceConfig);
+
+            // Screen Service.
+            builder.Register<ScreenService>(Lifetime.Singleton);
         }
     }
 }
