@@ -19,7 +19,7 @@ namespace Game.Core
         {
             intersection = Vector2.zero;
 
-            if (!_crossTimer.Elapsed.CurrentValue)
+            if (_crossTimer.Elapsed.CurrentValue)
             {
                 CastAwayPreviousSwipe(newSwipe);
                 return false;
@@ -71,37 +71,29 @@ namespace Game.Core
         {
             intersection = Vector2.zero;
 
-            // Векторы направлений отрезков
             Vector2 r = b - a;
             Vector2 s = d - c;
 
-            // Знаменатель (векторное произведение направлений)
-            float denominator = CrossProduct2D(r, s);
+            float directionsCross = CrossProduct2D(r, s);
 
-            // Направление между начальными точками
-            Vector2 cMinusA = c - a;
-
-            // Если знаменатель равен 0, отрезки параллельны или лежат на одной прямой
-            if (Mathf.Approximately(denominator, 0f))
-            {
-                // Здесь отрезки либо не пересекаются, либо накладываются друг на друга.
-                // Для простоты большинства игровых задач считаем, что четкой точки пересечения нет.
+            if (Mathf.Approximately(directionsCross, 0f))
                 return false;
-            }
 
-            // Параметры t и u для линейных уравнений отрезков
-            float t = CrossProduct2D(cMinusA, s) / denominator;
-            float u = CrossProduct2D(cMinusA, r) / denominator;
+            // a + t * r = c + u * s
+            // Cross(a + t*r, s) = Cross(c + u*s, s)
+            // Cross(a, s) + t * Cross(r, s) = Cross(c, s) + u * Cross(s, s)
+            // Cross(a, s) + t * Cross(r, s) = Cross(c, s)
+            // t = (Cross(c, s) - Cross(a, s)) / Cross(r, s)
+            // t = Cross(c - a, s) / Cross(r, s)
+            float t = CrossProduct2D(c - a, s) / directionsCross;
+            float u = CrossProduct2D(c - a, r) / directionsCross;
 
-            // Отрезки пересекаются только если t и u находятся в диапазоне от 0 до 1
-            if (t >= 0f && t <= 1f && u >= 0f && u <= 1f)
+            if (t > 0f && t < 1f && u > 0f && u < 1f)
             {
-                // Вычисляем точку пересечения на основе первого отрезка
                 intersection = a + t * r;
                 return true;
             }
 
-            // Отрезки не параллельны, но их воображаемые продолжения (прямые) пересекаются за пределами длин самих отрезков
             return false;
         }
 

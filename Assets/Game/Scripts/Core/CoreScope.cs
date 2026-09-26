@@ -28,6 +28,7 @@ namespace Game.Core
         [SerializeField] private GestureServiceView _gestureServiceView;
         [SerializeField] private HorizontalSwipeDetectorView _horizontalSwipeDetectorView;
         [SerializeField] private CrossDetectorView _crossDetectorView;
+        [SerializeField] private CrossCenterMarkerSpawnerView _crossCenterMarkerSpawnerView;
 
         [Header("Logging Service")]
         [SerializeField] private LoggingServiceConfig _loggingServiceConfig;
@@ -59,12 +60,18 @@ namespace Game.Core
 
             // Gesture Service.
             builder.Register<GestureService>(Lifetime.Singleton);
-            builder.Register<HorizontalSwipeDetector>(Lifetime.Singleton);
-            builder.Register<CrossDetector>(Lifetime.Singleton);
-            builder.Register<GestureLogger>(Lifetime.Singleton);
             builder.RegisterComponent(_gestureServiceView);
+
+            builder.Register<HorizontalSwipeDetector>(Lifetime.Singleton);
             builder.RegisterComponent(_horizontalSwipeDetectorView);
+
+            builder.Register<CrossDetector>(Lifetime.Singleton);
             builder.RegisterComponent(_crossDetectorView);
+
+            builder.Register<CrossCenterMarkerSpawner>(Lifetime.Singleton);
+            builder.RegisterComponent(_crossCenterMarkerSpawnerView);
+
+            builder.Register<GestureLogger>(Lifetime.Singleton);
 
             // Timer Service.
             builder.Register<TimerService>(Lifetime.Singleton);

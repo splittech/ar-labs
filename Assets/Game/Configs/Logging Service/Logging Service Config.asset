@@ -22,7 +22,7 @@ MonoBehaviour:
         \"_loggerTypes\": 1\n        }\n    },\n    {\n        \"Key\": 1,\n       
         \"Value\": {\n            \"_muted\": false,\n            \"channelPrefix\":
         \"Gesture Service\",\n            \"prefixColor\": {\n                \"r\":
-        1,\n                \"g\": 1,\n                \"b\": 1,\n               
+        1,\n                \"g\": 0.399371,\n                \"b\": 0.9596364,\n               
         \"a\": 1\n            },\n            \"_loggerTypes\": 1\n        }\n   
         }\n]"
     unityObjectReferences: []

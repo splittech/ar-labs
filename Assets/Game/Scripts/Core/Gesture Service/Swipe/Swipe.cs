@@ -15,5 +15,12 @@ namespace Game.Core
 
             Vector = endScreenPosition - startScreenPosition;
         }
+
+        public override string ToString()
+        {
+            return $"StartScreenPosition: {StartScreenPosition}, " +
+                   $"EndScreenPosition: {EndScreenPosition}, " +
+                   $"Vector: {Vector}";
+        }
     }
 }

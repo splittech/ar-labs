@@ -5,13 +5,13 @@ namespace Game.Core
 {
     public class GestureService
     {
-        private readonly GestureServiceView _gestureServiceView;
+        private readonly GestureServiceView _view;
         private readonly CrossDetector _crossDetector;
         private readonly HorizontalSwipeDetector _horizontalSwipeDetector;
-
         private bool _enabled;
 
-        private DisposableBag _disposableBag;
+        private DisposableBag _seviceDisposableBag;
+        private DisposableBag _markerDisposableBag;
 
         private Subject<Swipe> _onHorizontalSwipe = new();
         public Observable<Swipe> OnHorizontalSwipe => _onHorizontalSwipe;
@@ -24,7 +24,7 @@ namespace Game.Core
             CrossDetector crossDetector,
             HorizontalSwipeDetector horizontalSwipeDetector)
         {
-            _gestureServiceView = gestureServiceView;
+            _view = gestureServiceView;
             _crossDetector = crossDetector;
             _horizontalSwipeDetector = horizontalSwipeDetector;
         }
@@ -35,9 +35,9 @@ namespace Game.Core
                 return;
             _enabled = true;
 
-            _gestureServiceView.OnSwipe
+            _view.OnSwipe
                 .Subscribe(DetectGestures)
-                .AddTo(ref _disposableBag);
+                .AddTo(ref _seviceDisposableBag);
         }
 
         public void Disable()
@@ -46,16 +46,22 @@ namespace Game.Core
                 return;
             _enabled = false;
 
-            _disposableBag.Clear();
+            _seviceDisposableBag.Clear();
         }
 
         private void DetectGestures(Swipe swipe)
         {
             if (_horizontalSwipeDetector.TryDetectHorizontalSwipe(swipe))
+            {
                 _onHorizontalSwipe.OnNext(swipe);
+                return;
+            }
 
             if (_crossDetector.TryDetectCross(swipe, out Vector2 intersection))
+            {
                 _onCross.OnNext(intersection);
+                return;
+            }
         }
     }
 }
