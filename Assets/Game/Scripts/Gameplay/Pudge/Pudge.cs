@@ -105,6 +105,7 @@ namespace Game.Gameplay
                 return;
 
             ScaleTo(0f, EasingType.Linear);
+            _view.ChangeAlphaTo(0f);
 
             _isDespawning = true;
 

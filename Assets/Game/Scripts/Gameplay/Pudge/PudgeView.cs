@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using DG.Tweening;
 using R3;
 using UnityEngine;
 
@@ -42,13 +44,13 @@ namespace Game.Gameplay
         [SerializeField] private string _sadStateParameterName;
 
         [Header("Renderer")]
-        [SerializeField] private Renderer _renderer;
+        [SerializeField] private List<Renderer> _renderers;
 
         [Header("Selection")]
         [SerializeField] private GameObject _selectionMarker;
 
         private Pudge _pudge;
-        // private Tween _alphaAnimation;
+        private Sequence _alphaAnimation;
 
         public Pudge Pudge => _pudge;
         public string Name => _name;
@@ -120,9 +122,15 @@ namespace Game.Gameplay
             _selectionMarker.SetActive(false);
         }
 
-        public void ChangeAlphaTo()
+        public void ChangeAlphaTo(float targetAlpha)
         {
+            _alphaAnimation?.Kill();
+            _alphaAnimation = DOTween.Sequence().SetLink(gameObject);
 
+            float duration = transform.localScale.x / _linearScaleSpeed;
+
+            foreach (Renderer renderer in _renderers)
+                _alphaAnimation.Join(renderer.material.DOFade(targetAlpha, duration));
         }
     }
 }
