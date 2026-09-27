@@ -13,7 +13,6 @@ namespace Game.Gameplay
         private readonly PudgeEditor _pudgeEditor;
 
         private readonly HashSet<Pudge> _mergingPudges = new();
-        private Pudge _previousSelectedPudge;
         private bool _enabled;
 
 
@@ -37,8 +36,9 @@ namespace Game.Gameplay
                 .Subscribe(MergePudges)
                 .AddTo(ref _disposableBag);
 
-            _pudgeEditor.SelectedPudge
-                .Subscribe(SwitchPudgeSelection)
+            _pudgeEditor.PreviousSelectedPudge
+                .Where(pudge => pudge != null && !pudge.IsTransforming())
+                .Subscribe(MergePudges)
                 .AddTo(ref _disposableBag);
         }
 
@@ -50,14 +50,6 @@ namespace Game.Gameplay
             _enabled = false;
 
             _disposableBag.Clear();
-        }
-
-        private void SwitchPudgeSelection(Pudge pudge)
-        {
-            if (_previousSelectedPudge != null)
-                MergePudges(_previousSelectedPudge);
-
-            _previousSelectedPudge = pudge;
         }
 
         private void MergePudges(Pudge firstPudge)

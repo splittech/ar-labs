@@ -56,6 +56,7 @@ namespace Game.Gameplay
         public string Description => _view.Description;
         public bool Selected => _selected;
         public bool IsDespawning => _isDespawning;
+        public bool Disposed => _disposed;
 
         public ReadOnlyReactiveProperty<Vector3?> TargetPosition => _targetPosition;
         public ReadOnlyReactiveProperty<float?> RemainingRotationAngle => _remainingRotationAngle;
