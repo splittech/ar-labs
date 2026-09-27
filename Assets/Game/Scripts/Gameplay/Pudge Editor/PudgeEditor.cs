@@ -16,10 +16,12 @@ namespace Game.Gameplay
         private DisposableBag _disposableBag;
 
         private ReactiveProperty<Pudge> _selectedPudge = new();
+        private ReactiveProperty<Pudge> _previousSelectedPudge = new();
         private ReactiveProperty<float> _totalScaleDelta = new();
         private ReactiveProperty<float> _totalRotationDelta = new();
 
         public ReadOnlyReactiveProperty<Pudge> SelectedPudge => _selectedPudge;
+        public ReadOnlyReactiveProperty<Pudge> PreviousSelectedPudge => _previousSelectedPudge;
         public ReadOnlyReactiveProperty<float> TotalScaleDelta => _totalScaleDelta;
         public ReadOnlyReactiveProperty<float> TotalAngleDelta => _totalRotationDelta;
 
@@ -37,8 +39,6 @@ namespace Game.Gameplay
 
             _enabled = true;
 
-            SelectPudge(null);
-
             _totalScaleDelta.Value = 0f;
             _totalRotationDelta.Value = 0f;
 
@@ -47,7 +47,7 @@ namespace Game.Gameplay
                     context.ActionType == ActionType.Tap &&
                     context.ActionStatus == ActionStatus.Performed &&
                     !context.IsOverUI)
-                .Subscribe(TryGetPudge)
+                .Subscribe(TrySelectPudge)
                 .AddTo(ref _disposableBag);
         }
 
@@ -58,7 +58,8 @@ namespace Game.Gameplay
 
             _enabled = false;
 
-            SelectPudge(null);
+            DeselectCurrentPudge();
+            _selectedPudge.Value = null;
 
             _disposableBag.Clear();
         }
@@ -99,7 +100,7 @@ namespace Game.Gameplay
             if (selectedPudge.CurrentScale + scaleDelta < Mathf.Epsilon)
                 return;
 
-            selectedPudge.SetScale(selectedPudge.CurrentScale + scaleDelta);
+            selectedPudge.ScaleTo(selectedPudge.CurrentScale + scaleDelta, Pudge.EasingType.Instant);
 
             _totalScaleDelta.Value += scaleDelta;
         }
@@ -114,40 +115,65 @@ namespace Game.Gameplay
             Quaternion pudgeRotation = selectedPudge.CurrentPose.rotation;
             Quaternion deltaRotation = Quaternion.AngleAxis(angleDelta, Vector3.up);
 
-            selectedPudge.SetRotation(pudgeRotation * deltaRotation);
+            selectedPudge.RotateTo(pudgeRotation * deltaRotation, Pudge.EasingType.Instant);
 
             _totalRotationDelta.Value += angleDelta;
         }
 
-        private void TryGetPudge(InputContext context)
+        private void DeselectCurrentPudge()
         {
+            _previousSelectedPudge.Value = _selectedPudge.Value;
+            if (_selectedPudge.Value != null && !_selectedPudge.Value.Disposed)
+                _selectedPudge.Value.Deselect();
+        }
+
+        private void TrySelectPudge(InputContext context)
+        {
+            DeselectCurrentPudge();
+
+            if (!TryRaycastOnPudge(context.ScreenPosition, out Pudge pudge))
+            {
+                _selectedPudge.Value = null;
+                return;
+            }
+
+            if (!FilterPudge(pudge))
+            {
+                _selectedPudge.Value = null;
+                return;
+            }
+
+            _totalScaleDelta.Value = 0f;
+            _totalRotationDelta.Value = 0f;
+
+            _selectedPudge.Value = pudge;
+            pudge.Select();
+        }
+
+        private bool TryRaycastOnPudge(Vector2 screenPosition, out Pudge pudge)
+        {
+            pudge = null;
+
             bool hasCollision = _raycastService.RaycastOnObject(
-                context.ScreenPosition,
+                screenPosition,
                 _pudgeEditorView.PudgeInteractableLayer,
                 out var collider);
 
             if (!hasCollision)
-                return;
+                return false;
 
             if (!collider.TryGetComponent<PudgeView>(out var pudgeView))
-                return;
+                return false;
 
-            Pudge pudge = pudgeView.Pudge;
-
-            if (pudge == _selectedPudge.CurrentValue)
-                return;
-
-            SelectPudge(pudge);
+            pudge = pudgeView.Pudge;
+            return true;
         }
 
-        private void SelectPudge(Pudge pudge)
+        private bool FilterPudge(Pudge pudge)
         {
-            _totalScaleDelta.Value = 0f;
-            _totalRotationDelta.Value = 0f;
-
-            _selectedPudge.CurrentValue?.Deselect();
-            _selectedPudge.Value = pudge;
-            pudge?.Select();
+            return
+                pudge != _selectedPudge.CurrentValue ||
+                !pudge.IsTransforming();
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -7,16 +6,9 @@ namespace Game.Core
     public class FPSCounterView : MonoBehaviour
     {
         [SerializeField] private TMP_Text _fpsTextField;
+        [SerializeField] private float _timeBetweenFPSTextUpdate = 1f;
 
-        /// <summary>
-        /// float: time delta in seconds between current frame and last one.
-        /// </summary>
-        public event Action<float> OnFrameUpdated;
-
-        private void Update()
-        {
-            OnFrameUpdated?.Invoke(Time.deltaTime);
-        }
+        public float TimeBetweenFPSTextUpdate => _timeBetweenFPSTextUpdate;
 
         public void ShowFPS(float fps)
         {

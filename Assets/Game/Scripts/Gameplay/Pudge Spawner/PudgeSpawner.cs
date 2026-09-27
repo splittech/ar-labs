@@ -80,7 +80,7 @@ namespace Game.Gameplay
 
         public void DespawnPudge(Pudge pudge)
         {
-            pudge.Dispose();
+            pudge.Despawn();
             _spawnedPudges.Remove(pudge);
         }
 

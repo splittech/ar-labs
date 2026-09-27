@@ -1,11 +1,12 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Game.Core;
 using R3;
 using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class Pudge : IDisposable
+    public class Pudge
     {
         public enum State
         {
@@ -15,11 +16,23 @@ namespace Game.Gameplay
             Sad
         }
 
-        private readonly PudgeView _pudgeView;
+        public enum EasingType
+        {
+            Instant,
+            Linear,
+            Damped,
+        }
+
+        private readonly PudgeView _view;
         private readonly TickService _tickService;
 
         private readonly ReactiveProperty<Vector3?> _targetPosition = new(null);
-        private readonly ReactiveProperty<Quaternion?> _targetRotation = new(null);
+        private readonly ReactiveProperty<float?> _remainingRotationAngle = new(null);
+        private readonly ReactiveProperty<float?> _targetScale = new(null);
+
+        private EasingType _movementEasingType;
+        private EasingType _rotationEasingType;
+        private EasingType _scalingEasingType;
 
         private State _currentState;
         private Pose _currentPose;
@@ -27,26 +40,31 @@ namespace Game.Gameplay
 
         private float _movementSpeed;
         private float _rotationSpeed;
+        private float _scalingSpeed;
 
         private bool _initialized;
         private bool _disposed;
         private bool _selected;
+        private bool _isDespawning;
 
         private DisposableBag _disposableBag;
 
         public State CurrentState => _currentState;
         public Pose CurrentPose => _currentPose;
         public float CurrentScale => _currentScale;
-        public string Name => _pudgeView.Name;
-        public string Description => _pudgeView.Description;
+        public string Name => _view.Name;
+        public string Description => _view.Description;
         public bool Selected => _selected;
+        public bool IsDespawning => _isDespawning;
+        public bool Disposed => _disposed;
 
         public ReadOnlyReactiveProperty<Vector3?> TargetPosition => _targetPosition;
-        public ReadOnlyReactiveProperty<Quaternion?> TargetRotation => _targetRotation;
+        public ReadOnlyReactiveProperty<float?> RemainingRotationAngle => _remainingRotationAngle;
+        public ReadOnlyReactiveProperty<float?> TargetScale => _targetScale;
 
         public Pudge(PudgeView pudgeView, TickService tickService)
         {
-            _pudgeView = pudgeView;
+            _view = pudgeView;
             _tickService = tickService;
         }
 
@@ -55,16 +73,13 @@ namespace Game.Gameplay
             State initialState,
             float initialScale)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(Pudge));
+            CheckDisposed();
+            CheckDespawning();
 
             if (_initialized)
                 return;
 
-            _pudgeView.Initialize(this);
-
-            _movementSpeed = _pudgeView.MovementSpeed;
-            _rotationSpeed = _pudgeView.RotationSpeed;
+            _view.Initialize(this);
 
             SetPose(initialPose);
             SetScale(initialScale);
@@ -78,69 +93,152 @@ namespace Game.Gameplay
             _initialized = true;
         }
 
-        public void SetTargetPosition(Vector3 position)
+        public void Despawn()
         {
-            _targetPosition.Value = position;
-        }
-
-        public void RotateTowards(Vector3 targetPosition)
-        {
-            Vector3 direction = targetPosition - _currentPose.position;
-            direction.y = 0f;
-
-            if (direction.magnitude < 0.001f)
+            if (!_initialized)
             {
-                _targetRotation.Value = null;
+                Dispose();
                 return;
             }
 
-            SetTargetRotation(Quaternion.LookRotation(direction, Vector3.up));
+            CheckDisposed();
+            if (_isDespawning)
+                return;
+
+            ScaleTo(0f, EasingType.Linear);
+            _view.ChangeAlphaTo(0f);
+
+            _isDespawning = true;
+
+            _targetScale
+                .Where(value => value == null)
+                .Take(1)
+                .Subscribe(_ => Dispose())
+                .AddTo(ref _disposableBag);
         }
 
-        public void SetTargetRotation(Quaternion rotation)
+        public void MoveTo(Vector3 targetPosition, EasingType easingType, float speedMultiplier = 1f)
         {
-            _targetRotation.Value = rotation;
+            CheckDisposed();
+            CheckDespawning();
+
+            _movementEasingType = easingType;
+
+            if (easingType == EasingType.Instant)
+            {
+                _targetPosition.Value = null;
+                SetPosition(targetPosition);
+                return;
+            }
+
+            _movementSpeed = _view.LinearMovementSpeed * speedMultiplier;
+            _targetPosition.Value = targetPosition;
         }
 
-        public void SetScale(float scale)
+        public void RotateBy(float angle, EasingType easingType, float speedMultiplier = 1f)
         {
-            _currentScale = scale;
-            _pudgeView.SetScale(scale);
+            StartRotation((_remainingRotationAngle.Value ?? 0f) + angle, easingType, speedMultiplier);
+        }
+
+        public void RotateTo(Vector3 targetPosition, EasingType easingType, float speedMultiplier = 1f)
+        {
+            Vector3 lookDirection = targetPosition - _currentPose.position;
+            lookDirection.y = 0f;
+
+            if (lookDirection.sqrMagnitude < 0.000001f)
+                return;
+
+            RotateTo(Quaternion.LookRotation(lookDirection, Vector3.up), easingType, speedMultiplier);
+        }
+
+        public void RotateTo(Quaternion targetRotation, EasingType easingType, float speedMultiplier = 1f)
+        {
+            float currentYaw = _currentPose.rotation.eulerAngles.y;
+            float targetYaw = targetRotation.eulerAngles.y;
+
+            StartRotation(Mathf.DeltaAngle(currentYaw, targetYaw), easingType, speedMultiplier);
+        }
+
+        public void ScaleTo(float targetScale, EasingType easingType, float speedMultiplier = 1f)
+        {
+            CheckDisposed();
+            CheckDespawning();
+
+            _scalingEasingType = easingType;
+
+            if (easingType == EasingType.Instant)
+            {
+                _targetScale.Value = null;
+                SetScale(targetScale);
+                return;
+            }
+
+            _scalingSpeed = _view.LinearScaleSpeed * speedMultiplier;
+            _targetScale.Value = targetScale;
+        }
+
+        public bool IsTransforming()
+        {
+            return
+                TargetPosition.CurrentValue != null ||
+                RemainingRotationAngle.CurrentValue != null ||
+                TargetScale.CurrentValue != null;
         }
 
         public void SetState(State state)
         {
+            CheckDisposed();
+            CheckDespawning();
+
             PudgeView.AnimatorState animatorState = state switch
             {
                 State.Normal => PudgeView.AnimatorState.Normal,
                 State.Happy => PudgeView.AnimatorState.Happy,
                 State.Sad => PudgeView.AnimatorState.Sad,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
             };
 
-            _pudgeView.SetAnimatorState(animatorState);
+            _view.SetAnimatorState(animatorState);
             _currentState = state;
-        }
-
-        public void SetRotation(Quaternion rotation)
-        {
-            _currentPose.rotation = rotation;
-            _pudgeView.SetRotation(rotation);
         }
 
         public void Select()
         {
+            CheckDisposed();
+            CheckDespawning();
+
             _selected = true;
-            _pudgeView.Select();
+            _view.Select();
         }
 
         public void Deselect()
         {
+            CheckDisposed();
+            CheckDespawning();
+
             _selected = false;
-            _pudgeView.Deselect();
+            _view.Deselect();
         }
 
-        public void Dispose()
+        private void StartRotation(float angle, EasingType easingType, float speedMultiplier)
+        {
+            CheckDisposed();
+            CheckDespawning();
+
+            _rotationEasingType = easingType;
+
+            if (easingType == EasingType.Instant)
+            {
+                _remainingRotationAngle.Value = null;
+                SetRotation(Quaternion.AngleAxis(angle, Vector3.up) * _currentPose.rotation);
+                return;
+            }
+
+            _rotationSpeed = _view.LinearRotationSpeed * speedMultiplier;
+            _remainingRotationAngle.Value = angle;
+        }
+
+        private void Dispose()
         {
             if (_disposed)
                 return;
@@ -149,21 +247,16 @@ namespace Game.Gameplay
 
             _disposableBag.Dispose();
             _targetPosition.Dispose();
-            _targetRotation.Dispose();
-            _pudgeView.DestroyObject();
+            _remainingRotationAngle.Dispose();
+            _targetScale.Dispose();
+            _view.DestroyObject();
         }
 
         private void OnUpdate(TickService.Tick tick)
         {
-            if (_disposed)
-                return;
-
             UpdatePosition(tick.DeltaTime);
-
-            if (_disposed)
-                return;
-
             UpdateRotation(tick.DeltaTime);
+            UpdateScale(tick.DeltaTime); // последним: по окончании Despawn здесь вызывается Dispose
         }
 
         private void UpdatePosition(float deltaTime)
@@ -171,12 +264,16 @@ namespace Game.Gameplay
             if (_targetPosition.Value is not Vector3 targetPosition)
                 return;
 
-            Vector3 newPosition = Vector3.MoveTowards(
-                _currentPose.position,
-                targetPosition,
-                _movementSpeed * deltaTime);
+            float speed = _movementSpeed;
+            if (_movementEasingType == EasingType.Damped)
+            {
+                speed = Mathf.Max(
+                    Vector3.Distance(_currentPose.position, targetPosition) * _view.DampedMovementSharpness,
+                    _view.DampedMinimumMovementSpeed);
+            }
 
-            bool reached = (newPosition - targetPosition).magnitude < 0.001f;
+            Vector3 newPosition = Vector3.MoveTowards(_currentPose.position, targetPosition, speed * deltaTime);
+            bool reached = (newPosition - targetPosition).sqrMagnitude < 0.000001f;
 
             SetPosition(reached ? targetPosition : newPosition);
 
@@ -186,27 +283,45 @@ namespace Game.Gameplay
 
         private void UpdateRotation(float deltaTime)
         {
-            if (_targetRotation.Value is not Quaternion targetRotation)
+            if (_remainingRotationAngle.Value is not float remaining)
                 return;
 
-            Quaternion newRotation = Quaternion.RotateTowards(
-                _currentPose.rotation,
-                targetRotation,
-                _rotationSpeed * deltaTime);
+            float speed = _rotationSpeed;
+            if (_rotationEasingType == EasingType.Damped)
+            {
+                speed = Mathf.Max(
+                    Mathf.Abs(remaining) * _view.DampedRotationSharpness,
+                    _view.DampedMinimumRotationSpeed);
+            }
 
-            bool reached = Quaternion.Angle(newRotation, targetRotation) < 0.1f;
+            // Шаг со знаком, по модулю не больше оставшегося угла.
+            float step = Mathf.MoveTowards(0f, remaining, speed * deltaTime);
+            SetRotation(Quaternion.AngleAxis(step, Vector3.up) * _currentPose.rotation);
 
-            SetRotation(reached ? targetRotation : newRotation);
-
-            if (reached)
-                _targetRotation.Value = null;
+            remaining -= step;
+            _remainingRotationAngle.Value = Mathf.Abs(remaining) < 0.01f ? null : remaining;
         }
 
-
-        private void SetPosition(Vector3 position)
+        private void UpdateScale(float deltaTime)
         {
-            _currentPose.position = position;
-            _pudgeView.SetPosition(position);
+            if (_targetScale.Value is not float targetScale)
+                return;
+
+            float speed = _scalingSpeed;
+            if (_scalingEasingType == EasingType.Damped)
+            {
+                speed = Mathf.Max(
+                    Mathf.Abs(targetScale - _currentScale) * _view.DampedScalingSharpness,
+                    _view.DampedMinimumScalingSpeed);
+            }
+
+            float newScale = Mathf.MoveTowards(_currentScale, targetScale, speed * deltaTime);
+            bool reached = Mathf.Abs(newScale - targetScale) < 0.0001f;
+
+            SetScale(reached ? targetScale : newScale);
+
+            if (reached)
+                _targetScale.Value = null;
         }
 
         private void SetPose(Pose pose)
@@ -214,6 +329,36 @@ namespace Game.Gameplay
             _currentPose = pose;
             SetPosition(_currentPose.position);
             SetRotation(_currentPose.rotation);
+        }
+
+        private void SetPosition(Vector3 position)
+        {
+            _currentPose.position = position;
+            _view.SetPosition(position);
+        }
+
+        private void SetRotation(Quaternion rotation)
+        {
+            _currentPose.rotation = rotation;
+            _view.SetRotation(rotation);
+        }
+
+        private void SetScale(float scale)
+        {
+            _currentScale = scale;
+            _view.SetScale(scale);
+        }
+
+        private void CheckDisposed()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(Pudge));
+        }
+
+        private void CheckDespawning()
+        {
+            if (_isDespawning)
+                throw new InvalidOperationException($"{nameof(Pudge)} is despawning.");
         }
     }
 }

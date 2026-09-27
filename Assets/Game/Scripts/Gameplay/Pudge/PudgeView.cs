@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using DG.Tweening;
 using R3;
 using UnityEngine;
 
@@ -13,11 +15,27 @@ namespace Game.Gameplay
             Sad
         }
 
-        [Header("Parameters")]
+        [Header("General")]
         [SerializeField] private string _name;
         [SerializeField, TextArea] private string _description;
-        [SerializeField] private float _movementSpeed = 0.1f;
-        [SerializeField] private float _rotationSpeed = 500f;
+
+        [Header("Movement Speed")]
+        [SerializeField] private float _linearMovementSpeed = 0.1f;
+        [SerializeField] private float _dampedInitialMovementSpeed = 1f;
+        [SerializeField] private float _dampedMinimumMovementSpeed = 0.02f;
+        [SerializeField] private float _dampedMovementSharpness = 4f;
+
+        [Header("Rotation Speed")]
+        [SerializeField] private float _linearRotationSpeed = 500f;
+        [SerializeField] private float _dampedInitialRotationSpeed = 700f;
+        [SerializeField] private float _dampedMinimumRotationSpeed = 30f;
+        [SerializeField] private float _dampedRotationSharpness = 4f;
+
+        [Header("Scaling Speed")]
+        [SerializeField] private float _linearScaleSpeed = 0.2f;
+        [SerializeField] private float _dampedInitialScalingSpeed = 1f;
+        [SerializeField] private float _dampedMinimumScalingSpeed = 0.05f;
+        [SerializeField] private float _dampedScalingSharpness = 4f;
 
         [Header("Animator")]
         [SerializeField] private Animator _animator;
@@ -25,16 +43,33 @@ namespace Game.Gameplay
         [SerializeField] private string _happyStateParameterName;
         [SerializeField] private string _sadStateParameterName;
 
+        [Header("Renderer")]
+        [SerializeField] private List<Renderer> _renderers;
+
         [Header("Selection")]
         [SerializeField] private GameObject _selectionMarker;
 
         private Pudge _pudge;
+        private Sequence _alphaAnimation;
 
         public Pudge Pudge => _pudge;
         public string Name => _name;
         public string Description => _description;
-        public float MovementSpeed => _movementSpeed;
-        public float RotationSpeed => _rotationSpeed;
+
+        public float LinearMovementSpeed => _linearMovementSpeed;
+        public float DampedInitialMovementSpeed => _dampedInitialMovementSpeed;
+        public float DampedMovementSharpness => _dampedMovementSharpness;
+        public float DampedMinimumMovementSpeed => _dampedMinimumMovementSpeed;
+
+        public float LinearRotationSpeed => _linearRotationSpeed;
+        public float DampedInitialRotationSpeed => _dampedInitialRotationSpeed;
+        public float DampedRotationSharpness => _dampedRotationSharpness;
+        public float DampedMinimumRotationSpeed => _dampedMinimumRotationSpeed;
+
+        public float LinearScaleSpeed => _linearScaleSpeed;
+        public float DampedInitialScalingSpeed => _dampedInitialScalingSpeed;
+        public float DampedScalingSharpness => _dampedScalingSharpness;
+        public float DampedMinimumScalingSpeed => _dampedMinimumScalingSpeed;
 
         private Subject<Unit> _onSelected = new();
         public Observable<Unit> OnSelected => _onSelected;
@@ -85,6 +120,17 @@ namespace Game.Gameplay
         public void Deselect()
         {
             _selectionMarker.SetActive(false);
+        }
+
+        public void ChangeAlphaTo(float targetAlpha)
+        {
+            _alphaAnimation?.Kill();
+            _alphaAnimation = DOTween.Sequence().SetLink(gameObject);
+
+            float duration = transform.localScale.x / _linearScaleSpeed;
+
+            foreach (Renderer renderer in _renderers)
+                _alphaAnimation.Join(renderer.material.DOFade(targetAlpha, duration));
         }
     }
 }
