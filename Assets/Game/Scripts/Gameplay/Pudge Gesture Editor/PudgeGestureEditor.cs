@@ -78,8 +78,6 @@ namespace Game.Gameplay
 
         private void CrossDeletePudge(Vector2 crossCenter)
         {
-            Debug.Log("Cross delete");
-
             bool hasCollision = _raycastService.RaycastOnObject(crossCenter, _view.PudgeLayerMask, out var collider);
 
             if (!hasCollision)

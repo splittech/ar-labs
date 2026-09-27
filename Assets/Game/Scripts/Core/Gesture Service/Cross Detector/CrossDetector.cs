@@ -4,13 +4,15 @@ namespace Game.Core
 {
     public class CrossDetector
     {
-        private readonly CrossDetectorView _crossDetectorView;
+        private readonly CrossDetectorView _view;
         private readonly Timer _crossTimer;
+
         private Swipe _previousSwipe;
+        private bool _hasPreviousSwipe;
 
         public CrossDetector(CrossDetectorView crossDetectorView, TimerService timerService)
         {
-            _crossDetectorView = crossDetectorView;
+            _view = crossDetectorView;
 
             _crossTimer = timerService.CreateTimer();
         }
@@ -19,52 +21,47 @@ namespace Game.Core
         {
             intersection = Vector2.zero;
 
-            if (_crossTimer.Elapsed.CurrentValue)
+            bool withinTimeWindow = _hasPreviousSwipe && !_crossTimer.Elapsed.CurrentValue;
+
+            if (withinTimeWindow && IsCross(_previousSwipe, newSwipe, out intersection))
             {
-                CastAwayPreviousSwipe(newSwipe);
-                return false;
+                _hasPreviousSwipe = false;
+                _crossTimer.Stop();
+                return true;
             }
 
-            bool firstSwipeIsDiagonal = IsDiagonalVector(_previousSwipe.Vector, _crossDetectorView.MaxDiagonalDeltaAngle);
-            bool secondSwipeIsDiagonal = IsDiagonalVector(newSwipe.Vector, _crossDetectorView.MaxDiagonalDeltaAngle);
-
-            if (!firstSwipeIsDiagonal || !secondSwipeIsDiagonal)
-            {
-                CastAwayPreviousSwipe(newSwipe);
-                return false;
-            }
-
-            bool crossDetected = TryGetIntersection(
-                _previousSwipe.StartScreenPosition,
-                _previousSwipe.EndScreenPosition,
-                newSwipe.StartScreenPosition,
-                newSwipe.EndScreenPosition,
-                out intersection);
-
-            if (!crossDetected)
-            {
-                CastAwayPreviousSwipe(newSwipe);
-                return false;
-            }
-
-            _crossTimer.Stop();
-            return true;
-        }
-
-        private void CastAwayPreviousSwipe(Swipe newSwipe)
-        {
-            _crossTimer.Reset(_crossDetectorView.MaxDeltaTimeBwetweenTwoSwipes);
             _previousSwipe = newSwipe;
+            _hasPreviousSwipe = true;
+            _crossTimer.Reset(_view.MaxDeltaTimeBwetweenTwoSwipes);
+            return false;
         }
 
-        private bool IsDiagonalVector(Vector2 vector, float maxAngleDelta)
+        private bool IsCross(Swipe first, Swipe second, out Vector2 intersection)
         {
-            float upDeltaAngle = Vector2.Angle(vector, Vector2.up);
+            intersection = Vector2.zero;
 
-            bool isUpDiagonalVector = Mathf.Abs(Mathf.DeltaAngle(upDeltaAngle, 45f)) < maxAngleDelta;
-            bool isDownDiagonalVector = Mathf.Abs(Mathf.DeltaAngle(upDeltaAngle, 135f)) < maxAngleDelta;
+            float maxDelta = _view.MaxDiagonalDeltaAngle;
+            if (!IsDiagonal(first.Vector, maxDelta) || !IsDiagonal(second.Vector, maxDelta))
+                return false;
 
-            return isUpDiagonalVector || isDownDiagonalVector;
+            if (DiagonalType(first.Vector) == DiagonalType(second.Vector))
+                return false;
+
+            return TryGetIntersection(
+                first.StartScreenPosition, first.EndScreenPosition,
+                second.StartScreenPosition, second.EndScreenPosition,
+                out intersection);
+        }
+
+        private bool IsDiagonal(Vector2 vector, float maxAngleDelta)
+        {
+            float diagonalAngle = Mathf.Atan2(Mathf.Abs(vector.y), Mathf.Abs(vector.x)) * Mathf.Rad2Deg;
+            return Mathf.Abs(diagonalAngle - 45f) < maxAngleDelta;
+        }
+
+        private bool DiagonalType(Vector2 vector)
+        {
+            return vector.x * vector.y > 0f;
         }
 
         private bool TryGetIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d, out Vector2 intersection)
@@ -83,7 +80,6 @@ namespace Game.Core
             // Cross(a + t*r, s) = Cross(c + u*s, s)
             // Cross(a, s) + t * Cross(r, s) = Cross(c, s) + u * Cross(s, s)
             // Cross(a, s) + t * Cross(r, s) = Cross(c, s)
-            // t = (Cross(c, s) - Cross(a, s)) / Cross(r, s)
             // t = Cross(c - a, s) / Cross(r, s)
             float t = CrossProduct2D(c - a, s) / directionsCross;
             float u = CrossProduct2D(c - a, r) / directionsCross;
