@@ -434,6 +434,7 @@ MonoBehaviour:
   _pudgeLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  maxSwipeRotationAngle: 360
 --- !u!4 &264496465
 Transform:
   m_ObjectHideFlags: 0

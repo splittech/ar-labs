@@ -49,8 +49,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.PudgeView
   _name: 
   _description: 
-  _movementSpeed: 0.1
-  _rotationSpeed: 1000
+  _linearMovementSpeed: 0.1
+  _dampedInitialMovementSpeed: 1
+  _dampedMinimumMovementSpeed: 0.02
+  _dampedMovementSharpness: 4
+  _linearRotationSpeed: 500
+  _dampedInitialRotationSpeed: 700
+  _dampedMinimumRotationSpeed: 30
+  _dampedRotationSharpness: 4
+  _linearScaleSpeed: 1
+  _dampedInitialScalingSpeed: 1
+  _dampedMinimumScalingSpeed: 0.05
+  _dampedScalingSharpness: 4
   _animator: {fileID: 5656006795175558973}
   _normalStateParameterName: Normal
   _happyStateParameterName: Happy

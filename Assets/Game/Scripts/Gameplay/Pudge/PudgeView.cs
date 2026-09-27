@@ -19,18 +19,21 @@ namespace Game.Gameplay
 
         [Header("Movement Speed")]
         [SerializeField] private float _linearMovementSpeed = 0.1f;
-        [SerializeField] private float _dampedInitialMovementSpeed = 0.1f;
-        [SerializeField] private float _dampedMovementSpeedLoss = 0.02f;
+        [SerializeField] private float _dampedInitialMovementSpeed = 1f;
+        [SerializeField] private float _dampedMinimumMovementSpeed = 0.02f;
+        [SerializeField] private float _dampedMovementSharpness = 4f;
 
         [Header("Rotation Speed")]
         [SerializeField] private float _linearRotationSpeed = 500f;
-        [SerializeField] private float _dampedInitialRotationSpeed = 500f;
-        [SerializeField] private float _dampedRotationSpeedLoss = 0.02f;
+        [SerializeField] private float _dampedInitialRotationSpeed = 700f;
+        [SerializeField] private float _dampedMinimumRotationSpeed = 30f;
+        [SerializeField] private float _dampedRotationSharpness = 4f;
 
         [Header("Scaling Speed")]
         [SerializeField] private float _linearScaleSpeed = 0.2f;
-        [SerializeField] private float _dampedInitialScaleSpeed = 0.2f;
-        [SerializeField] private float _dampedScaleSpeedLoss = 0.02f;
+        [SerializeField] private float _dampedInitialScalingSpeed = 1f;
+        [SerializeField] private float _dampedMinimumScalingSpeed = 0.05f;
+        [SerializeField] private float _dampedScalingSharpness = 4f;
 
         [Header("Animator")]
         [SerializeField] private Animator _animator;
@@ -38,10 +41,14 @@ namespace Game.Gameplay
         [SerializeField] private string _happyStateParameterName;
         [SerializeField] private string _sadStateParameterName;
 
+        [Header("Renderer")]
+        [SerializeField] private Renderer _renderer;
+
         [Header("Selection")]
         [SerializeField] private GameObject _selectionMarker;
 
         private Pudge _pudge;
+        // private Tween _alphaAnimation;
 
         public Pudge Pudge => _pudge;
         public string Name => _name;
@@ -49,13 +56,18 @@ namespace Game.Gameplay
 
         public float LinearMovementSpeed => _linearMovementSpeed;
         public float DampedInitialMovementSpeed => _dampedInitialMovementSpeed;
-        public float DampedMovementSpeedLoss => _dampedMovementSpeedLoss;
+        public float DampedMovementSharpness => _dampedMovementSharpness;
+        public float DampedMinimumMovementSpeed => _dampedMinimumMovementSpeed;
+
         public float LinearRotationSpeed => _linearRotationSpeed;
         public float DampedInitialRotationSpeed => _dampedInitialRotationSpeed;
-        public float DampedRotationSpeedLoss => _dampedRotationSpeedLoss;
+        public float DampedRotationSharpness => _dampedRotationSharpness;
+        public float DampedMinimumRotationSpeed => _dampedMinimumRotationSpeed;
+
         public float LinearScaleSpeed => _linearScaleSpeed;
-        public float DampedInitialScaleSpeed => _dampedInitialScaleSpeed;
-        public float DampedScalingSpeedLoss => _dampedScaleSpeedLoss;
+        public float DampedInitialScalingSpeed => _dampedInitialScalingSpeed;
+        public float DampedScalingSharpness => _dampedScalingSharpness;
+        public float DampedMinimumScalingSpeed => _dampedMinimumScalingSpeed;
 
         private Subject<Unit> _onSelected = new();
         public Observable<Unit> OnSelected => _onSelected;
@@ -106,6 +118,11 @@ namespace Game.Gameplay
         public void Deselect()
         {
             _selectionMarker.SetActive(false);
+        }
+
+        public void ChangeAlphaTo()
+        {
+
         }
     }
 }

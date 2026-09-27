@@ -13,17 +13,25 @@ namespace Game.Gameplay
         private readonly GestureService _gestureService;
         private readonly ScreenService _screenService;
         private readonly PudgeGestureEditorView _view;
+        private readonly PudgeSpawner _pudgeSpawner;
 
         private bool _enabled;
 
         private DisposableBag _disposableBag;
 
-        public PudgeGestureEditor(PudgeEditor pudgeEditor, RaycastService raycastService, GestureService gestureService, ScreenService screenService, PudgeGestureEditorView view)
+        public PudgeGestureEditor(
+            PudgeEditor pudgeEditor,
+            RaycastService raycastService,
+            GestureService gestureService,
+            ScreenService screenService,
+            PudgeGestureEditorView view,
+            PudgeSpawner pudgeSpawner)
         {
             _pudgeEditor = pudgeEditor;
             _raycastService = raycastService;
             _gestureService = gestureService;
             _screenService = screenService;
+            _pudgeSpawner = pudgeSpawner;
             _view = view;
         }
 
@@ -32,6 +40,8 @@ namespace Game.Gameplay
             if (_enabled)
                 return;
             _enabled = true;
+
+            _gestureService.Enable();
 
             _gestureService.OnHorizontalSwipe
                 .Subscribe(HorizontalSwipeRotatePudge)
@@ -48,6 +58,8 @@ namespace Game.Gameplay
                 return;
             _enabled = false;
 
+            _gestureService.Disable();
+
             _disposableBag.Clear();
         }
 
@@ -59,19 +71,21 @@ namespace Game.Gameplay
 
             float swipePower = Math.Abs(swipe.Vector.x) / _screenService.SceenWidth;
             float swipeSign = Mathf.Sign(swipe.Vector.x);
+            float rotationAngle = _view.MaxSwipeRotationAngle * swipePower * swipeSign;
 
-            Quaternion targetRotation =
-                Quaternion.AngleAxis(swipePower * swipeSign, Vector3.up) * selectedPudge.CurrentPose.rotation;
-
-            selectedPudge.RotateTo(targetRotation, Pudge.EasingType.Damped, swipePower);
+            selectedPudge.RotateBy(rotationAngle, Pudge.EasingType.Damped, swipePower);
         }
 
         private void CrossDeletePudge(Vector2 crossCenter)
         {
+            Debug.Log("Cross delete");
+
             bool hasCollision = _raycastService.RaycastOnObject(crossCenter, _view.PudgeLayerMask, out var collider);
 
             if (!hasCollision)
+            {
                 return;
+            }
 
             if (!collider.TryGetComponent<PudgeView>(out var pudgeView))
                 return;
@@ -81,7 +95,7 @@ namespace Game.Gameplay
             if (pudge.IsTransforming() || pudge == _pudgeEditor.SelectedPudge.CurrentValue)
                 return;
 
-            pudge.Despawn();
+            _pudgeSpawner.DespawnPudge(pudge);
         }
     }
 }

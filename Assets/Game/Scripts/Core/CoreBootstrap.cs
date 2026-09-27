@@ -10,22 +10,19 @@ namespace Game.Core
         private readonly FPSCounter _fpsCounter;
         private readonly GestureLogger _gestureLogger;
         private readonly CrossCenterMarkerSpawner _crossCenterMarkerSpawner;
-        private readonly GestureService _gestureService;
 
         public CoreBootstrap(
             InputService inputService,
             InputLogger inputLogger,
             FPSCounter fpsCounter,
             GestureLogger gestureLogger,
-            CrossCenterMarkerSpawner crossCenterMarkerSpawner,
-            GestureService gestureService)
+            CrossCenterMarkerSpawner crossCenterMarkerSpawner)
         {
             _inputService = inputService;
             _inputLogger = inputLogger;
             _fpsCounter = fpsCounter;
             _gestureLogger = gestureLogger;
             _crossCenterMarkerSpawner = crossCenterMarkerSpawner;
-            _gestureService = gestureService;
         }
 
         public void Start()
@@ -33,7 +30,6 @@ namespace Game.Core
             _fpsCounter.Enable();
             _inputService.Enable();
 
-            _gestureService.Enable();
             _crossCenterMarkerSpawner.Enable();
 
             _inputLogger.Enable();
