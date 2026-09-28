@@ -27,7 +27,7 @@ namespace Game.Gameplay
         {
             _currentGameMode?.Disable();
 
-            _currentGameMode = _gameModeResolver.GetGameMode(menuView);
+            _currentGameMode = _gameModeResolver.ResolveGameMode(menuView);
 
             _currentGameMode.Enable();
         }

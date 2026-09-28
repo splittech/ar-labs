@@ -17,6 +17,12 @@ namespace Game.Gameplay
         [SerializeField] private PudgeEditorView _pudgeEditorView;
         [SerializeField] private PudgeGestureEditorView _pudgeGestureEditorView;
 
+        [Header("Image Tracking Game Mode")]
+        [SerializeField] private ImageTrackingModeView _imageTrackingModeView;
+
+        [Header("Face Tracking Game Mode")]
+        [SerializeField] private FaceTrackingModeView _faceTrackingModeView;
+
         protected override void Configure(IContainerBuilder builder)
         {
             // Bootstrap.
@@ -56,6 +62,14 @@ namespace Game.Gameplay
             // Pudge Gesture Editor.
             builder.Register<PudgeGestureEditor>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeGestureEditorView);
+
+            // Image Tracking Mode.
+            builder.Register<ImageTrackingMode>(Lifetime.Singleton);
+            builder.RegisterComponent(_imageTrackingModeView);
+
+            // Image Tracking Mode.
+            builder.Register<FaceTrackingMode>(Lifetime.Singleton);
+            builder.RegisterComponent(_faceTrackingModeView);
         }
     }
 }
