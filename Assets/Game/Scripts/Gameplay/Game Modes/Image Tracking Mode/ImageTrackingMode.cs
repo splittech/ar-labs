@@ -6,6 +6,11 @@ namespace Game.Gameplay
     {
         private readonly ARService _ARService;
 
+        public ImageTrackingMode(ARService aRService)
+        {
+            _ARService = aRService;
+        }
+
         public override void Enable()
         {
             _ARService.SwitchDetectionType(ARService.DetectionType.Images);

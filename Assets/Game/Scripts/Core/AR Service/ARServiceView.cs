@@ -9,6 +9,7 @@ namespace Game.Core.AR
         [SerializeField] private ARPlaneManager _ARPlaneManager;
         [SerializeField] private ARTrackedImageManager _ARTrackedImageManager;
         [SerializeField] private ARFaceManager _ARFaceManager;
+        [SerializeField] private ARCameraManager _ARCameraManager;
 
         private Subject<ARTrackablesChangedEventArgs<ARPlane>> _onPlanesChanged = new();
         private Subject<ARTrackablesChangedEventArgs<ARTrackedImage>> _onImagesChanged = new();
@@ -52,6 +53,8 @@ namespace Game.Core.AR
             _ARPlaneManager.enabled = false;
             _ARTrackedImageManager.enabled = false;
             _ARFaceManager.enabled = false;
+
+            _ARCameraManager.requestedFacingDirection = CameraFacingDirection.World;
         }
 
         public void EnablePlaneManager()
@@ -70,6 +73,8 @@ namespace Game.Core.AR
         {
             DisableAllManagers();
             _ARFaceManager.enabled = true;
+
+            _ARCameraManager.requestedFacingDirection = CameraFacingDirection.User;
         }
 
         public void Enable()
