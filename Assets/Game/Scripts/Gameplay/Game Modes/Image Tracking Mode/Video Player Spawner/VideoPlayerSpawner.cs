@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Game.Core.AR;
 using R3;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
 namespace Game.Gameplay
 {
@@ -11,7 +10,7 @@ namespace Game.Gameplay
         private readonly ARService _ARService;
         private readonly VideoPlayerSpawnerView _view;
 
-        private Dictionary<string, VideoPlayerView> _imageVideoPlayers;
+        private Dictionary<string, VideoPlayerView> _imageVideoPlayers = new();
         private bool _enabled;
 
         private DisposableBag _disposableBag;
@@ -39,12 +38,6 @@ namespace Game.Gameplay
                 .SelectMany(trackables => trackables.updated.ToObservable())
                 .Subscribe(OnImageUpdated)
                 .AddTo(ref _disposableBag);
-
-            _ARService.OnImagesChanged
-                .Where(trackables => trackables.removed.Count > 0)
-                .SelectMany(trackables => trackables.removed.ToObservable())
-                .Subscribe(OnImageRemoved)
-                .AddTo(ref _disposableBag);
         }
 
         public void Disable()
@@ -63,20 +56,34 @@ namespace Game.Gameplay
         private void OnImageAdded(ARTrackedImage addedImage)
         {
             string imageName = addedImage.referenceImage.name;
-            _imageVideoPlayers[imageName] = _view.CreateVideoPlayerView(imageName);
+
+            VideoPlayerView videoPlayerView = _view.CreateVideoPlayerView(imageName);
+            _imageVideoPlayers[imageName] = videoPlayerView;
+
+            ApplyTrackingState(videoPlayerView, addedImage);
         }
 
         private void OnImageUpdated(ARTrackedImage updatedImage)
         {
             string imageName = updatedImage.referenceImage.name;
-            _imageVideoPlayers[imageName].SetPose(updatedImage.pose);
+
+            if (!_imageVideoPlayers.TryGetValue(imageName, out VideoPlayerView videoPlayerView))
+            {
+                OnImageAdded(updatedImage);
+                return;
+            }
+
+            ApplyTrackingState(videoPlayerView, updatedImage);
         }
 
-        private void OnImageRemoved(KeyValuePair<TrackableId, ARTrackedImage> removedImage)
+        private void ApplyTrackingState(VideoPlayerView videoPlayerView, ARTrackedImage image)
         {
-            string imageName = removedImage.Value.referenceImage.name;
-            _imageVideoPlayers[imageName].Destroy();
-            _imageVideoPlayers.Remove(imageName);
+            bool isTracking = image.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking;
+
+            videoPlayerView.SetActive(isTracking);
+
+            if (isTracking)
+                videoPlayerView.SetPose(image.pose);
         }
     }
 }

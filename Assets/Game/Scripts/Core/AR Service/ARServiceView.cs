@@ -35,6 +35,55 @@ namespace Game.Core.AR
             _ARFaceManager.trackablesChanged.RemoveListener(FaceTrackablesChanged);
         }
 
+        public void DisableAllARManagers()
+        {
+            _ARPlaneManager.enabled = false;
+            _ARTrackedImageManager.enabled = false;
+            _ARFaceManager.enabled = false;
+
+            SetPlanesActive(false);
+            SetImagesActive(false);
+            SetFacesActive(false);
+
+            SwitchCameraFacingDirection(CameraFacingDirection.World);
+        }
+
+        public void SwitchToPlaneManager()
+        {
+            DisableAllARManagers();
+            _ARPlaneManager.enabled = true;
+
+            SetPlanesActive(true);
+        }
+
+        public void SwitchToTrackedImageManager()
+        {
+            DisableAllARManagers();
+            _ARTrackedImageManager.enabled = true;
+
+            SetImagesActive(true);
+        }
+
+        public void SwitchToFaceManager()
+        {
+            DisableAllARManagers();
+            _ARFaceManager.enabled = true;
+
+            SetFacesActive(true);
+
+            SwitchCameraFacingDirection(CameraFacingDirection.User);
+        }
+
+        public void Enable()
+        {
+            enabled = true;
+        }
+
+        public void Disable()
+        {
+            enabled = false;
+        }
+
         private void PlaneTrackablesChanged(ARTrackablesChangedEventArgs<ARPlane> args)
         {
             _onPlanesChanged.OnNext(args);
@@ -50,35 +99,6 @@ namespace Game.Core.AR
             _onFacesChanged.OnNext(args);
         }
 
-        public void DisableAllARManagers()
-        {
-            _ARPlaneManager.enabled = false;
-            _ARTrackedImageManager.enabled = false;
-            _ARFaceManager.enabled = false;
-
-            SwitchCameraFacingDirection(CameraFacingDirection.World);
-        }
-
-        public void SwitchToPlaneManager()
-        {
-            DisableAllARManagers();
-            _ARPlaneManager.enabled = true;
-        }
-
-        public void SwitchToTrackedImageManager()
-        {
-            DisableAllARManagers();
-            _ARTrackedImageManager.enabled = true;
-        }
-
-        public void SwitchToFaceManager()
-        {
-            DisableAllARManagers();
-            _ARFaceManager.enabled = true;
-
-            SwitchCameraFacingDirection(CameraFacingDirection.User);
-        }
-
         private void SwitchCameraFacingDirection(CameraFacingDirection cameraFacingDirection)
         {
             bool frontalCamera = cameraFacingDirection == CameraFacingDirection.User;
@@ -89,14 +109,22 @@ namespace Game.Core.AR
             _ARCameraManager.requestedFacingDirection = cameraFacingDirection;
         }
 
-        public void Enable()
+        private void SetPlanesActive(bool active)
         {
-            enabled = true;
+            foreach (ARPlane plane in _ARPlaneManager.trackables)
+                plane.gameObject.SetActive(active);
         }
 
-        public void Disable()
+        private void SetImagesActive(bool active)
         {
-            enabled = false;
+            foreach (ARTrackedImage image in _ARTrackedImageManager.trackables)
+                image.gameObject.SetActive(active);
+        }
+
+        private void SetFacesActive(bool active)
+        {
+            foreach (ARFace face in _ARFaceManager.trackables)
+                face.gameObject.SetActive(active);
         }
     }
 }
