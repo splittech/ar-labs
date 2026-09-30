@@ -6,24 +6,11 @@ namespace Game.Gameplay
     {
         [SerializeField] private GameObject _ARFacePrefab;
 
-        private GameObject _ARFace;
-
-        public void CreateFace()
+        public ARFaceView CreateARFaceView()
         {
-            _ARFace = Instantiate(_ARFacePrefab);
-        }
-
-        public void DestroyFace()
-        {
-            if (_ARFace == null)
-                return;
-
-            Destroy(_ARFace);
-        }
-
-        public void UpdateFacePose()
-        {
-
+            GameObject ARFaceObject = Instantiate(_ARFacePrefab, transform);
+            ARFaceView ARFaceView = ARFaceObject.GetComponent<ARFaceView>();
+            return ARFaceView;
         }
     }
 }

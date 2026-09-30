@@ -1,23 +1,23 @@
-using System;
-using System.Collections.Generic;
 using Game.Core.AR;
 using R3;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
 namespace Game.Gameplay
 {
     public class FaceSpawner
     {
         private readonly ARService _ARService;
+        private readonly FaceSpawnerView _view;
 
+        private ARFaceView _ARFaceView;
         private bool _enabled;
 
         private DisposableBag _disposableBag;
 
-        public FaceSpawner(ARService aRService)
+        public FaceSpawner(ARService aRService, FaceSpawnerView view)
         {
             _ARService = aRService;
+            _view = view;
         }
 
         public void Enable()
@@ -26,22 +26,22 @@ namespace Game.Gameplay
                 return;
             _enabled = true;
 
-            _ARService.OnFacesChanged
-                .Where(trackables => trackables.added.Count > 0)
-                .SelectMany(trackables => trackables.added.ToObservable())
-                .Subscribe(OnFaceAdded)
-                .AddTo(ref _disposableBag);
-
-            _ARService.OnFacesChanged
-                .Where(trackables => trackables.updated.Count > 0)
-                .SelectMany(trackables => trackables.updated.ToObservable())
-                .Subscribe(OnFaceUpdated)
-                .AddTo(ref _disposableBag);
+            _ARFaceView = _view.CreateARFaceView();
+            _ARFaceView.SetActive(false);
 
             _ARService.OnFacesChanged
                 .Where(trackables => trackables.removed.Count > 0)
-                .SelectMany(trackables => trackables.removed.ToObservable())
-                .Subscribe(OnFaceRemoved)
+                .Subscribe(_ => _ARFaceView.SetActive(false))
+                .AddTo(ref _disposableBag);
+
+            _ARService.OnFacesChanged
+                .SelectMany(trackables => trackables.added.ToObservable())
+                .Subscribe(ApplyTrackingState)
+                .AddTo(ref _disposableBag);
+
+            _ARService.OnFacesChanged
+                .SelectMany(trackables => trackables.updated.ToObservable())
+                .Subscribe(ApplyTrackingState)
                 .AddTo(ref _disposableBag);
         }
 
@@ -52,21 +52,19 @@ namespace Game.Gameplay
             _enabled = false;
 
             _disposableBag.Clear();
+
+            _ARFaceView.Destroy();
+            _ARFaceView = null;
         }
 
-        private void OnFaceAdded(ARFace face)
+        private void ApplyTrackingState(ARFace face)
         {
-            throw new NotImplementedException();
-        }
+            bool isTracking = face.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking;
 
-        private void OnFaceUpdated(ARFace face)
-        {
-            throw new NotImplementedException();
-        }
+            _ARFaceView.SetActive(isTracking);
 
-        private void OnFaceRemoved(KeyValuePair<TrackableId, ARFace> pair)
-        {
-            throw new NotImplementedException();
+            if (isTracking)
+                _ARFaceView.SetPose(face.pose);
         }
     }
 }

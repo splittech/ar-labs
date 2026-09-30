@@ -19,7 +19,7 @@ namespace Game.Gameplay
 
         public void SetPose(Pose pose)
         {
-            transform.SetPositionAndRotation(pose.position + Vector3.up * 0.001f, pose.rotation);
+            transform.SetPositionAndRotation(pose.position + Vector3.up * 0.01f, pose.rotation);
         }
 
         public void SetActive(bool active)
