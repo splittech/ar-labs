@@ -199,6 +199,7 @@ MonoBehaviour:
   _ARCameraManager: {fileID: 857704903}
   _ARRaycastManager: {fileID: 2031237971}
   _ARAnchorManager: {fileID: 2031237978}
+  _ARSession: {fileID: 702413258}
 --- !u!4 &131185519
 Transform:
   m_ObjectHideFlags: 0
@@ -1187,7 +1188,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &566499731
+--- !u!1 &634549348 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2512387469002778309, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
+  m_PrefabInstance: {fileID: 331264285}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &640242421
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1195,48 +1201,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 566499733}
-  - component: {fileID: 566499732}
+  - component: {fileID: 640242423}
+  - component: {fileID: 640242422}
   m_Layer: 0
-  m_Name: Face Spawner
+  m_Name: Image Tracking Mode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &566499732
+--- !u!114 &640242422
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 566499731}
+  m_GameObject: {fileID: 640242421}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2c014327de2f64439d37d96a6573c8b, type: 3}
+  m_Script: {fileID: 11500000, guid: f517a64d7c9c64b32922a42317242caf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Game.Gameplay::Game.Gameplay.FaceSpawnerView
-  _ARFacePrefab: {fileID: 8490360943846378846, guid: f84b23c98949a3243928baa88b7bf7d8, type: 3}
---- !u!4 &566499733
+  m_EditorClassIdentifier: Alchemy::Alchemy.Hierarchy.HierarchyHeader
+  hierarchyObjectMode: 0
+--- !u!4 &640242423
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 566499731}
+  m_GameObject: {fileID: 640242421}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &634549348 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2512387469002778309, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
-  m_PrefabInstance: {fileID: 331264285}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &702413256
 GameObject:
   m_ObjectHideFlags: 0
@@ -1690,8 +1691,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 902782157}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: -0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2791,7 +2792,6 @@ MonoBehaviour:
   _imageTrackingModeView: {fileID: 150172526}
   _videoPlayerSpawnerView: {fileID: 902782158}
   _faceTrackingModeView: {fileID: 1894398635}
-  _faceSpawnerView: {fileID: 566499732}
 --- !u!4 &1840361969
 Transform:
   m_ObjectHideFlags: 0
@@ -3112,7 +3112,7 @@ MonoBehaviour:
   <trackablesChanged>k__BackingField:
     m_PersistentCalls:
       m_Calls: []
-  m_FacePrefab: {fileID: 0}
+  m_FacePrefab: {fileID: 8490360943846378846, guid: f84b23c98949a3243928baa88b7bf7d8, type: 3}
   m_MaximumFaceCount: 1
 --- !u!114 &2031237977
 MonoBehaviour:
@@ -3344,9 +3344,9 @@ SceneRoots:
   - {fileID: 1233005471}
   - {fileID: 1224360295}
   - {fileID: 264496465}
+  - {fileID: 640242423}
+  - {fileID: 902782159}
   - {fileID: 1641567290}
   - {fileID: 374523678}
   - {fileID: 1629116672}
   - {fileID: 118285611}
-  - {fileID: 902782159}
-  - {fileID: 566499733}

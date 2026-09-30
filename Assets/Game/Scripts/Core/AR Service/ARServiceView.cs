@@ -12,6 +12,7 @@ namespace Game.Core.AR
         [SerializeField] private ARCameraManager _ARCameraManager;
         [SerializeField] private ARRaycastManager _ARRaycastManager;
         [SerializeField] private ARAnchorManager _ARAnchorManager;
+        [SerializeField] private ARSession _ARSession;
 
         private Subject<ARTrackablesChangedEventArgs<ARPlane>> _onPlanesChanged = new();
         private Subject<ARTrackablesChangedEventArgs<ARTrackedImage>> _onImagesChanged = new();
@@ -105,6 +106,9 @@ namespace Game.Core.AR
 
             _ARRaycastManager.enabled = !frontalCamera;
             _ARAnchorManager.enabled = !frontalCamera;
+
+            if (_ARCameraManager.requestedFacingDirection != cameraFacingDirection)
+                _ARSession.Reset();
 
             _ARCameraManager.requestedFacingDirection = cameraFacingDirection;
         }

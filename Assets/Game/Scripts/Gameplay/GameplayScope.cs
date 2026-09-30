@@ -24,7 +24,6 @@ namespace Game.Gameplay
 
         [Header("Face Tracking Game Mode")]
         [SerializeField] private FaceTrackingModeView _faceTrackingModeView;
-        [SerializeField] private FaceSpawnerView _faceSpawnerView;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -67,8 +66,6 @@ namespace Game.Gameplay
             // Face Tracking Mode.
             builder.Register<FaceTrackingMode>(Lifetime.Singleton);
             builder.RegisterComponent(_faceTrackingModeView);
-            builder.Register<FaceSpawner>(Lifetime.Singleton);
-            builder.RegisterComponent(_faceSpawnerView);
         }
     }
 }

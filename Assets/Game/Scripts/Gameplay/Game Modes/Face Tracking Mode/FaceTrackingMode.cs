@@ -5,24 +5,20 @@ namespace Game.Gameplay
     public class FaceTrackingMode : GameMode
     {
         private readonly ARService _ARService;
-        private readonly FaceSpawner _faceSpawner;
 
-        public FaceTrackingMode(ARService aRService, FaceSpawner faceSpawner)
+        public FaceTrackingMode(ARService aRService)
         {
             _ARService = aRService;
-            _faceSpawner = faceSpawner;
         }
 
         public override void Enable()
         {
-            _faceSpawner.Enable();
-
             _ARService.SwitchDetectionType(ARService.DetectionType.Faces);
         }
 
         public override void Disable()
         {
-            _faceSpawner.Disable();
+
         }
     }
 }
