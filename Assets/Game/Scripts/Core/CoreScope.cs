@@ -14,6 +14,7 @@ namespace Game.Core
 
         [Header("AR")]
         [SerializeField] private ARRaycastManager _ARRaycastManager;
+        [SerializeField] private ARServiceView _ARServiceView;
 
         [Header("Input Service")]
         [SerializeField] private InputServiceView _inputServiceView;
@@ -42,8 +43,11 @@ namespace Game.Core
             builder.RegisterComponent(_camera);
 
             // AR.
+            builder.Register<ARService>(Lifetime.Singleton);
+            builder.RegisterComponent(_ARServiceView);
             builder.Register<RaycastService>(Lifetime.Singleton);
             builder.RegisterComponent(_ARRaycastManager);
+            builder.Register<ARServiceLogger>(Lifetime.Singleton);
 
             // Input Service.
             builder.Register<InputService>(Lifetime.Singleton);

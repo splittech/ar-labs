@@ -24,5 +24,9 @@ MonoBehaviour:
         \"Gesture Service\",\n            \"prefixColor\": {\n                \"r\":
         1,\n                \"g\": 0.399371,\n                \"b\": 0.9596364,\n               
         \"a\": 1\n            },\n            \"_loggerTypes\": 1\n        }\n   
-        }\n]"
+        },\n    {\n        \"Key\": 2,\n        \"Value\": {\n            \"_muted\":
+        false,\n            \"channelPrefix\": \"AR Service\",\n            \"prefixColor\":
+        {\n                \"r\": 0,\n                \"g\": 0.7259811,\n               
+        \"b\": 0.9308176,\n                \"a\": 1\n            },\n           
+        \"_loggerTypes\": 1\n        }\n    }\n]"
     unityObjectReferences: []

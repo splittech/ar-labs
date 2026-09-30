@@ -1,3 +1,4 @@
+using Game.Core.AR;
 using R3;
 
 namespace Game.Gameplay
@@ -7,7 +8,7 @@ namespace Game.Gameplay
         private readonly CreateGameModeView _createGameModeView;
         private readonly SpawnMarkerCreator _spawnMarkerCreator;
         private readonly PudgeSpawner _pudgeSpawner;
-        private readonly PudgeMerger _pudgeMerger;
+        private readonly ARService _ARService;
 
         private Pudge.State _selectedPudgeState;
         private bool _enabled;
@@ -18,23 +19,24 @@ namespace Game.Gameplay
             CreateGameModeView createGameModeView,
             PudgeSpawner pudgeSpawner,
             SpawnMarkerCreator spawnMarkerCreator,
-            PudgeMerger pudgeMerger)
+            ARService ARService)
         {
             _createGameModeView = createGameModeView;
             _pudgeSpawner = pudgeSpawner;
             _spawnMarkerCreator = spawnMarkerCreator;
-            _pudgeMerger = pudgeMerger;
+            _ARService = ARService;
         }
 
         public override void Enable()
         {
             if (_enabled)
                 return;
-
             _enabled = true;
 
             _pudgeSpawner.Enable();
             _spawnMarkerCreator.Enable();
+
+            _ARService.SwitchDetectionType(ARService.DetectionType.Planes);
 
             _createGameModeView.OnPudgeTypeButtonSelected
                 .Subscribe(SwitchPudgeType)
@@ -45,7 +47,6 @@ namespace Game.Gameplay
         {
             if (!_enabled)
                 return;
-
             _enabled = false;
 
             _pudgeSpawner.Disable();
