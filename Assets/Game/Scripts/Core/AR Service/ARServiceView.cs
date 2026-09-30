@@ -10,6 +10,8 @@ namespace Game.Core.AR
         [SerializeField] private ARTrackedImageManager _ARTrackedImageManager;
         [SerializeField] private ARFaceManager _ARFaceManager;
         [SerializeField] private ARCameraManager _ARCameraManager;
+        [SerializeField] private ARRaycastManager _ARRaycastManager;
+        [SerializeField] private ARAnchorManager _ARAnchorManager;
 
         private Subject<ARTrackablesChangedEventArgs<ARPlane>> _onPlanesChanged = new();
         private Subject<ARTrackablesChangedEventArgs<ARTrackedImage>> _onImagesChanged = new();
@@ -48,33 +50,43 @@ namespace Game.Core.AR
             _onFacesChanged.OnNext(args);
         }
 
-        public void DisableAllManagers()
+        public void DisableAllARManagers()
         {
             _ARPlaneManager.enabled = false;
             _ARTrackedImageManager.enabled = false;
             _ARFaceManager.enabled = false;
 
-            _ARCameraManager.requestedFacingDirection = CameraFacingDirection.World;
+            SwitchCameraFacingDirection(CameraFacingDirection.World);
         }
 
-        public void EnablePlaneManager()
+        public void SwitchToPlaneManager()
         {
-            DisableAllManagers();
+            DisableAllARManagers();
             _ARPlaneManager.enabled = true;
         }
 
-        public void EnableTrackedImageManager()
+        public void SwitchToTrackedImageManager()
         {
-            DisableAllManagers();
+            DisableAllARManagers();
             _ARTrackedImageManager.enabled = true;
         }
 
-        public void EnableFaceManager()
+        public void SwitchToFaceManager()
         {
-            DisableAllManagers();
+            DisableAllARManagers();
             _ARFaceManager.enabled = true;
 
-            _ARCameraManager.requestedFacingDirection = CameraFacingDirection.User;
+            SwitchCameraFacingDirection(CameraFacingDirection.User);
+        }
+
+        private void SwitchCameraFacingDirection(CameraFacingDirection cameraFacingDirection)
+        {
+            bool frontalCamera = cameraFacingDirection == CameraFacingDirection.User;
+
+            _ARRaycastManager.enabled = !frontalCamera;
+            _ARAnchorManager.enabled = !frontalCamera;
+
+            _ARCameraManager.requestedFacingDirection = cameraFacingDirection;
         }
 
         public void Enable()

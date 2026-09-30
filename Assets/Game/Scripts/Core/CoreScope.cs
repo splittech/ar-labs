@@ -47,6 +47,7 @@ namespace Game.Core
             builder.RegisterComponent(_ARServiceView);
             builder.Register<RaycastService>(Lifetime.Singleton);
             builder.RegisterComponent(_ARRaycastManager);
+            builder.Register<ARServiceLogger>(Lifetime.Singleton);
 
             // Input Service.
             builder.Register<InputService>(Lifetime.Singleton);

@@ -19,14 +19,21 @@ namespace Game.Gameplay
 
         [Header("Image Tracking Game Mode")]
         [SerializeField] private ImageTrackingModeView _imageTrackingModeView;
+        [SerializeField] private VideoPlayerSpawnerView _videoPlayerSpawnerView;
+
 
         [Header("Face Tracking Game Mode")]
         [SerializeField] private FaceTrackingModeView _faceTrackingModeView;
+        [SerializeField] private FaceSpawnerView _faceSpawnerView;
 
         protected override void Configure(IContainerBuilder builder)
         {
             // Bootstrap.
             builder.RegisterEntryPoint<GameplayBootstrap>();
+
+            // Pudge Merger.
+            builder.Register<PudgeMerger>(Lifetime.Singleton);
+            builder.RegisterComponent(_pudgeMergerView);
 
             // Game Mode Switcher.
             builder.Register<GameModeSwitcher>(Lifetime.Singleton);
@@ -38,38 +45,30 @@ namespace Game.Gameplay
             // Create Game Mode.
             builder.Register<CreateGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_createGameModeView);
+            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton);
+            builder.RegisterComponent(_spawnMarkerCreatorView);
+            builder.Register<PudgeSpawner>(Lifetime.Singleton);
+            builder.RegisterComponent(_pudgeSpawnerView);
 
             // Edit Game Mode.
             builder.Register<EditGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_editGameModeView);
-
-            // Spawn Marker Creator.
-            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton);
-            builder.RegisterComponent(_spawnMarkerCreatorView);
-
-            // Pudge Spawner.
-            builder.Register<PudgeSpawner>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeSpawnerView);
-
-            // Pudge Merger.
-            builder.Register<PudgeMerger>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeMergerView);
-
-            // Pudge Editor.
             builder.Register<PudgeEditor>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeEditorView);
-
-            // Pudge Gesture Editor.
             builder.Register<PudgeGestureEditor>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeGestureEditorView);
 
             // Image Tracking Mode.
             builder.Register<ImageTrackingMode>(Lifetime.Singleton);
             builder.RegisterComponent(_imageTrackingModeView);
+            builder.Register<VideoPlayerSpawner>(Lifetime.Singleton);
+            builder.RegisterComponent(_videoPlayerSpawnerView);
 
-            // Image Tracking Mode.
+            // Face Tracking Mode.
             builder.Register<FaceTrackingMode>(Lifetime.Singleton);
             builder.RegisterComponent(_faceTrackingModeView);
+            builder.Register<FaceSpawner>(Lifetime.Singleton);
+            builder.RegisterComponent(_faceSpawnerView);
         }
     }
 }

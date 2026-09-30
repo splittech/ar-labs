@@ -49,10 +49,10 @@ namespace Game.Core.AR
         {
             Action switchAction = detectionType switch
             {
-                DetectionType.None => _view.DisableAllManagers,
-                DetectionType.Planes => _view.EnablePlaneManager,
-                DetectionType.Images => _view.EnableTrackedImageManager,
-                DetectionType.Faces => _view.EnableFaceManager,
+                DetectionType.None => _view.DisableAllARManagers,
+                DetectionType.Planes => _view.SwitchToPlaneManager,
+                DetectionType.Images => _view.SwitchToTrackedImageManager,
+                DetectionType.Faces => _view.SwitchToFaceManager,
                 _ => throw new NotImplementedException()
             };
 
