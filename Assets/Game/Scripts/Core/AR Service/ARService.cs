@@ -21,6 +21,7 @@ namespace Game.Core.AR
         public Subject<ARTrackablesChangedEventArgs<ARPlane>> OnPlanesChanged => _view.OnPlanesChanged;
         public Subject<ARTrackablesChangedEventArgs<ARTrackedImage>> OnImagesChanged => _view.OnImagesChanged;
         public Subject<ARTrackablesChangedEventArgs<ARFace>> OnFacesChanged => _view.OnFacesChanged;
+        public Subject<ARLightEstimationData> OnLightEstimated => _view.OnLightEstimated;
 
         public ARService(ARServiceView view)
         {

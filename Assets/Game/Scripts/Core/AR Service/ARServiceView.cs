@@ -1,6 +1,7 @@
 using R3;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace Game.Core.AR
 {
@@ -17,16 +18,19 @@ namespace Game.Core.AR
         private Subject<ARTrackablesChangedEventArgs<ARPlane>> _onPlanesChanged = new();
         private Subject<ARTrackablesChangedEventArgs<ARTrackedImage>> _onImagesChanged = new();
         private Subject<ARTrackablesChangedEventArgs<ARFace>> _onFacesChanged = new();
+        private Subject<ARLightEstimationData> _onLightEstimated = new();
 
         public Subject<ARTrackablesChangedEventArgs<ARPlane>> OnPlanesChanged => _onPlanesChanged;
         public Subject<ARTrackablesChangedEventArgs<ARTrackedImage>> OnImagesChanged => _onImagesChanged;
         public Subject<ARTrackablesChangedEventArgs<ARFace>> OnFacesChanged => _onFacesChanged;
+        public Subject<ARLightEstimationData> OnLightEstimated => _onLightEstimated;
 
         private void OnEnable()
         {
             _ARPlaneManager.trackablesChanged.AddListener(PlaneTrackablesChanged);
             _ARTrackedImageManager.trackablesChanged.AddListener(ImageTrackablesChanged);
             _ARFaceManager.trackablesChanged.AddListener(FaceTrackablesChanged);
+            _ARCameraManager.frameReceived += CameraFrameReceived;
         }
 
         private void OnDisable()
@@ -34,6 +38,7 @@ namespace Game.Core.AR
             _ARPlaneManager.trackablesChanged.RemoveListener(PlaneTrackablesChanged);
             _ARTrackedImageManager.trackablesChanged.RemoveListener(ImageTrackablesChanged);
             _ARFaceManager.trackablesChanged.RemoveListener(FaceTrackablesChanged);
+            _ARCameraManager.frameReceived -= CameraFrameReceived;
         }
 
         public void DisableAllARManagers()
@@ -100,6 +105,11 @@ namespace Game.Core.AR
             _onFacesChanged.OnNext(args);
         }
 
+        private void CameraFrameReceived(ARCameraFrameEventArgs args)
+        {
+            _onLightEstimated.OnNext(args.lightEstimation);
+        }
+
         private void SwitchCameraFacingDirection(CameraFacingDirection cameraFacingDirection)
         {
             bool frontalCamera = cameraFacingDirection == CameraFacingDirection.User;
@@ -111,6 +121,37 @@ namespace Game.Core.AR
                 _ARSession.Reset();
 
             _ARCameraManager.requestedFacingDirection = cameraFacingDirection;
+            _ARCameraManager.requestedLightEstimation = GetSupportedLightEstimation(frontalCamera);
+        }
+
+        // ARCore умеет HDR-оценку только для задней камеры, ARKit — только для фронтальной.
+        // Запрашиваем HDR там, где он есть, иначе обычную оценку яркости и цвета.
+        private LightEstimation GetSupportedLightEstimation(bool frontalCamera)
+        {
+            XRCameraSubsystemDescriptor descriptor = _ARCameraManager.descriptor;
+
+            if (descriptor == null)
+                return LightEstimation.None;
+
+            bool supportsHDR = frontalCamera
+                ? descriptor.supportsFaceTrackingHDRLightEstimation
+                : descriptor.supportsWorldTrackingHDRLightEstimation;
+
+            if (supportsHDR)
+            {
+                return LightEstimation.MainLightDirection |
+                       LightEstimation.MainLightIntensity |
+                       LightEstimation.AmbientSphericalHarmonics;
+            }
+
+            bool supportsAmbient = frontalCamera
+                ? descriptor.supportsFaceTrackingAmbientIntensityLightEstimation
+                : descriptor.supportsWorldTrackingAmbientIntensityLightEstimation;
+
+            if (supportsAmbient)
+                return LightEstimation.AmbientIntensity | LightEstimation.AmbientColor;
+
+            return LightEstimation.None;
         }
 
         private void SetPlanesActive(bool active)
