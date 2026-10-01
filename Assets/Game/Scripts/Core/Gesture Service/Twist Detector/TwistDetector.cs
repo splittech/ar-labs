@@ -14,8 +14,6 @@ namespace Game.Core
             _view = gestureServiceView;
         }
 
-        // Мёртвая зона: поворот начинается только после того, как суммарный угол превысит порог,
-        // чтобы pinch и случайное дрожание пальцев не крутили объект.
         public bool TryDetectTwist(float angleDelta)
         {
             if (_detected)
