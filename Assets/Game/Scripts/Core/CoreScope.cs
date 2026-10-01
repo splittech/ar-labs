@@ -16,6 +16,9 @@ namespace Game.Core
         [SerializeField] private ARRaycastManager _ARRaycastManager;
         [SerializeField] private ARServiceView _ARServiceView;
 
+        [Header("Light Estimation Service")]
+        [SerializeField] private LightEstimationServiceView _lightEstimationServiceView;
+
         [Header("Input Service")]
         [SerializeField] private InputServiceView _inputServiceView;
 
@@ -48,6 +51,10 @@ namespace Game.Core
             builder.Register<RaycastService>(Lifetime.Singleton);
             builder.RegisterComponent(_ARRaycastManager);
             builder.Register<ARServiceLogger>(Lifetime.Singleton);
+
+            // Light Estimation Service.
+            builder.Register<LightEstimationService>(Lifetime.Singleton);
+            builder.RegisterComponent(_lightEstimationServiceView);
 
             // Input Service.
             builder.Register<InputService>(Lifetime.Singleton);

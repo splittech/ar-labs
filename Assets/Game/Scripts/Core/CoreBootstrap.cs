@@ -13,6 +13,7 @@ namespace Game.Core
         private readonly CrossCenterMarkerSpawner _crossCenterMarkerSpawner;
         private readonly ARService _ARService;
         private readonly ARServiceLogger _ARServiceLogger;
+        private readonly LightEstimationService _lightEstimationService;
 
         public CoreBootstrap(
             InputService inputService,
@@ -21,7 +22,8 @@ namespace Game.Core
             GestureLogger gestureLogger,
             CrossCenterMarkerSpawner crossCenterMarkerSpawner,
             ARService aRService,
-            ARServiceLogger aRServiceLogger)
+            ARServiceLogger aRServiceLogger,
+            LightEstimationService lightEstimationService)
         {
             _inputService = inputService;
             _inputLogger = inputLogger;
@@ -30,12 +32,14 @@ namespace Game.Core
             _crossCenterMarkerSpawner = crossCenterMarkerSpawner;
             _ARService = aRService;
             _ARServiceLogger = aRServiceLogger;
+            _lightEstimationService = lightEstimationService;
         }
 
         public void Start()
         {
             _inputService.Enable();
             _ARService.Enable();
+            _lightEstimationService.Enable();
             _fpsCounter.Enable();
             _crossCenterMarkerSpawner.Enable();
 

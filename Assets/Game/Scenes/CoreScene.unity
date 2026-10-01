@@ -1743,6 +1743,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game.Core::Game.Core.HorizontalSwipeDetectorView
   _maxHorizontalDeltaAngle: 30
+--- !u!1 &1069694439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1069694441}
+  - component: {fileID: 1069694440}
+  m_Layer: 0
+  m_Name: Light Estimation Service
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1069694440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069694439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcba92afff71444494b6d14ac16c6720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Core::Game.Core.LightEstimationServiceView
+  _mainLight: {fileID: 1075000275}
+  _intensityMultiplier: 1
+  _smoothingSharpness: 5
+--- !u!4 &1069694441
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069694439}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1075000274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,6 +1801,7 @@ GameObject:
   - component: {fileID: 1075000276}
   - component: {fileID: 1075000275}
   - component: {fileID: 1075000277}
+  - component: {fileID: 1075000278}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1870,6 +1918,21 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &1075000278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075000274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcba92afff71444494b6d14ac16c6720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Core::Game.Core.LightEstimationServiceView
+  _mainLight: {fileID: 1075000275}
+  _intensityMultiplier: 1
+  _smoothingSharpness: 5
 --- !u!1 &1122700246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1926,7 +1989,7 @@ GameObject:
   - component: {fileID: 1150787401}
   - component: {fileID: 1150787400}
   m_Layer: 0
-  m_Name: LeanFingerSwipe
+  m_Name: Lean Finger Swipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2415,6 +2478,7 @@ MonoBehaviour:
   _camera: {fileID: 857704900}
   _ARRaycastManager: {fileID: 2031237971}
   _ARServiceView: {fileID: 131185518}
+  _lightEstimationServiceView: {fileID: 1075000278}
   _inputServiceView: {fileID: 3169406324211273100}
   _tickService: {fileID: 1525909399}
   _fpsCounterView: {fileID: 374523679}
@@ -3330,6 +3394,7 @@ SceneRoots:
   - {fileID: 1390610793}
   - {fileID: 1840361969}
   - {fileID: 380711178}
+  - {fileID: 1069694441}
   - {fileID: 1525909400}
   - {fileID: 7871912950057136370}
   - {fileID: 544452540}
