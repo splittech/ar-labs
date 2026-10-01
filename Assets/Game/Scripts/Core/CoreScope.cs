@@ -68,6 +68,8 @@ namespace Game.Core
             builder.Register<CrossDetector>(Lifetime.Singleton);
             builder.RegisterComponent(_crossDetectorView);
 
+            builder.Register<TwistDetector>(Lifetime.Singleton);
+
             builder.Register<CrossCenterMarkerSpawner>(Lifetime.Singleton);
             builder.RegisterComponent(_crossCenterMarkerSpawnerView);
 

@@ -50,6 +50,10 @@ namespace Game.Gameplay
             _gestureService.OnCross
                 .Subscribe(CrossDeletePudge)
                 .AddTo(ref _disposableBag);
+
+            _gestureService.OnTwist
+                .Subscribe(TwistRotatePudge)
+                .AddTo(ref _disposableBag);
         }
 
         public void Disable()
@@ -74,6 +78,13 @@ namespace Game.Gameplay
             float rotationAngle = _view.MaxSwipeRotationAngle * swipePower * swipeSign;
 
             selectedPudge.RotateBy(rotationAngle, Pudge.EasingType.Damped, swipePower);
+        }
+
+        private void TwistRotatePudge(float twistAngle)
+        {
+            // Twist по часовой стрелке на экране даёт отрицательный угол, а поворот вокруг Vector3.up
+            // с положительным углом выглядит сверху как поворот по часовой. Отсюда минус.
+            _pudgeEditor.RotateBy(-twistAngle * _view.TwistSensitivity);
         }
 
         private void CrossDeletePudge(Vector2 crossCenter)

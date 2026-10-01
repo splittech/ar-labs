@@ -31,6 +31,10 @@ namespace Game.Core
             _gestureService.OnCross
                 .Subscribe(center => _logger.Log($"Cross: center = {center}."))
                 .AddTo(ref _disposableBag);
+
+            _gestureService.OnDoubleTap
+                .Subscribe(position => _logger.Log($"Double tap: position = {position}."))
+                .AddTo(ref _disposableBag);
         }
 
         public void Disable()

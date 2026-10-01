@@ -1,5 +1,5 @@
+using Game.Core;
 using Game.Core.AR;
-using Game.Core.Input;
 using R3;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ namespace Game.Gameplay
 {
     public class PudgeEditor
     {
-        private readonly InputService _inputService;
+        private readonly GestureService _gestureService;
         private readonly RaycastService _raycastService;
         private readonly PudgeEditorView _pudgeEditorView;
 
@@ -25,9 +25,9 @@ namespace Game.Gameplay
         public ReadOnlyReactiveProperty<float> TotalScaleDelta => _totalScaleDelta;
         public ReadOnlyReactiveProperty<float> TotalAngleDelta => _totalRotationDelta;
 
-        public PudgeEditor(InputService inputService, RaycastService raycastService, PudgeEditorView pudgeEditorView)
+        public PudgeEditor(GestureService gestureService, RaycastService raycastService, PudgeEditorView pudgeEditorView)
         {
-            _inputService = inputService;
+            _gestureService = gestureService;
             _raycastService = raycastService;
             _pudgeEditorView = pudgeEditorView;
         }
@@ -42,11 +42,9 @@ namespace Game.Gameplay
             _totalScaleDelta.Value = 0f;
             _totalRotationDelta.Value = 0f;
 
-            _inputService.OnInputActionPerformed
-                .Where(context =>
-                    context.ActionType == ActionType.Tap &&
-                    context.ActionStatus == ActionStatus.Performed &&
-                    !context.IsOverUI)
+            _gestureService.Enable();
+
+            _gestureService.OnTap
                 .Subscribe(TrySelectPudge)
                 .AddTo(ref _disposableBag);
         }
@@ -61,6 +59,7 @@ namespace Game.Gameplay
             DeselectCurrentPudge();
             _selectedPudge.Value = null;
 
+            _gestureService.Disable();
             _disposableBag.Clear();
         }
 
@@ -82,6 +81,11 @@ namespace Game.Gameplay
         public void RotateCounterClockwise()
         {
             ChangeRotation(-_pudgeEditorView.RotationDelta);
+        }
+
+        public void RotateBy(float angleDelta)
+        {
+            ChangeRotation(angleDelta);
         }
 
         public void ResetScaleAndRotation()
@@ -127,17 +131,17 @@ namespace Game.Gameplay
                 _selectedPudge.Value.Deselect();
         }
 
-        private void TrySelectPudge(InputContext context)
+        private void TrySelectPudge(Vector2 screenPosition)
         {
+            bool hasPudge = TryRaycastOnPudge(screenPosition, out Pudge pudge);
+
+            // Повторный тап по выбранному пуджу (в том числе второй тап двойного тапа) ничего не сбрасывает.
+            if (hasPudge && pudge == _selectedPudge.CurrentValue)
+                return;
+
             DeselectCurrentPudge();
 
-            if (!TryRaycastOnPudge(context.ScreenPosition, out Pudge pudge))
-            {
-                _selectedPudge.Value = null;
-                return;
-            }
-
-            if (!FilterPudge(pudge))
+            if (!hasPudge)
             {
                 _selectedPudge.Value = null;
                 return;
@@ -167,13 +171,6 @@ namespace Game.Gameplay
 
             pudge = pudgeView.Pudge;
             return true;
-        }
-
-        private bool FilterPudge(Pudge pudge)
-        {
-            return
-                pudge != _selectedPudge.CurrentValue ||
-                !pudge.IsTransforming();
         }
     }
 }

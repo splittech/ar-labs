@@ -34,6 +34,9 @@ namespace Game.Gameplay
         private List<TextPanelView> _allTextPanels = new();
         private int _currentTextFieldIndex;
 
+        // Скрытие двойным тапом сохраняется и при выборе другого пуджа, пока пользователь не вернёт панели.
+        private bool _panelsHiddenByUser;
+
         public Observable<Button> OnButtonPressed => Observable.Merge(
             ObserveClick(_switchDescriptionButton, Button.SwitchDescription),
             ObserveClick(_addScaleButton, Button.AddScale),
@@ -73,7 +76,8 @@ namespace Game.Gameplay
                 return;
             }
 
-            ShowPanels();
+            if (!_panelsHiddenByUser)
+                ShowPanels();
 
             _nameTextPanel.UpdateText(0, selectedPudge.Name);
             _desciptionTextPanel.UpdateText(0, selectedPudge.Description);
@@ -91,6 +95,16 @@ namespace Game.Gameplay
         public void UpdateAngleText(float angle)
         {
             _transformationTextPanel.UpdateText(1, angle.ToString());
+        }
+
+        public void TogglePanelsHiddenByUser()
+        {
+            _panelsHiddenByUser = !_panelsHiddenByUser;
+
+            if (_panelsHiddenByUser)
+                HidePanels();
+            else
+                ShowPanels();
         }
 
         public void HidePanels()
