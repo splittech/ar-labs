@@ -4,7 +4,7 @@ namespace Game.Core
 {
     public class Timer
     {
-        private readonly TickService _tickService;
+        private readonly ITickService _tickService;
 
         private float _currentTime;
 
@@ -13,7 +13,7 @@ namespace Game.Core
         private ReactiveProperty<bool> _elapsed = new();
         public ReadOnlyReactiveProperty<bool> Elapsed => _elapsed;
 
-        public Timer(TickService tickService)
+        public Timer(ITickService tickService)
         {
             _tickService = tickService;
         }
@@ -36,7 +36,7 @@ namespace Game.Core
             _elapsed.Value = false;
         }
 
-        private void Update(TickService.Tick tick)
+        private void Update(Tick tick)
         {
             _currentTime -= tick.DeltaTime;
             if (_currentTime < 0)

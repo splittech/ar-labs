@@ -12,7 +12,7 @@ namespace Game.Gameplay
         private readonly InputService _inputService;
         private readonly PudgeSpawnerView _pudgeSpawnerView;
         private readonly SpawnMarkerCreator _spawnMarkerCreator;
-        private readonly TickService _tickService;
+        private readonly ITickService _tickService;
 
         private HashSet<Pudge> _spawnedPudges = new();
         private Pudge.State _inititalPudgeState;
@@ -29,7 +29,7 @@ namespace Game.Gameplay
             InputService inputService,
             PudgeSpawnerView pudgeSpawnerView,
             SpawnMarkerCreator spawnMarkerCreator,
-            TickService tickService)
+            ITickService tickService)
         {
             _inputService = inputService;
             _pudgeSpawnerView = pudgeSpawnerView;
@@ -70,7 +70,7 @@ namespace Game.Gameplay
 
         public void SpawnPudge(Pose pudgePose, Pudge.State pudgeState, float pudgeScale)
         {
-            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pudgeState);
+            IPudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pudgeState);
             Pudge pudge = new(pudgeView, _tickService);
 
             pudge.Initialize(pudgePose, pudgeState, pudgeScale);

@@ -23,7 +23,7 @@ namespace Game.Core
         [SerializeField] private InputServiceView _inputServiceView;
 
         [Header("Tick Service")]
-        [SerializeField] private TickService _tickService;
+        [SerializeField] private ITickService _tickService;
 
         [Header("FPS Counter")]
         [SerializeField] private FPSCounterView _fpsCounterView;

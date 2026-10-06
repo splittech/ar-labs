@@ -85,7 +85,7 @@ namespace Game.Gameplay
                 return;
             }
 
-            if (!collider.TryGetComponent<PudgeView>(out var pudgeView))
+            if (!collider.TryGetComponent<IPudgeView>(out var pudgeView))
                 return;
 
             Pudge pudge = pudgeView.Pudge;

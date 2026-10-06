@@ -5,7 +5,7 @@ namespace Game.Core
     public class FPSCounter
     {
         private readonly FPSCounterView _fpsCounterView;
-        private readonly TickService _tickService;
+        private readonly ITickService _tickService;
 
         private int _accumulatedFrames;
         private float _accumulatedTime;
@@ -13,7 +13,7 @@ namespace Game.Core
 
         private DisposableBag _disposableBag;
 
-        public FPSCounter(FPSCounterView fpsCounterView, TickService tickService)
+        public FPSCounter(FPSCounterView fpsCounterView, ITickService tickService)
         {
             _fpsCounterView = fpsCounterView;
             _tickService = tickService;
@@ -40,7 +40,7 @@ namespace Game.Core
             _disposableBag.Clear();
         }
 
-        private void AccamulateFrame(TickService.Tick tick)
+        private void AccamulateFrame(Tick tick)
         {
             _accumulatedTime += tick.DeltaTime;
             _accumulatedFrames++;

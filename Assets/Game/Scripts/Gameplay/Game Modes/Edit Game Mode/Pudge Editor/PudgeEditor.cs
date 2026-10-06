@@ -123,7 +123,7 @@ namespace Game.Gameplay
         private void DeselectCurrentPudge()
         {
             _previousSelectedPudge.Value = _selectedPudge.Value;
-            if (_selectedPudge.Value != null && !_selectedPudge.Value.Disposed)
+            if (_selectedPudge.Value != null && !_selectedPudge.Value.IsValid)
                 _selectedPudge.Value.Deselect();
         }
 
@@ -162,7 +162,7 @@ namespace Game.Gameplay
             if (!hasCollision)
                 return false;
 
-            if (!collider.TryGetComponent<PudgeView>(out var pudgeView))
+            if (!collider.TryGetComponent<IPudgeView>(out var pudgeView))
                 return false;
 
             pudge = pudgeView.Pudge;
