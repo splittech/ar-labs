@@ -8,9 +8,9 @@ namespace Game.Gameplay
 {
     public class PudgeMerger
     {
-        private readonly PudgeMergerView _pudgeMergerView;
-        private readonly PudgeSpawner _pudgeSpawner;
-        private readonly PudgeEditor _pudgeEditor;
+        private readonly IPudgeMergerView _pudgeMergerView;
+        private readonly IPudgeSpawner _pudgeSpawner;
+        private readonly IPudgeEditor _pudgeEditor;
 
         private readonly HashSet<Pudge> _mergingPudges = new();
         private bool _enabled;
@@ -18,7 +18,7 @@ namespace Game.Gameplay
 
         private DisposableBag _disposableBag;
 
-        public PudgeMerger(PudgeMergerView pudgeMergerView, PudgeSpawner pudgeSpawner, PudgeEditor pudgeEditor)
+        public PudgeMerger(IPudgeMergerView pudgeMergerView, IPudgeSpawner pudgeSpawner, IPudgeEditor pudgeEditor)
         {
             _pudgeMergerView = pudgeMergerView;
             _pudgeSpawner = pudgeSpawner;

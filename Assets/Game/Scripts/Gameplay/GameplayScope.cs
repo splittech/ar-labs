@@ -32,7 +32,7 @@ namespace Game.Gameplay
 
             // Pudge Merger.
             builder.Register<PudgeMerger>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeMergerView);
+            builder.RegisterComponent(_pudgeMergerView).As<IPudgeMergerView>();
 
             // Game Mode Switcher.
             builder.Register<GameModeSwitcher>(Lifetime.Singleton);
@@ -46,13 +46,13 @@ namespace Game.Gameplay
             builder.RegisterComponent(_createGameModeView);
             builder.Register<SpawnMarkerCreator>(Lifetime.Singleton);
             builder.RegisterComponent(_spawnMarkerCreatorView);
-            builder.Register<PudgeSpawner>(Lifetime.Singleton);
+            builder.Register<PudgeSpawner>(Lifetime.Singleton).AsSelf().As<IPudgeSpawner>();
             builder.RegisterComponent(_pudgeSpawnerView);
 
             // Edit Game Mode.
             builder.Register<EditGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_editGameModeView);
-            builder.Register<PudgeEditor>(Lifetime.Singleton);
+            builder.Register<PudgeEditor>(Lifetime.Singleton).AsSelf().As<IPudgeEditor>();
             builder.RegisterComponent(_pudgeEditorView);
             builder.Register<PudgeGestureEditor>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeGestureEditorView);

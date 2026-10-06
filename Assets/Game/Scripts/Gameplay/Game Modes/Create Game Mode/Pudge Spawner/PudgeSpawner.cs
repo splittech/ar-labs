@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeSpawner
+    public class PudgeSpawner : IPudgeSpawner
     {
         private readonly InputService _inputService;
         private readonly PudgeSpawnerView _pudgeSpawnerView;

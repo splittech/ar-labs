@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeEditor
+    public class PudgeEditor : IPudgeEditor
     {
         private readonly InputService _inputService;
         private readonly RaycastService _raycastService;
