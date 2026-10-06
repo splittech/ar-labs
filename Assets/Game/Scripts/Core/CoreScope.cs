@@ -23,7 +23,7 @@ namespace Game.Core
         [SerializeField] private InputServiceView _inputServiceView;
 
         [Header("Tick Service")]
-        [SerializeField] private ITickService _tickService;
+        [SerializeField] private TickService _tickService;
 
         [Header("FPS Counter")]
         [SerializeField] private FPSCounterView _fpsCounterView;
@@ -63,7 +63,7 @@ namespace Game.Core
             builder.RegisterComponent(_inputServiceView);
 
             // Tick Service
-            builder.RegisterComponent(_tickService);
+            builder.RegisterComponent(_tickService).As<ITickService>();
 
             // FPS Counter.
             builder.Register<FPSCounter>(Lifetime.Singleton);
@@ -77,7 +77,7 @@ namespace Game.Core
             builder.RegisterComponent(_horizontalSwipeDetectorView);
 
             builder.Register<CrossDetector>(Lifetime.Singleton);
-            builder.RegisterComponent(_crossDetectorView);
+            builder.RegisterComponent(_crossDetectorView).As<ICrossDetectorView>();
 
             builder.Register<CrossCenterMarkerSpawner>(Lifetime.Singleton);
             builder.RegisterComponent(_crossCenterMarkerSpawnerView);
@@ -85,7 +85,7 @@ namespace Game.Core
             builder.Register<GestureLogger>(Lifetime.Singleton);
 
             // Timer Service.
-            builder.Register<TimerService>(Lifetime.Singleton);
+            builder.Register<TimerService>(Lifetime.Singleton).As<ITimerService>();
 
             // Logging Service.
             builder.Register<LoggingService>(Lifetime.Singleton);

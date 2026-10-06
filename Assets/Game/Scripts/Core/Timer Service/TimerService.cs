@@ -1,6 +1,6 @@
 namespace Game.Core
 {
-    public class TimerService
+    public class TimerService : ITimerService
     {
         private readonly ITickService _tickService;
 
@@ -9,7 +9,7 @@ namespace Game.Core
             _tickService = tickService;
         }
 
-        public Timer CreateTimer()
+        public ITimer CreateTimer()
         {
             return new Timer(_tickService);
         }

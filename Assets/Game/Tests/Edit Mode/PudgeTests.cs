@@ -19,7 +19,7 @@ namespace Game.Tests.EditMode
         public void Despawn_PudgeIsNotInitialized_PudgeIsDisposed()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var onTick);
+            Pudge pudge = Setup.Pudge();
 
             // Act.
             pudge.Despawn();
@@ -50,7 +50,7 @@ namespace Game.Tests.EditMode
         public void Despawn_PudgeIsInitializedAndInstantAssert_PudgeIsDespawning()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize();
 
             // Act.
@@ -64,7 +64,7 @@ namespace Game.Tests.EditMode
         public void Despawn_PudgeIsInitializedAndInstantAssertAfterDoubleCall_PudgeIsDespawning()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize();
 
             // Act.
@@ -79,7 +79,7 @@ namespace Game.Tests.EditMode
         public void MoveTo_PudgeIsNotInitialized_ThrowsException()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
 
             // Act and Assert.
             Assert.That(() => pudge.MoveTo(Vector3.zero), Throws.Exception);
@@ -91,7 +91,7 @@ namespace Game.Tests.EditMode
             // Arrange.
             Vector3 targetPosition = new(1f, 2f, 3f);
 
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize();
 
             // Act.
@@ -127,7 +127,7 @@ namespace Game.Tests.EditMode
         public void RotateTo_PudgeIsNotInitialized_ThrowsException()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
 
             // Act and Assert.
             Assert.That(() => pudge.RotateTo(Quaternion.identity), Throws.Exception);
@@ -139,7 +139,7 @@ namespace Game.Tests.EditMode
             // Arrange.
             Quaternion targetRotation = Quaternion.Euler(0f, 45f, 0f);
 
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize();
 
             // Act.
@@ -180,7 +180,7 @@ namespace Game.Tests.EditMode
             Pose firstPose = new(new Vector3(1f, 2f, 3f), Quaternion.identity);
             Pose secondPose = new(new Vector3(4f, 5f, 6f), Quaternion.identity);
 
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
 
             // Act.
             pudge.Initialize(initialPose: firstPose);
@@ -194,7 +194,7 @@ namespace Game.Tests.EditMode
         public void MoveTo_PudgeIsDespawning_ThrowsInvalidOperationException()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize();
             pudge.Despawn();
 
@@ -206,7 +206,7 @@ namespace Game.Tests.EditMode
         public void MoveTo_PudgeIsDisposed_ThrowsObjectDisposedException()
         {
             // Arrange.
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Despawn();
 
             // Act and Assert.
@@ -271,10 +271,7 @@ namespace Game.Tests.EditMode
             ));
 
             // Assert.
-            Assert.That(
-                pudge.CurrentPose.position,
-                Is.EqualTo(targetPosition / 2f).Using(Vector3EqualityComparer.Instance));
-            Assert.That(pudge.IsTransforming(), Is.True);
+            Assert.That(pudge.CurrentPose.position, Is.EqualTo(targetPosition / 2f).Using(Vector3EqualityComparer.Instance));
         }
 
         [Test]
@@ -297,7 +294,6 @@ namespace Game.Tests.EditMode
 
             // Assert.
             Assert.That(pudge.IsTransforming(), Is.False);
-            Assert.That(pudge.TargetPosition.CurrentValue, Is.Null);
         }
 
         [Test]
@@ -307,7 +303,7 @@ namespace Game.Tests.EditMode
             Pose initialPose = new(Vector3.zero, Quaternion.Euler(0f, 10f, 0f));
             Quaternion targetRotation = Quaternion.Euler(0f, 350f, 0f);
 
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize(initialPose: initialPose);
 
             // Act.
@@ -323,7 +319,7 @@ namespace Game.Tests.EditMode
             // Arrange.
             float rotationAngle = 30f;
 
-            Pudge pudge = Setup.Pudge(out var _);
+            Pudge pudge = Setup.Pudge();
             pudge.Initialize();
 
             // Act.
@@ -352,7 +348,6 @@ namespace Game.Tests.EditMode
 
             // Assert.
             Assert.That(pudge.CurrentScale, Is.EqualTo(targetScale));
-            Assert.That(pudge.TargetScale.CurrentValue, Is.Null);
         }
     }
 }

@@ -4,17 +4,22 @@ namespace Game.Core
 {
     public class CrossDetector
     {
-        private readonly CrossDetectorView _view;
-        private readonly Timer _crossTimer;
+        private readonly ICrossDetectorView _view;
+        private readonly ITimer _crossTimer;
 
         private Swipe _previousSwipe;
         private bool _hasPreviousSwipe;
 
-        public CrossDetector(CrossDetectorView crossDetectorView, TimerService timerService)
+        public CrossDetector(ICrossDetectorView crossDetectorView, ITimerService timerService)
         {
             _view = crossDetectorView;
 
             _crossTimer = timerService.CreateTimer();
+        }
+
+        public bool TryDetectCross(Swipe newSwipe)
+        {
+            return TryDetectCross(newSwipe, out var _);
         }
 
         public bool TryDetectCross(Swipe newSwipe, out Vector2 intersection)
@@ -76,7 +81,7 @@ namespace Game.Core
             if (Mathf.Approximately(directionsCross, 0f))
                 return false;
 
-            // a + t * r = c + u * s
+            // a + t * r = c + u * s <= find t and u
             // Cross(a + t*r, s) = Cross(c + u*s, s)
             // Cross(a, s) + t * Cross(r, s) = Cross(c, s) + u * Cross(s, s)
             // Cross(a, s) + t * Cross(r, s) = Cross(c, s)

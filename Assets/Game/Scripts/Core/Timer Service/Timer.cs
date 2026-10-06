@@ -2,7 +2,7 @@ using R3;
 
 namespace Game.Core
 {
-    public class Timer
+    public class Timer : ITimer
     {
         private readonly ITickService _tickService;
 

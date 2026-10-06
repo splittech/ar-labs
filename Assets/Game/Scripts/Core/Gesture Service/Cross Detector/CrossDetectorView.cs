@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class CrossDetectorView : MonoBehaviour
+    public class CrossDetectorView : MonoBehaviour, ICrossDetectorView
     {
         [SerializeField] private float _maxDiagonalDeltaAngle = 30f;
         [SerializeField] private float _maxDeltaTimeBwetweenTwoSwipes = 1f;
