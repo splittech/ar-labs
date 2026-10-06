@@ -123,7 +123,7 @@ namespace Game.Gameplay
         private void DeselectCurrentPudge()
         {
             _previousSelectedPudge.Value = _selectedPudge.Value;
-            if (_selectedPudge.Value != null && !_selectedPudge.Value.IsValid)
+            if (_selectedPudge.Value != null && _selectedPudge.Value.IsValid)
                 _selectedPudge.Value.Deselect();
         }
 

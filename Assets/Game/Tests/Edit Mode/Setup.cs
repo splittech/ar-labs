@@ -13,9 +13,19 @@ namespace Game.Tests.EditMode
             float linearRotationSpeed = 1f,
             float linearScaleSpeed = 1f)
         {
+            return Pudge(out onTick, out _, linearMovementSpeed, linearRotationSpeed, linearScaleSpeed);
+        }
+
+        public static Pudge Pudge(
+            out Subject<Tick> onTick,
+            out IPudgeView pudgeView,
+            float linearMovementSpeed = 1f,
+            float linearRotationSpeed = 1f,
+            float linearScaleSpeed = 1f)
+        {
             onTick = new Subject<Tick>();
 
-            var pudgeView = Substitute.For<IPudgeView>();
+            pudgeView = Substitute.For<IPudgeView>();
             pudgeView.LinearMovementSpeed.Returns(linearMovementSpeed);
             pudgeView.LinearRotationSpeed.Returns(linearRotationSpeed);
             pudgeView.LinearScaleSpeed.Returns(linearScaleSpeed);
