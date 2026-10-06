@@ -7,9 +7,9 @@ namespace Game.Gameplay
 {
     public class PudgeEditor : IPudgeEditor
     {
-        private readonly InputService _inputService;
-        private readonly RaycastService _raycastService;
-        private readonly PudgeEditorView _pudgeEditorView;
+        private readonly IInputService _inputService;
+        private readonly IRaycastService _raycastService;
+        private readonly IPudgeEditorView _pudgeEditorView;
 
         private bool _enabled;
 
@@ -25,7 +25,7 @@ namespace Game.Gameplay
         public ReadOnlyReactiveProperty<float> TotalScaleDelta => _totalScaleDelta;
         public ReadOnlyReactiveProperty<float> TotalAngleDelta => _totalRotationDelta;
 
-        public PudgeEditor(InputService inputService, RaycastService raycastService, PudgeEditorView pudgeEditorView)
+        public PudgeEditor(IInputService inputService, IRaycastService raycastService, IPudgeEditorView pudgeEditorView)
         {
             _inputService = inputService;
             _raycastService = raycastService;
@@ -154,15 +154,12 @@ namespace Game.Gameplay
         {
             pudge = null;
 
-            bool hasCollision = _raycastService.RaycastOnObject(
+            bool hasPudgeView = _raycastService.TryRaycastOnComponent(
                 screenPosition,
                 _pudgeEditorView.PudgeInteractableLayer,
-                out var collider);
+                out IPudgeView pudgeView);
 
-            if (!hasCollision)
-                return false;
-
-            if (!collider.TryGetComponent<IPudgeView>(out var pudgeView))
+            if (!hasPudgeView)
                 return false;
 
             pudge = pudgeView.Pudge;

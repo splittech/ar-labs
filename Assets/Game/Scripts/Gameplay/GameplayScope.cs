@@ -44,16 +44,16 @@ namespace Game.Gameplay
             // Create Game Mode.
             builder.Register<CreateGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_createGameModeView);
-            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton);
+            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton).AsSelf().As<ISpawnMarkerCreator>();
             builder.RegisterComponent(_spawnMarkerCreatorView);
             builder.Register<PudgeSpawner>(Lifetime.Singleton).AsSelf().As<IPudgeSpawner>();
-            builder.RegisterComponent(_pudgeSpawnerView);
+            builder.RegisterComponent(_pudgeSpawnerView).As<IPudgeSpawnerView>();
 
             // Edit Game Mode.
             builder.Register<EditGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_editGameModeView);
             builder.Register<PudgeEditor>(Lifetime.Singleton).AsSelf().As<IPudgeEditor>();
-            builder.RegisterComponent(_pudgeEditorView);
+            builder.RegisterComponent(_pudgeEditorView).As<IPudgeEditorView>();
             builder.Register<PudgeGestureEditor>(Lifetime.Singleton);
             builder.RegisterComponent(_pudgeGestureEditorView);
 

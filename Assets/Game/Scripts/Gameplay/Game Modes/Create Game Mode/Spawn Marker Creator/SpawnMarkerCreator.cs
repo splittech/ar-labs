@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class SpawnMarkerCreator
+    public class SpawnMarkerCreator : ISpawnMarkerCreator
     {
         private readonly SpawnMarkerCreatorView _spawnMarkerCreatorView;
         private readonly InputService _inputService;
@@ -15,6 +15,8 @@ namespace Game.Gameplay
         private DisposableBag _disposableBag;
         private bool _enabled;
 
+        private readonly Subject<Pose> _onSpawnMarkerReleased = new();
+
         public SpawnMarkerCreator(SpawnMarkerCreatorView spawnMarkerCreatorView, InputService inputService, RaycastService raycastService)
         {
             _spawnMarkerCreatorView = spawnMarkerCreatorView;
@@ -23,6 +25,10 @@ namespace Game.Gameplay
         }
 
         public SpawnMarker CurrentSpawnMarker => _currentSpawnMarker;
+
+        // Срабатывает, когда палец отпущен над маркером. Маркер к этому моменту уже удалён,
+        // поэтому подписчикам передаётся его последняя поза.
+        public Observable<Pose> OnSpawnMarkerReleased => _onSpawnMarkerReleased;
 
         public void Enable()
         {
@@ -56,7 +62,7 @@ namespace Game.Gameplay
                     ActionType: ActionType.Press,
                     ActionStatus: ActionStatus.Canceled,
                 })
-                .Subscribe(_ => DeleteMarker())
+                .Subscribe(_ => ReleaseMarker())
                 .AddTo(ref _disposableBag);
         }
 
@@ -96,6 +102,17 @@ namespace Game.Gameplay
                 return;
 
             _currentSpawnMarker.SetPositionAndRotation(pose.position, pose.rotation);
+        }
+
+        private void ReleaseMarker()
+        {
+            if (_currentSpawnMarker == null)
+                return;
+
+            Pose pose = _currentSpawnMarker.Pose;
+
+            DeleteMarker();
+            _onSpawnMarkerReleased.OnNext(pose);
         }
 
         private void DeleteMarker()

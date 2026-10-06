@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Core.Input
 {
-    public class InputService
+    public class InputService : IInputService
     {
         private readonly InputServiceView _inputServiceView;
         private readonly InputUIChecker _inputUIChecker;

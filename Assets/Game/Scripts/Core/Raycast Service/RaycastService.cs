@@ -6,7 +6,7 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Game.Core.AR
 {
-    public class RaycastService
+    public class RaycastService : IRaycastService
     {
         private readonly ARRaycastManager _aRRaycastManager;
         private readonly Camera _camera;
@@ -55,6 +55,20 @@ namespace Game.Core.AR
 
             hitCollider = hit.collider;
             return true;
+        }
+
+        public bool TryRaycastOnComponent<T>(
+            Vector2 screenPosition,
+            LayerMask interactableLayer,
+            out T component,
+            float maxDistance = 100f)
+        {
+            component = default;
+
+            if (!RaycastOnObject(screenPosition, interactableLayer, out Collider hitCollider, maxDistance))
+                return false;
+
+            return hitCollider.TryGetComponent(out component);
         }
 
         private bool IsFloorHit(ARRaycastHit raycastHit)

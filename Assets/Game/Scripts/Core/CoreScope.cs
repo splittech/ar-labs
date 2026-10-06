@@ -48,7 +48,7 @@ namespace Game.Core
             // AR.
             builder.Register<ARService>(Lifetime.Singleton);
             builder.RegisterComponent(_ARServiceView);
-            builder.Register<RaycastService>(Lifetime.Singleton);
+            builder.Register<RaycastService>(Lifetime.Singleton).AsSelf().As<IRaycastService>();
             builder.RegisterComponent(_ARRaycastManager);
             builder.Register<ARServiceLogger>(Lifetime.Singleton);
 
@@ -57,7 +57,7 @@ namespace Game.Core
             builder.RegisterComponent(_lightEstimationServiceView);
 
             // Input Service.
-            builder.Register<InputService>(Lifetime.Singleton);
+            builder.Register<InputService>(Lifetime.Singleton).AsSelf().As<IInputService>();
             builder.Register<InputUIChecker>(Lifetime.Singleton);
             builder.Register<InputLogger>(Lifetime.Singleton);
             builder.RegisterComponent(_inputServiceView);

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeEditorView : MonoBehaviour
+    public class PudgeEditorView : MonoBehaviour, IPudgeEditorView
     {
         [Header("Parameters")]
         [SerializeField] private LayerMask _pudgeInteractableLayer;

@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using Game.Core;
+using Game.Core.AR;
+using Game.Core.Input;
 using Game.Gameplay;
 using NSubstitute;
 using R3;
+using UnityEngine;
 
 namespace Game.Tests
 {
@@ -112,6 +115,60 @@ namespace Game.Tests
 
             PudgeMerger pudgeMerger = new(pudgeMergerView, pudgeSpawner, pudgeEditor);
             return pudgeMerger;
+        }
+
+        public static PudgeEditor PudgeEditor(
+            out Subject<InputContext> onInputActionPerformed,
+            out IRaycastService raycastService,
+            float scaleDelta = 0.5f,
+            float rotationDelta = 90f)
+        {
+            onInputActionPerformed = new Subject<InputContext>();
+
+            var inputService = Substitute.For<IInputService>();
+            inputService.OnInputActionPerformed.Returns(onInputActionPerformed);
+
+            raycastService = Substitute.For<IRaycastService>();
+
+            var pudgeEditorView = Substitute.For<IPudgeEditorView>();
+            pudgeEditorView.ScaleDelta.Returns(scaleDelta);
+            pudgeEditorView.RotationDelta.Returns(rotationDelta);
+
+            PudgeEditor pudgeEditor = new(inputService, raycastService, pudgeEditorView);
+            return pudgeEditor;
+        }
+
+        public static PudgeSpawner PudgeSpawner(float initialScale = 1f)
+        {
+            return PudgeSpawner(out _, out _, initialScale);
+        }
+
+        public static PudgeSpawner PudgeSpawner(
+            out Subject<Pose> onSpawnMarkerReleased,
+            float initialScale = 1f)
+        {
+            return PudgeSpawner(out onSpawnMarkerReleased, out _, initialScale);
+        }
+
+        public static PudgeSpawner PudgeSpawner(
+            out Subject<Pose> onSpawnMarkerReleased,
+            out IPudgeSpawnerView pudgeSpawnerView,
+            float initialScale = 1f)
+        {
+            onSpawnMarkerReleased = new Subject<Pose>();
+
+            var spawnMarkerCreator = Substitute.For<ISpawnMarkerCreator>();
+            spawnMarkerCreator.OnSpawnMarkerReleased.Returns(onSpawnMarkerReleased);
+
+            pudgeSpawnerView = Substitute.For<IPudgeSpawnerView>();
+            pudgeSpawnerView.InitialScale.Returns(initialScale);
+            pudgeSpawnerView.CreatePudgeObject(Arg.Any<Pudge.State>()).Returns(_ => Substitute.For<IPudgeView>());
+
+            var tickService = Substitute.For<ITickService>();
+            tickService.OnTick.Returns(new Subject<Tick>());
+
+            PudgeSpawner pudgeSpawner = new(pudgeSpawnerView, spawnMarkerCreator, tickService);
+            return pudgeSpawner;
         }
 
         public static Timer Timer(out Subject<Tick> onTick)

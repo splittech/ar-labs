@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeSpawnerView : MonoBehaviour
+    public class PudgeSpawnerView : MonoBehaviour, IPudgeSpawnerView
     {
         [Header("Parameters")]
         [SerializeField] private Transform _pudgeRootTransform;
