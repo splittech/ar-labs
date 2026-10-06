@@ -269,6 +269,23 @@ namespace Game.Tests
             return spawnMarkerView;
         }
 
+        public static GestureService GestureService(
+            out Subject<Swipe> onSwipe,
+            out IHorizontalSwipeDetector horizontalSwipeDetector,
+            out ICrossDetector crossDetector)
+        {
+            onSwipe = new Subject<Swipe>();
+
+            var gestureServiceView = Substitute.For<IGestureServiceView>();
+            gestureServiceView.OnSwipe.Returns(onSwipe);
+
+            horizontalSwipeDetector = Substitute.For<IHorizontalSwipeDetector>();
+            crossDetector = Substitute.For<ICrossDetector>();
+
+            GestureService gestureService = new(gestureServiceView, crossDetector, horizontalSwipeDetector);
+            return gestureService;
+        }
+
         public static Timer Timer(out Subject<Tick> onTick)
         {
             onTick = new Subject<Tick>();

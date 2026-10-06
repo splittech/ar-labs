@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class CrossDetector
+    public class CrossDetector : ICrossDetector
     {
         private readonly ICrossDetectorView _view;
         private readonly ITimer _crossTimer;

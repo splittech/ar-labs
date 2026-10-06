@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class HorizontalSwipeDetector
+    public class HorizontalSwipeDetector : IHorizontalSwipeDetector
     {
         private readonly HorizontalSwipeDetectorView _view;
 
