@@ -45,7 +45,7 @@ namespace Game.Gameplay
             builder.Register<CreateGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_createGameModeView);
             builder.Register<SpawnMarkerCreator>(Lifetime.Singleton).AsSelf().As<ISpawnMarkerCreator>();
-            builder.RegisterComponent(_spawnMarkerCreatorView);
+            builder.RegisterComponent(_spawnMarkerCreatorView).As<ISpawnMarkerCreatorView>();
             builder.Register<PudgeSpawner>(Lifetime.Singleton).AsSelf().As<IPudgeSpawner>();
             builder.RegisterComponent(_pudgeSpawnerView).As<IPudgeSpawnerView>();
 
@@ -55,7 +55,7 @@ namespace Game.Gameplay
             builder.Register<PudgeEditor>(Lifetime.Singleton).AsSelf().As<IPudgeEditor>();
             builder.RegisterComponent(_pudgeEditorView).As<IPudgeEditorView>();
             builder.Register<PudgeGestureEditor>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeGestureEditorView);
+            builder.RegisterComponent(_pudgeGestureEditorView).As<IPudgeGestureEditorView>();
 
             // Image Tracking Mode.
             builder.Register<ImageTrackingMode>(Lifetime.Singleton);

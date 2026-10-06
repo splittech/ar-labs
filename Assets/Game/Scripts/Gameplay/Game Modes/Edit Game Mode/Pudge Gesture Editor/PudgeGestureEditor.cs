@@ -8,24 +8,24 @@ namespace Game.Gameplay
 {
     public class PudgeGestureEditor
     {
-        private readonly PudgeEditor _pudgeEditor;
-        private readonly RaycastService _raycastService;
-        private readonly GestureService _gestureService;
-        private readonly ScreenService _screenService;
-        private readonly PudgeGestureEditorView _view;
-        private readonly PudgeSpawner _pudgeSpawner;
+        private readonly IPudgeEditor _pudgeEditor;
+        private readonly IRaycastService _raycastService;
+        private readonly IGestureService _gestureService;
+        private readonly IScreenService _screenService;
+        private readonly IPudgeGestureEditorView _view;
+        private readonly IPudgeSpawner _pudgeSpawner;
 
         private bool _enabled;
 
         private DisposableBag _disposableBag;
 
         public PudgeGestureEditor(
-            PudgeEditor pudgeEditor,
-            RaycastService raycastService,
-            GestureService gestureService,
-            ScreenService screenService,
-            PudgeGestureEditorView view,
-            PudgeSpawner pudgeSpawner)
+            IPudgeEditor pudgeEditor,
+            IRaycastService raycastService,
+            IGestureService gestureService,
+            IScreenService screenService,
+            IPudgeGestureEditorView view,
+            IPudgeSpawner pudgeSpawner)
         {
             _pudgeEditor = pudgeEditor;
             _raycastService = raycastService;
@@ -78,14 +78,12 @@ namespace Game.Gameplay
 
         private void CrossDeletePudge(Vector2 crossCenter)
         {
-            bool hasCollision = _raycastService.RaycastOnObject(crossCenter, _view.PudgeLayerMask, out var collider);
+            bool hasPudgeView = _raycastService.TryRaycastOnComponent(
+                crossCenter,
+                _view.PudgeLayerMask,
+                out IPudgeView pudgeView);
 
-            if (!hasCollision)
-            {
-                return;
-            }
-
-            if (!collider.TryGetComponent<IPudgeView>(out var pudgeView))
+            if (!hasPudgeView)
                 return;
 
             Pudge pudge = pudgeView.Pudge;

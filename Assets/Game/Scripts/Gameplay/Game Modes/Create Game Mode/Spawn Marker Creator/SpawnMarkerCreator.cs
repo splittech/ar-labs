@@ -7,9 +7,9 @@ namespace Game.Gameplay
 {
     public class SpawnMarkerCreator : ISpawnMarkerCreator
     {
-        private readonly SpawnMarkerCreatorView _spawnMarkerCreatorView;
-        private readonly InputService _inputService;
-        private readonly RaycastService _raycastService;
+        private readonly ISpawnMarkerCreatorView _spawnMarkerCreatorView;
+        private readonly IInputService _inputService;
+        private readonly IRaycastService _raycastService;
 
         private SpawnMarker _currentSpawnMarker;
         private DisposableBag _disposableBag;
@@ -17,7 +17,7 @@ namespace Game.Gameplay
 
         private readonly Subject<Pose> _onSpawnMarkerReleased = new();
 
-        public SpawnMarkerCreator(SpawnMarkerCreatorView spawnMarkerCreatorView, InputService inputService, RaycastService raycastService)
+        public SpawnMarkerCreator(ISpawnMarkerCreatorView spawnMarkerCreatorView, IInputService inputService, IRaycastService raycastService)
         {
             _spawnMarkerCreatorView = spawnMarkerCreatorView;
             _inputService = inputService;
@@ -82,7 +82,7 @@ namespace Game.Gameplay
             if (!_raycastService.RaycastOnFloor(context.ScreenPosition, out Pose pose))
                 return;
 
-            SpawnMarkerView spawnMarkerView = _spawnMarkerCreatorView.CreateSpawnMarkerObject(pose.position, pose.rotation);
+            ISpawnMarkerView spawnMarkerView = _spawnMarkerCreatorView.CreateSpawnMarkerObject(pose.position, pose.rotation);
             _currentSpawnMarker = new SpawnMarker(spawnMarkerView, pose);
         }
 

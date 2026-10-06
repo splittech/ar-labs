@@ -171,6 +171,104 @@ namespace Game.Tests
             return pudgeSpawner;
         }
 
+        public static PudgeGestureEditor PudgeGestureEditor(
+            out Subject<Swipe> onHorizontalSwipe,
+            out ReactiveProperty<Pudge> selectedPudge,
+            float screenWidth = 1000f,
+            float maxSwipeRotationAngle = 360f)
+        {
+            return PudgeGestureEditor(
+                out onHorizontalSwipe, out _, out selectedPudge, out _, out _,
+                screenWidth, maxSwipeRotationAngle);
+        }
+
+        public static PudgeGestureEditor PudgeGestureEditor(
+            out Subject<Vector2> onCross,
+            out ReactiveProperty<Pudge> selectedPudge,
+            out IRaycastService raycastService,
+            out IPudgeSpawner pudgeSpawner,
+            float screenWidth = 1000f,
+            float maxSwipeRotationAngle = 360f)
+        {
+            return PudgeGestureEditor(
+                out _, out onCross, out selectedPudge, out raycastService, out pudgeSpawner,
+                screenWidth, maxSwipeRotationAngle);
+        }
+
+        public static PudgeGestureEditor PudgeGestureEditor(
+            out Subject<Swipe> onHorizontalSwipe,
+            out Subject<Vector2> onCross,
+            out ReactiveProperty<Pudge> selectedPudge,
+            out IRaycastService raycastService,
+            out IPudgeSpawner pudgeSpawner,
+            float screenWidth = 1000f,
+            float maxSwipeRotationAngle = 360f)
+        {
+            onHorizontalSwipe = new Subject<Swipe>();
+            onCross = new Subject<Vector2>();
+            selectedPudge = new ReactiveProperty<Pudge>();
+
+            var gestureService = Substitute.For<IGestureService>();
+            gestureService.OnHorizontalSwipe.Returns(onHorizontalSwipe);
+            gestureService.OnCross.Returns(onCross);
+
+            var pudgeEditor = Substitute.For<IPudgeEditor>();
+            pudgeEditor.SelectedPudge.Returns(selectedPudge);
+
+            var screenService = Substitute.For<IScreenService>();
+            screenService.SceenWidth.Returns(screenWidth);
+
+            var pudgeGestureEditorView = Substitute.For<IPudgeGestureEditorView>();
+            pudgeGestureEditorView.MaxSwipeRotationAngle.Returns(maxSwipeRotationAngle);
+
+            raycastService = Substitute.For<IRaycastService>();
+            pudgeSpawner = Substitute.For<IPudgeSpawner>();
+
+            PudgeGestureEditor pudgeGestureEditor = new(
+                pudgeEditor, raycastService, gestureService, screenService, pudgeGestureEditorView, pudgeSpawner);
+            return pudgeGestureEditor;
+        }
+
+        public static SpawnMarkerCreator SpawnMarkerCreator(
+            out Subject<InputContext> onInputActionPerformed,
+            out IRaycastService raycastService)
+        {
+            onInputActionPerformed = new Subject<InputContext>();
+
+            var inputService = Substitute.For<IInputService>();
+            inputService.OnInputActionPerformed.Returns(onInputActionPerformed);
+
+            raycastService = Substitute.For<IRaycastService>();
+
+            var spawnMarkerCreatorView = Substitute.For<ISpawnMarkerCreatorView>();
+            spawnMarkerCreatorView
+                .CreateSpawnMarkerObject(Arg.Any<Vector3>(), Arg.Any<Quaternion>())
+                .Returns(_ => SpawnMarkerView());
+
+            SpawnMarkerCreator spawnMarkerCreator = new(spawnMarkerCreatorView, inputService, raycastService);
+            return spawnMarkerCreator;
+        }
+
+        // Мок View маркера, который, как настоящий transform, отдаёт последнюю выставленную позу.
+        private static ISpawnMarkerView SpawnMarkerView()
+        {
+            Vector3 position = Vector3.zero;
+            Quaternion rotation = Quaternion.identity;
+
+            var spawnMarkerView = Substitute.For<ISpawnMarkerView>();
+            spawnMarkerView
+                .When(view => view.SetTransformPositionAndRotation(Arg.Any<Vector3>(), Arg.Any<Quaternion>()))
+                .Do(call =>
+                {
+                    position = call.ArgAt<Vector3>(0);
+                    rotation = call.ArgAt<Quaternion>(1);
+                });
+            spawnMarkerView.Position.Returns(_ => position);
+            spawnMarkerView.Rotation.Returns(_ => rotation);
+
+            return spawnMarkerView;
+        }
+
         public static Timer Timer(out Subject<Tick> onTick)
         {
             onTick = new Subject<Tick>();

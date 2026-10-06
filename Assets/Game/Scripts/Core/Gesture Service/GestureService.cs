@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class GestureService
+    public class GestureService : IGestureService
     {
         private readonly GestureServiceView _view;
         private readonly CrossDetector _crossDetector;

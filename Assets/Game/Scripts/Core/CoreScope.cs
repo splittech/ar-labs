@@ -70,7 +70,7 @@ namespace Game.Core
             builder.RegisterComponent(_fpsCounterView);
 
             // Gesture Service.
-            builder.Register<GestureService>(Lifetime.Singleton);
+            builder.Register<GestureService>(Lifetime.Singleton).AsSelf().As<IGestureService>();
             builder.RegisterComponent(_gestureServiceView);
 
             builder.Register<HorizontalSwipeDetector>(Lifetime.Singleton);
@@ -93,7 +93,7 @@ namespace Game.Core
             builder.RegisterInstance(_loggingServiceConfig);
 
             // Screen Service.
-            builder.Register<ScreenService>(Lifetime.Singleton);
+            builder.Register<ScreenService>(Lifetime.Singleton).AsSelf().As<IScreenService>();
         }
     }
 }
