@@ -2,6 +2,7 @@ using Game.Core;
 using Game.Gameplay;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools.Utils;
 
 namespace Game.Tests.EditMode
 {
@@ -9,8 +10,8 @@ namespace Game.Tests.EditMode
     {
         public const float InitialPudgeScale = 1f;
         public const float PudgeReduceScaleSpeed = 1f;
-        private const float PudgeLinearMovementSpeed = 1f;
-        private const float PudgeLinearRotationSpeed = 1f;
+        public const float PudgeLinearMovementSpeed = 1f;
+        public const float PudgeLinearRotationSpeed = 1f;
 
         [Test]
         public void Despawn_PudgeIsNotInitialized_PudgeIsDisposed()
@@ -134,7 +135,7 @@ namespace Game.Tests.EditMode
         public void RotateTo_WithInstantEasingType_PudgeCurrentRotationIsTargetRotation()
         {
             // Arrange.
-            Quaternion targetRotation = new(0.1f, 0.2f, 0.3f, 0.4f);
+            Quaternion targetRotation = Quaternion.Euler(0f, 45f, 0f);
 
             Pudge pudge = Setup.Pudge(out var _);
             pudge.Initialize();
@@ -143,19 +144,21 @@ namespace Game.Tests.EditMode
             pudge.RotateTo(targetRotation: targetRotation, easingType: Pudge.EasingType.Instant);
 
             // Assert.
-            Assert.That(pudge.CurrentPose.rotation, Is.EqualTo(targetRotation));
+            Assert.That(pudge.CurrentPose.rotation, Is.EqualTo(targetRotation).Using(QuaternionEqualityComparer.Instance));
         }
 
         [Test]
         public void RotateTo_WithLinearEasingTypeAndAnimationEnded_PudgeCurrentRotationIsTargetRotation()
         {
             // Arrange.
-            Quaternion targetRotation = new(0.1f, 0.2f, 0.3f, 0.4f);
+            Quaternion targetRotation = Quaternion.Euler(0f, 45f, 0f);
 
-            Pudge pudge = Setup.Pudge(out var onTick, linearMovementSpeed: PudgeLinearMovementSpeed);
+            Pudge pudge = Setup.Pudge(out var onTick, linearRotationSpeed: PudgeLinearRotationSpeed);
             pudge.Initialize();
 
-            float deltaAngle = Quaternion.Angle(pudge.CurrentPose.rotation, targetRotation);
+            float deltaAngle = Mathf.Abs(Mathf.DeltaAngle(
+                pudge.CurrentPose.rotation.eulerAngles.y,
+                targetRotation.eulerAngles.y));
 
             // Act.
             pudge.RotateTo(targetRotation: targetRotation, easingType: Pudge.EasingType.Linear);
@@ -165,7 +168,7 @@ namespace Game.Tests.EditMode
             ));
 
             // Assert.
-            Assert.That(pudge.CurrentPose.rotation, Is.EqualTo(targetRotation));
+            Assert.That(pudge.CurrentPose.rotation, Is.EqualTo(targetRotation).Using(QuaternionEqualityComparer.Instance));
         }
     }
 }

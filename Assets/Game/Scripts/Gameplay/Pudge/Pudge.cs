@@ -70,19 +70,20 @@ namespace Game.Gameplay
         }
 
         public void Initialize(
-            Pose initialPose = default,
+            Pose? initialPose = null,
             State initialState = State.Normal,
             float initialScale = 1f)
         {
             CheckIsNotDisposed();
             CheckIsNotDespawning();
-
             if (_initialized)
                 return;
 
+            initialPose ??= Pose.identity;
+
             _view.Initialize(this);
 
-            SetPose(initialPose);
+            SetPose(initialPose.Value);
             SetScale(initialScale);
             SetState(initialState);
 
