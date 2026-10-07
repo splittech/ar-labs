@@ -74,7 +74,7 @@ namespace Game.Core
             builder.RegisterComponent(_gestureServiceView).As<IGestureServiceView>();
 
             builder.Register<HorizontalSwipeDetector>(Lifetime.Singleton).As<IHorizontalSwipeDetector>();
-            builder.RegisterComponent(_horizontalSwipeDetectorView);
+            builder.RegisterComponent(_horizontalSwipeDetectorView).As<IHorizontalSwipeDetectorView>();
 
             builder.Register<CrossDetector>(Lifetime.Singleton).As<ICrossDetector>();
             builder.RegisterComponent(_crossDetectorView).As<ICrossDetectorView>();

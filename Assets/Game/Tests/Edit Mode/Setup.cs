@@ -286,6 +286,15 @@ namespace Game.Tests
             return gestureService;
         }
 
+        public static HorizontalSwipeDetector HorizontalSwipeDetector(float maxHorizontalDeltaAngle = 20f)
+        {
+            var horizontalSwipeDetectorView = Substitute.For<IHorizontalSwipeDetectorView>();
+            horizontalSwipeDetectorView.MaxHorizontalDeltaAngle.Returns(maxHorizontalDeltaAngle);
+
+            HorizontalSwipeDetector horizontalSwipeDetector = new(horizontalSwipeDetectorView);
+            return horizontalSwipeDetector;
+        }
+
         public static Timer Timer(out Subject<Tick> onTick)
         {
             onTick = new Subject<Tick>();
@@ -298,7 +307,7 @@ namespace Game.Tests
         }
 
         public static CrossDetector CrossDetector(
-            float maxDiagonalDeltaAngle = 30f,
+            float maxDiagonalDeltaAngle = 25f,
             float maxDeltaTimeBetweenTwoSwipes = 1f)
         {
             return CrossDetector(out _, maxDiagonalDeltaAngle, maxDeltaTimeBetweenTwoSwipes);
@@ -306,7 +315,7 @@ namespace Game.Tests
 
         public static CrossDetector CrossDetector(
             out ReactiveProperty<bool> timerElapsed,
-            float maxDiagonalDeltaAngle = 30f,
+            float maxDiagonalDeltaAngle = 25f,
             float maxDeltaTimeBetweenTwoSwipes = 1f)
         {
             timerElapsed = new ReactiveProperty<bool>(false);

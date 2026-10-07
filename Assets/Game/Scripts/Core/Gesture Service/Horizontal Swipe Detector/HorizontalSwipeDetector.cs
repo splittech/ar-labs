@@ -4,9 +4,9 @@ namespace Game.Core
 {
     public class HorizontalSwipeDetector : IHorizontalSwipeDetector
     {
-        private readonly HorizontalSwipeDetectorView _view;
+        private readonly IHorizontalSwipeDetectorView _view;
 
-        public HorizontalSwipeDetector(HorizontalSwipeDetectorView horizontalSwipeDetectorView)
+        public HorizontalSwipeDetector(IHorizontalSwipeDetectorView horizontalSwipeDetectorView)
         {
             _view = horizontalSwipeDetectorView;
         }
