@@ -1,15 +1,15 @@
 namespace Game.Core
 {
-    public class TimerService
+    public class TimerService : ITimerService
     {
-        private readonly TickService _tickService;
+        private readonly ITickService _tickService;
 
-        public TimerService(TickService tickService)
+        public TimerService(ITickService tickService)
         {
             _tickService = tickService;
         }
 
-        public Timer CreateTimer()
+        public ITimer CreateTimer()
         {
             return new Timer(_tickService);
         }

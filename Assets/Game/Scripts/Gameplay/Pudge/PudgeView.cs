@@ -6,15 +6,15 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeView : MonoBehaviour
+    public enum AnimatorState
     {
-        public enum AnimatorState
-        {
-            Normal,
-            Happy,
-            Sad
-        }
+        Normal,
+        Happy,
+        Sad
+    }
 
+    public class PudgeView : MonoBehaviour, IPudgeView
+    {
         [Header("General")]
         [SerializeField] private string _name;
         [SerializeField, TextArea] private string _description;

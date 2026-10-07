@@ -16,8 +16,8 @@ namespace Game.Menu
             builder.RegisterEntryPoint<MenuBootstrap>();
 
             // Menu Switcher.
-            builder.Register<MenuSwitcher>(Lifetime.Singleton);
-            builder.RegisterComponent(_menuSwitcherView);
+            builder.Register<MenuSwitcher>(Lifetime.Singleton).AsSelf().As<IMenuSwitcher>();
+            builder.RegisterComponent(_menuSwitcherView).As<IMenuSwitcherView>();
             builder.RegisterComponent(_initialMenuView);
         }
     }

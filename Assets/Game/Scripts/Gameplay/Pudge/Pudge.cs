@@ -23,8 +23,8 @@ namespace Game.Gameplay
             Damped,
         }
 
-        private readonly PudgeView _view;
-        private readonly TickService _tickService;
+        private readonly IPudgeView _view;
+        private readonly ITickService _tickService;
 
         private readonly ReactiveProperty<Vector3?> _targetPosition = new(null);
         private readonly ReactiveProperty<float?> _remainingRotationAngle = new(null);
@@ -55,33 +55,35 @@ namespace Game.Gameplay
         public string Name => _view.Name;
         public string Description => _view.Description;
         public bool Selected => _selected;
-        public bool IsDespawning => _isDespawning;
         public bool Disposed => _disposed;
+        public bool IsDespawning => _isDespawning;
+        public bool IsValid => _initialized && !_disposed && !_isDespawning;
 
         public ReadOnlyReactiveProperty<Vector3?> TargetPosition => _targetPosition;
         public ReadOnlyReactiveProperty<float?> RemainingRotationAngle => _remainingRotationAngle;
         public ReadOnlyReactiveProperty<float?> TargetScale => _targetScale;
 
-        public Pudge(PudgeView pudgeView, TickService tickService)
+        public Pudge(IPudgeView pudgeView, ITickService tickService)
         {
             _view = pudgeView;
             _tickService = tickService;
         }
 
         public void Initialize(
-            Pose initialPose,
-            State initialState,
-            float initialScale)
+            Pose? initialPose = null,
+            State initialState = State.Normal,
+            float initialScale = 1f)
         {
-            CheckDisposed();
-            CheckDespawning();
-
+            CheckIsNotDisposed();
+            CheckIsNotDespawning();
             if (_initialized)
                 return;
 
+            initialPose ??= Pose.identity;
+
             _view.Initialize(this);
 
-            SetPose(initialPose);
+            SetPose(initialPose.Value);
             SetScale(initialScale);
             SetState(initialState);
 
@@ -101,8 +103,7 @@ namespace Game.Gameplay
                 return;
             }
 
-            CheckDisposed();
-            if (_isDespawning)
+            if (_isDespawning || _disposed)
                 return;
 
             ScaleTo(0f, EasingType.Linear);
@@ -117,10 +118,9 @@ namespace Game.Gameplay
                 .AddTo(ref _disposableBag);
         }
 
-        public void MoveTo(Vector3 targetPosition, EasingType easingType, float speedMultiplier = 1f)
+        public void MoveTo(Vector3 targetPosition, EasingType easingType = EasingType.Instant, float speedMultiplier = 1f)
         {
-            CheckDisposed();
-            CheckDespawning();
+            CheckIsValid();
 
             _movementEasingType = easingType;
 
@@ -137,32 +137,37 @@ namespace Game.Gameplay
 
         public void RotateBy(float angle, EasingType easingType, float speedMultiplier = 1f)
         {
+            CheckIsValid();
+
             StartRotation((_remainingRotationAngle.Value ?? 0f) + angle, easingType, speedMultiplier);
         }
 
         public void RotateTo(Vector3 targetPosition, EasingType easingType, float speedMultiplier = 1f)
         {
+            CheckIsValid();
+
             Vector3 lookDirection = targetPosition - _currentPose.position;
             lookDirection.y = 0f;
 
-            if (lookDirection.sqrMagnitude < 0.000001f)
+            if (lookDirection.magnitude < 0.001f)
                 return;
 
             RotateTo(Quaternion.LookRotation(lookDirection, Vector3.up), easingType, speedMultiplier);
         }
 
-        public void RotateTo(Quaternion targetRotation, EasingType easingType, float speedMultiplier = 1f)
+        public void RotateTo(Quaternion targetRotation, EasingType easingType = EasingType.Instant, float speedMultiplier = 1f)
         {
+            CheckIsValid();
+
             float currentYaw = _currentPose.rotation.eulerAngles.y;
             float targetYaw = targetRotation.eulerAngles.y;
 
             StartRotation(Mathf.DeltaAngle(currentYaw, targetYaw), easingType, speedMultiplier);
         }
 
-        public void ScaleTo(float targetScale, EasingType easingType, float speedMultiplier = 1f)
+        public void ScaleTo(float targetScale, EasingType easingType = EasingType.Instant, float speedMultiplier = 1f)
         {
-            CheckDisposed();
-            CheckDespawning();
+            CheckIsValid();
 
             _scalingEasingType = easingType;
 
@@ -185,27 +190,9 @@ namespace Game.Gameplay
                 TargetScale.CurrentValue != null;
         }
 
-        public void SetState(State state)
-        {
-            CheckDisposed();
-            CheckDespawning();
-
-            PudgeView.AnimatorState animatorState = state switch
-            {
-                State.Normal => PudgeView.AnimatorState.Normal,
-                State.Happy => PudgeView.AnimatorState.Happy,
-                State.Sad => PudgeView.AnimatorState.Sad,
-                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
-            };
-
-            _view.SetAnimatorState(animatorState);
-            _currentState = state;
-        }
-
         public void Select()
         {
-            CheckDisposed();
-            CheckDespawning();
+            CheckIsValid();
 
             _selected = true;
             _view.Select();
@@ -213,18 +200,28 @@ namespace Game.Gameplay
 
         public void Deselect()
         {
-            CheckDisposed();
-            CheckDespawning();
+            CheckIsValid();
 
             _selected = false;
             _view.Deselect();
         }
 
+        private void SetState(State state)
+        {
+            AnimatorState animatorState = state switch
+            {
+                State.Normal => AnimatorState.Normal,
+                State.Happy => AnimatorState.Happy,
+                State.Sad => AnimatorState.Sad,
+                _ => throw new NotImplementedException()
+            };
+
+            _view.SetAnimatorState(animatorState);
+            _currentState = state;
+        }
+
         private void StartRotation(float angle, EasingType easingType, float speedMultiplier)
         {
-            CheckDisposed();
-            CheckDespawning();
-
             _rotationEasingType = easingType;
 
             if (easingType == EasingType.Instant)
@@ -252,7 +249,7 @@ namespace Game.Gameplay
             _view.DestroyObject();
         }
 
-        private void OnUpdate(TickService.Tick tick)
+        private void OnUpdate(Tick tick)
         {
             UpdatePosition(tick.DeltaTime);
             UpdateRotation(tick.DeltaTime);
@@ -349,16 +346,29 @@ namespace Game.Gameplay
             _view.SetScale(scale);
         }
 
-        private void CheckDisposed()
+        private void CheckIsValid()
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(Pudge));
+            CheckIsNotDisposed();
+            CheckIsNotDespawning();
+            CheckInitialized();
         }
 
-        private void CheckDespawning()
+        private void CheckInitialized()
+        {
+            if (!_initialized)
+                throw new InvalidOperationException($"{nameof(Pudge)} is not initialized.");
+        }
+
+        private void CheckIsNotDespawning()
         {
             if (_isDespawning)
                 throw new InvalidOperationException($"{nameof(Pudge)} is despawning.");
+        }
+
+        private void CheckIsNotDisposed()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(Pudge));
         }
     }
 }

@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class GestureService
+    public class GestureService : IGestureService
     {
-        private readonly GestureServiceView _view;
-        private readonly CrossDetector _crossDetector;
-        private readonly HorizontalSwipeDetector _horizontalSwipeDetector;
+        private readonly IGestureServiceView _view;
+        private readonly ICrossDetector _crossDetector;
+        private readonly IHorizontalSwipeDetector _horizontalSwipeDetector;
         private bool _enabled;
 
         private DisposableBag _seviceDisposableBag;
@@ -20,9 +20,9 @@ namespace Game.Core
         public Observable<Vector2> OnCross => _onCross;
 
         public GestureService(
-            GestureServiceView gestureServiceView,
-            CrossDetector crossDetector,
-            HorizontalSwipeDetector horizontalSwipeDetector)
+            IGestureServiceView gestureServiceView,
+            ICrossDetector crossDetector,
+            IHorizontalSwipeDetector horizontalSwipeDetector)
         {
             _view = gestureServiceView;
             _crossDetector = crossDetector;

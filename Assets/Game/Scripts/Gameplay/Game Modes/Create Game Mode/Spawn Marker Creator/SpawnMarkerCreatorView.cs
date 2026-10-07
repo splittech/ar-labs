@@ -2,14 +2,14 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class SpawnMarkerCreatorView : MonoBehaviour
+    public class SpawnMarkerCreatorView : MonoBehaviour, ISpawnMarkerCreatorView
     {
         [SerializeField] private GameObject _spawnMarkerPrefab;
 
-        public SpawnMarkerView CreateSpawnMarkerObject(Vector3 position, Quaternion rotation)
+        public ISpawnMarkerView CreateSpawnMarkerObject(Vector3 position, Quaternion rotation)
         {
             GameObject spawnMarkerObject = Instantiate(_spawnMarkerPrefab, position, rotation);
-            SpawnMarkerView spawnMarkerView = spawnMarkerObject.GetComponent<SpawnMarkerView>();
+            ISpawnMarkerView spawnMarkerView = spawnMarkerObject.GetComponent<ISpawnMarkerView>();
             return spawnMarkerView;
         }
     }

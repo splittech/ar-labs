@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class SpawnMarkerView : MonoBehaviour
+    public class SpawnMarkerView : MonoBehaviour, ISpawnMarkerView
     {
         public Vector3 Position => transform.position;
         public Quaternion Rotation => transform.rotation;

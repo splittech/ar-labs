@@ -1,18 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Game.Core;
-using Game.Core.Input;
 using R3;
 using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeSpawner
+    public class PudgeSpawner : IPudgeSpawner
     {
-        private readonly InputService _inputService;
-        private readonly PudgeSpawnerView _pudgeSpawnerView;
-        private readonly SpawnMarkerCreator _spawnMarkerCreator;
-        private readonly TickService _tickService;
+        private readonly IPudgeSpawnerView _pudgeSpawnerView;
+        private readonly ISpawnMarkerCreator _spawnMarkerCreator;
+        private readonly ITickService _tickService;
 
         private HashSet<Pudge> _spawnedPudges = new();
         private Pudge.State _inititalPudgeState;
@@ -26,12 +24,10 @@ namespace Game.Gameplay
         public Observable<Pudge> OnPudgeSpawned => _onPudgeSpawned;
 
         public PudgeSpawner(
-            InputService inputService,
-            PudgeSpawnerView pudgeSpawnerView,
-            SpawnMarkerCreator spawnMarkerCreator,
-            TickService tickService)
+            IPudgeSpawnerView pudgeSpawnerView,
+            ISpawnMarkerCreator spawnMarkerCreator,
+            ITickService tickService)
         {
-            _inputService = inputService;
             _pudgeSpawnerView = pudgeSpawnerView;
             _spawnMarkerCreator = spawnMarkerCreator;
             _tickService = tickService;
@@ -44,13 +40,8 @@ namespace Game.Gameplay
 
             _enabled = true;
 
-            _inputService.OnInputActionPerformed
-                .Where(context => context is
-                {
-                    ActionType: ActionType.Press,
-                    ActionStatus: ActionStatus.Canceled,
-                })
-                .Subscribe(_ => SpawnInitialPudge())
+            _spawnMarkerCreator.OnSpawnMarkerReleased
+                .Subscribe(SpawnInitialPudge)
                 .AddTo(ref _disposableBag);
         }
 
@@ -70,7 +61,7 @@ namespace Game.Gameplay
 
         public void SpawnPudge(Pose pudgePose, Pudge.State pudgeState, float pudgeScale)
         {
-            PudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pudgeState);
+            IPudgeView pudgeView = _pudgeSpawnerView.CreatePudgeObject(pudgeState);
             Pudge pudge = new(pudgeView, _tickService);
 
             pudge.Initialize(pudgePose, pudgeState, pudgeScale);
@@ -84,13 +75,13 @@ namespace Game.Gameplay
             _spawnedPudges.Remove(pudge);
         }
 
-        private void SpawnInitialPudge()
+        private void SpawnInitialPudge(Pose spawnMarkerPose)
         {
-            if (_spawnMarkerCreator.CurrentSpawnMarker == null || _inititalPudgeState == Pudge.State.None)
+            if (_inititalPudgeState == Pudge.State.None)
                 return;
 
             SpawnPudge(
-                _spawnMarkerCreator.CurrentSpawnMarker.Pose,
+                spawnMarkerPose,
                 _inititalPudgeState,
                 _pudgeSpawnerView.InitialScale);
         }

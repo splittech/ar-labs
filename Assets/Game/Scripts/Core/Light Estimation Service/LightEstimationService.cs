@@ -9,7 +9,7 @@ namespace Game.Core
     public class LightEstimationService
     {
         private readonly ARService _ARService;
-        private readonly TickService _tickService;
+        private readonly ITickService _tickService;
         private readonly LightEstimationServiceView _view;
 
         private bool _enabled;
@@ -29,7 +29,7 @@ namespace Game.Core
         private Quaternion? _targetRotation;
         private SphericalHarmonicsL2? _targetAmbientProbe;
 
-        public LightEstimationService(ARService aRService, TickService tickService, LightEstimationServiceView view)
+        public LightEstimationService(ARService aRService, ITickService tickService, LightEstimationServiceView view)
         {
             _ARService = aRService;
             _tickService = tickService;

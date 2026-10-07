@@ -4,11 +4,11 @@ namespace Game.Gameplay
 {
     public class SpawnMarker
     {
-        private readonly SpawnMarkerView _spawnMarkerView;
+        private readonly ISpawnMarkerView _spawnMarkerView;
 
         public Pose Pose => new(_spawnMarkerView.Position, _spawnMarkerView.Rotation);
 
-        public SpawnMarker(SpawnMarkerView spawnMarkerView, Pose pose)
+        public SpawnMarker(ISpawnMarkerView spawnMarkerView, Pose pose)
         {
             _spawnMarkerView = spawnMarkerView;
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeSpawnerView : MonoBehaviour
+    public class PudgeSpawnerView : MonoBehaviour, IPudgeSpawnerView
     {
         [Header("Parameters")]
         [SerializeField] private Transform _pudgeRootTransform;
@@ -16,7 +16,7 @@ namespace Game.Gameplay
 
         public float InitialScale => _initialScale;
 
-        public PudgeView CreatePudgeObject(Pudge.State pudgeState)
+        public IPudgeView CreatePudgeObject(Pudge.State pudgeState)
         {
             GameObject pudgePrefab = pudgeState switch
             {
@@ -27,7 +27,7 @@ namespace Game.Gameplay
             };
 
             GameObject pudgeObject = Instantiate(pudgePrefab, _pudgeRootTransform);
-            PudgeView pudgeView = pudgeObject.GetComponent<PudgeView>();
+            IPudgeView pudgeView = pudgeObject.GetComponent<IPudgeView>();
             return pudgeView;
         }
     }

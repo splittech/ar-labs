@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Menu
 {
-    public class MenuView : MonoBehaviour
+    public class MenuView : MonoBehaviour, IMenuView
     {
         public virtual void Show()
         {

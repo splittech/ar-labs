@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeGestureEditorView : MonoBehaviour
+    public class PudgeGestureEditorView : MonoBehaviour, IPudgeGestureEditorView
     {
         [SerializeField] private LayerMask _pudgeLayerMask;
         [SerializeField] private float maxSwipeRotationAngle = 360f;

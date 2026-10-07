@@ -32,11 +32,11 @@ namespace Game.Gameplay
 
             // Pudge Merger.
             builder.Register<PudgeMerger>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeMergerView);
+            builder.RegisterComponent(_pudgeMergerView).As<IPudgeMergerView>();
 
             // Game Mode Switcher.
             builder.Register<GameModeSwitcher>(Lifetime.Singleton);
-            builder.Register<GameModeResolver>(Lifetime.Singleton);
+            builder.Register<GameModeResolver>(Lifetime.Singleton).As<IGameModeResolver>();
 
             // Empty Game Mode.
             builder.Register<EmptyGameMode>(Lifetime.Singleton);
@@ -44,18 +44,18 @@ namespace Game.Gameplay
             // Create Game Mode.
             builder.Register<CreateGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_createGameModeView);
-            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton);
-            builder.RegisterComponent(_spawnMarkerCreatorView);
-            builder.Register<PudgeSpawner>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeSpawnerView);
+            builder.Register<SpawnMarkerCreator>(Lifetime.Singleton).AsSelf().As<ISpawnMarkerCreator>();
+            builder.RegisterComponent(_spawnMarkerCreatorView).As<ISpawnMarkerCreatorView>();
+            builder.Register<PudgeSpawner>(Lifetime.Singleton).AsSelf().As<IPudgeSpawner>();
+            builder.RegisterComponent(_pudgeSpawnerView).As<IPudgeSpawnerView>();
 
             // Edit Game Mode.
             builder.Register<EditGameMode>(Lifetime.Singleton);
             builder.RegisterComponent(_editGameModeView);
-            builder.Register<PudgeEditor>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeEditorView);
+            builder.Register<PudgeEditor>(Lifetime.Singleton).AsSelf().As<IPudgeEditor>();
+            builder.RegisterComponent(_pudgeEditorView).As<IPudgeEditorView>();
             builder.Register<PudgeGestureEditor>(Lifetime.Singleton);
-            builder.RegisterComponent(_pudgeGestureEditorView);
+            builder.RegisterComponent(_pudgeGestureEditorView).As<IPudgeGestureEditorView>();
 
             // Image Tracking Mode.
             builder.Register<ImageTrackingMode>(Lifetime.Singleton);

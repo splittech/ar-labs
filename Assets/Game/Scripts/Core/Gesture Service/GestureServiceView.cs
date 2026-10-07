@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Core
 {
-    public class GestureServiceView : MonoBehaviour
+    public class GestureServiceView : MonoBehaviour, IGestureServiceView
     {
         [SerializeField] private LeanFingerSwipe _leanFingerSwipe;
 

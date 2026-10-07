@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class PudgeMergerView : MonoBehaviour
+    public class PudgeMergerView : MonoBehaviour, IPudgeMergerView
     {
         [Header("Parameters")]
         [SerializeField] private GameObject _finalEffectPrefab;
