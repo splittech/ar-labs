@@ -2,7 +2,7 @@ using Game.Menu;
 
 namespace Game.Gameplay
 {
-    public class GameModeResolver
+    public class GameModeResolver : IGameModeResolver
     {
         private readonly EmptyGameMode _emptyGameMode;
 
@@ -40,7 +40,7 @@ namespace Game.Gameplay
             _faceTrackingModeView = faceTrackingModeView;
         }
 
-        public GameMode ResolveGameMode(MenuView menuView)
+        public GameMode ResolveGameMode(IMenuView menuView)
         {
             if (menuView == _createGameModeView)
                 return _createGameMode;

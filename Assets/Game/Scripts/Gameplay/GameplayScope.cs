@@ -36,7 +36,7 @@ namespace Game.Gameplay
 
             // Game Mode Switcher.
             builder.Register<GameModeSwitcher>(Lifetime.Singleton);
-            builder.Register<GameModeResolver>(Lifetime.Singleton);
+            builder.Register<GameModeResolver>(Lifetime.Singleton).As<IGameModeResolver>();
 
             // Empty Game Mode.
             builder.Register<EmptyGameMode>(Lifetime.Singleton);

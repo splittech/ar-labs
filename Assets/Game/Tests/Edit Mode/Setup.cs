@@ -3,6 +3,7 @@ using Game.Core;
 using Game.Core.AR;
 using Game.Core.Input;
 using Game.Gameplay;
+using Game.Menu;
 using NSubstitute;
 using R3;
 using UnityEngine;
@@ -293,6 +294,37 @@ namespace Game.Tests
 
             HorizontalSwipeDetector horizontalSwipeDetector = new(horizontalSwipeDetectorView);
             return horizontalSwipeDetector;
+        }
+
+        public static MenuSwitcher MenuSwitcher()
+        {
+            return MenuSwitcher(out _);
+        }
+
+        public static MenuSwitcher MenuSwitcher(out Subject<IMenuView> onSwitchMenuButtonClicked)
+        {
+            onSwitchMenuButtonClicked = new Subject<IMenuView>();
+
+            var menuSwitcherView = Substitute.For<IMenuSwitcherView>();
+            menuSwitcherView.OnSwitchMenuButtonClicked.Returns(onSwitchMenuButtonClicked);
+
+            MenuSwitcher menuSwitcher = new(menuSwitcherView);
+            return menuSwitcher;
+        }
+
+        public static GameModeSwitcher GameModeSwitcher(
+            out ReactiveProperty<IMenuView> currentMenuView,
+            out IGameModeResolver gameModeResolver)
+        {
+            currentMenuView = new ReactiveProperty<IMenuView>();
+
+            var menuSwitcher = Substitute.For<IMenuSwitcher>();
+            menuSwitcher.CurrentMenuView.Returns(currentMenuView);
+
+            gameModeResolver = Substitute.For<IGameModeResolver>();
+
+            GameModeSwitcher gameModeSwitcher = new(menuSwitcher, gameModeResolver);
+            return gameModeSwitcher;
         }
 
         public static Timer Timer(out Subject<Tick> onTick)

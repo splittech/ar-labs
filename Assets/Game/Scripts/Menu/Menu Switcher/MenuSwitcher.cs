@@ -2,35 +2,44 @@ using R3;
 
 namespace Game.Menu
 {
-    public class MenuSwitcher
+    public class MenuSwitcher : IMenuSwitcher
     {
-        private readonly MenuSwitcherView _menuSwitcherView;
+        private readonly IMenuSwitcherView _menuSwitcherView;
 
-        private MenuView _currentMenuView;
+        private readonly ReactiveProperty<IMenuView> _currentMenuView = new();
+        private bool _initialized;
 
-        public Observable<MenuView> OnMenuSwitched;
+        private DisposableBag _disposableBag;
 
-        public MenuSwitcher(MenuSwitcherView menuSwitcherView)
+        // Хранит текущее меню, поэтому подписчик сразу получает его значение
+        // и не зависит от того, успел ли MenuSwitcher переключиться до подписки.
+        public ReadOnlyReactiveProperty<IMenuView> CurrentMenuView => _currentMenuView;
+
+        public MenuSwitcher(IMenuSwitcherView menuSwitcherView)
         {
             _menuSwitcherView = menuSwitcherView;
         }
 
         public void Initialize()
         {
-            OnMenuSwitched = _menuSwitcherView.OnSwitchMenuButtonClicked;
+            if (_initialized)
+                return;
+            _initialized = true;
 
             _menuSwitcherView.OnSwitchMenuButtonClicked
-                .Subscribe(SwitchMenuView);
+                .Subscribe(SwitchMenuView)
+                .AddTo(ref _disposableBag);
         }
 
-        public void SwitchMenuView(MenuView menuView)
+        public void SwitchMenuView(IMenuView menuView)
         {
-            if (_currentMenuView != null)
-                _currentMenuView.Hide();
+            if (menuView == _currentMenuView.Value)
+                return;
 
+            _currentMenuView.Value?.Hide();
             menuView.Show();
 
-            _currentMenuView = menuView;
+            _currentMenuView.Value = menuView;
         }
     }
 }

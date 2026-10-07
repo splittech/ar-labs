@@ -6,16 +6,16 @@ using UnityEngine;
 
 namespace Game.Menu
 {
-    public class MenuSwitcherView : MonoBehaviour
+    public class MenuSwitcherView : MonoBehaviour, IMenuSwitcherView
     {
         [SerializeField] private List<SwitchMenuSetting> _switchMenuSettings;
 
-        public Observable<MenuView> OnSwitchMenuButtonClicked =>
+        public Observable<IMenuView> OnSwitchMenuButtonClicked =>
             _switchMenuSettings
                 .SelectMany(setting => setting.SwitchButtonViews
                     .Select(button => button.OnActionPerformed
                         .Where(action => action == ButtonAction.Click)
-                        .Select(_ => setting.MenuView)))
+                        .Select(_ => (IMenuView)setting.MenuView)))
                 .Merge();
 
         [Serializable]
