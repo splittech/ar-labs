@@ -41,31 +41,31 @@ A mobile AR app built in Unity as part of a series of lab assignments: Pudges on
 | —   | EditMode tests for the core logic                                             |
 
 ### Create Mode
-![Create mode](docs/media/create-mode.gif)
+![Create mode](Docs/Media/create-mode.gif)
 
 Pick a Pudge type (normal, happy or sad), press on the floor and, without lifting your finger, drag the marker to the spot you want. The Pudge appears where you release your finger.
 
 ### Merging
-![Merging](docs/media/merging.gif)
+![Merging](Docs/Media/merging.gif)
 
 Two Pudges of the same type and size walk towards each other and merge into a bigger one. Once the size reaches the threshold, a final effect plays instead of a new Pudge appearing. Merging starts when a new Pudge is spawned and when a Pudge is deselected in edit mode.
 
 ### Edit Mode
-![Edit mode](docs/media/edit-mode.gif)
+![Edit mode](Docs/Media/edit-mode.gif)
 
 Tap a Pudge to select it. The panel at the bottom shows its name, description and current changes. The buttons let you change the scale, rotate the Pudge by a fixed angle and reset the changes.
 
 A horizontal swipe rotates the selected Pudge, and a cross drawn over another Pudge deletes it.
 
 ### Image and Face Tracking
-![Image tracking](docs/media/image-tracking.gif)
+![Image tracking](Docs/Media/image-tracking.gif)
 
 A video player with playback controls appears on a recognized image from the library.
 
 In face tracking mode the app switches to the front camera and shows an object on the detected face.
 
 ### Light Estimation
-![Light estimation](docs/media/light-estimation.gif)
+![Light estimation](Docs/Media/light-estimation.gif)
 
 The direction, brightness and color of the main light in the scene, as well as the ambient light, adapt to the real-world lighting. What's available depends on the platform: on ARCore full HDR estimation is supported for the rear camera, on ARKit — for the front camera.
 
